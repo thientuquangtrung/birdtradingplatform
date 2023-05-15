@@ -1,0 +1,1 @@
+insert product ([name] , [description], [price], [discount], [categoryId]) values(@name, @description, @price, @discount, @categoryId)
