@@ -1,12 +1,12 @@
-import Home from "../../pages/Home/Home";
+import Footer from "../layoutComponents/Footer/Footer";
 import Header from "../layoutComponents/Header/Header";
 
-function DefaultLayout() {
+function DefaultLayout({ children }) {
     return (
         <div>
-            <h1>DefaultLayout nè</h1>
             <Header />
-            <Home />
+            {children}
+            <Footer />
         </div>
     );
 }
