@@ -10,6 +10,8 @@ import NewProduct from '../pages/NewProduct/NewProduct';
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
+    { path: '/product/new', component: NewProduct, layout: SellerLayout },
+    { path: '/shop/profile', component: Updateshop, layout: SellerLayout },
 ];
 
 const privateRoutes = [];
