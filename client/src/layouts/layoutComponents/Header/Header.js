@@ -1,7 +1,29 @@
-import { AppBar, Avatar, Box, Container, IconButton, InputBase, Menu, Stack, Toolbar, Typography } from '@mui/material';
-import { Search, ShoppingCart } from '@mui/icons-material';
+import {
+    AppBar,
+    Avatar,
+    Badge,
+    Box,
+    Container,
+    IconButton,
+    InputBase,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Paper,
+    Stack,
+    Toolbar,
+    Typography,
+} from '@mui/material';
+import { Logout, Search, ShoppingCart } from '@mui/icons-material';
+import Tippy from '@tippyjs/react/headless';
+import { useRef } from 'react';
+import Cart from '../../../components/Cart';
+import PersonalInfo from '../../../components/PersonalInfo';
 
 function Header() {
+    const ref = useRef();
+    const _ref = useRef();
+
     return (
         <AppBar position="sticky">
             <Toolbar>
@@ -15,21 +37,33 @@ function Header() {
                         >
                             Kênh người bán
                         </Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Avatar
-                                sx={{ width: 26, height: 26 }}
-                                alt="Remy Sharp"
-                                src="https://mui.com/static/images/avatar/2.jpg"
-                            />
+                        <Tippy
+                            interactive
+                            placement="bottom-end"
+                            render={(attrs) => (
+                                <Box tabIndex="-1" {...attrs}>
+                                    <PersonalInfo />
+                                </Box>
+                            )}
+                        >
+                            <Stack ref={_ref} direction="row" spacing={1} alignItems="center">
+                                <Avatar
+                                    sx={{ width: 26, height: 26 }}
+                                    alt="Remy Sharp"
+                                    src="https://mui.com/static/images/avatar/2.jpg"
+                                />
 
-                            <Typography variant="body2" component="span">
-                                trungdeptrai
-                            </Typography>
-                        </Stack>
+                                <Typography variant="body2" component="span">
+                                    trungdeptrai
+                                </Typography>
+                            </Stack>
+                        </Tippy>
                     </Stack>
-                    <Stack direction="row" justifyContent="space-between">
-                        <Box flex={1}>LOGO</Box>
-                        <Stack bgcolor="white" direction="row" flex={5} borderRadius>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Box flex={1}>
+                            <img style={{ maxWidth: '88px' }} src="/assets/images/logo.png" alt="logo" />
+                        </Box>
+                        <Stack height={50} bgcolor="white" direction="row" flex={5} borderRadius>
                             <InputBase
                                 sx={{ ml: 1, flex: 1 }}
                                 placeholder="Search..."
@@ -40,7 +74,19 @@ function Header() {
                             </IconButton>
                         </Stack>
                         <Box flex={1} sx={{ textAlign: 'center' }}>
-                            <ShoppingCart sx={{ width: 40, height: 40 }} />
+                            <Tippy
+                                interactive
+                                placement="bottom-end"
+                                render={(attrs) => (
+                                    <Box tabIndex="-1" {...attrs}>
+                                        <Cart />
+                                    </Box>
+                                )}
+                            >
+                                <Badge badgeContent={4} color="error">
+                                    <ShoppingCart sx={{ width: 40, height: 40 }} ref={ref} />
+                                </Badge>
+                            </Tippy>
                         </Box>
                     </Stack>
                 </Container>
