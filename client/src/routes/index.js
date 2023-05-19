@@ -1,9 +1,12 @@
 // Layouts
 import DefaultLayout from '../layouts/DefaultLayout/DefaultLayout';
 import Login from '../pages/Home/Login';
+import SellerLayout from '../layouts/SellerLayout/SellerLayout';
 
 // Pages
 import Home from '../pages/Home/Home';
+import Updateshop from '../pages/Updateshop.js';
+import NewProduct from '../pages/NewProduct/NewProduct';
 
 // Public routes
 const publicRoutes = [
