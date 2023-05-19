@@ -6,12 +6,14 @@ import SellerLayout from '../layouts/SellerLayout/SellerLayout';
 import Home from '../pages/Home/Home';
 import Updateshop from '../pages/Updateshop.js';
 import NewProduct from '../pages/NewProduct/NewProduct';
+import ListProduct from '../pages/ListProduct/ListProduct';
 
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
     { path: '/product/new', component: NewProduct, layout: SellerLayout },
     { path: '/shop/profile', component: Updateshop, layout: SellerLayout },
+    { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
 ];
 
 const privateRoutes = [];
