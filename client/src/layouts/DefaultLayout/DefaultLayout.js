@@ -1,12 +1,13 @@
-import Home from "../../pages/Home/Home";
+import { Container } from "@mui/material";
+import Footer from "../layoutComponents/Footer/Footer";
 import Header from "../layoutComponents/Header/Header";
 
-function DefaultLayout() {
+function DefaultLayout({ children }) {
     return (
         <div>
-            <h1>DefaultLayout nè</h1>
             <Header />
-            <Home />
+            <Container>{children}</Container>
+            <Footer />
         </div>
     );
 }

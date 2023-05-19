@@ -5,6 +5,7 @@ const createError = require('http-errors')
 
 const config = require('./src/config');
 const productRoutes = require('./src/api/routes/productRoutes')
+const authRoutes = require('./src/api/routes/authRoutes')
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false })); 
 
 app.use('/api', productRoutes.routes)
+app.use('/api', authRoutes.routes)
 
 app.use((req, res, next) => {
     next(createError(404, 'Not Found'));
