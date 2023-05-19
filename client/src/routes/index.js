@@ -14,7 +14,6 @@ const publicRoutes = [
     { path: '/product/new', component: NewProduct, layout: SellerLayout },
     { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
     { path: '/shop/profile', component: Updateshop, layout: SellerLayout },
-    { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
 ];
 
 const privateRoutes = [];
