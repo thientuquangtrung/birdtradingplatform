@@ -16,11 +16,11 @@ function NewProduct() {
                 <Typography variant="h4" gutterBottom>
                     Thông tin cơ bản
                 </Typography>
-                <Box sx={{width: 500, marginLeft: 42, display: 'flex', alignItems: 'center'}}>
-                <Typography variant="h5" gutterBottom>
-                    Hình ảnh sản phẩm:
-                </Typography>
-                <Button
+                <Box sx={{ width: 500, marginLeft: 20, display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h5" gutterBottom>
+                        Hình ảnh sản phẩm:
+                    </Typography>
+                    <Button
                         variant="contained"
                         component="label"
                         color="primary"
