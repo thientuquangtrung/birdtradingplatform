@@ -17,7 +17,7 @@ function NewProduct() {
                     Thông tin cơ bản
                 </Typography>
                 <Box sx={{ width: 500, marginLeft: 20, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h6" gutterBottom>
                         Hình ảnh sản phẩm:
                     </Typography>
                     <Button
