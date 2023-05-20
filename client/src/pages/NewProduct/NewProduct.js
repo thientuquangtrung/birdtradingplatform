@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import UploadImage from '../../components/UploadImage';
 
 function NewProduct() {
     return (
@@ -20,18 +21,7 @@ function NewProduct() {
                     <Typography variant="h6" gutterBottom>
                         Hình ảnh sản phẩm:
                     </Typography>
-                    <Button
-                        variant="contained"
-                        component="label"
-                        color="primary"
-                        sx={{
-                            margin: 3,
-                        }}
-                    >
-                        {' '}
-                        Upload a file
-                        <input type="file" hidden />
-                    </Button>
+                    <UploadImage />
                 </Box>
                 <TextField id="outlined-basic" label="Tên sản phẩm" variant="outlined" sx={{ width: 500 }} /> <br />{' '}
                 <br />
