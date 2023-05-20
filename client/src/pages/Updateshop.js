@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     Paper,
     createTheme,
@@ -7,13 +8,31 @@ import {
     TextField,
     Stack,
     Box,
-    colors
 } from "@mui/material";
-import React, { useState } from 'react';
-import { InputAdornment } from '@mui/material';
-import { grey, orange } from "@mui/material/colors";
+import { orange } from "@mui/material/colors";
 
 export default function Updateshop() {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imageURL, setImageURL] = useState(null);
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+
+        // Tạo URL cho hình ảnh đã chọn
+        const imageURL = URL.createObjectURL(file);
+        setImageURL(imageURL);
+    };
+
+    const handleFileUpload = () => {
+        if (selectedFile) {
+            // Gửi tệp lên máy chủ hoặc xử lý tệp theo nhu cầu của ứng dụng
+            console.log('Đã chọn tệp:', selectedFile);
+        } else {
+            console.log('Chưa chọn tệp');
+        }
+    };
+
     const theme = createTheme({
         palette: {
             mode: "light",
@@ -24,8 +43,7 @@ export default function Updateshop() {
     });
 
     return (
-        <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
-        <Paper>
+        <Paper sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: 'column', padding: 3 }}>
             <ThemeProvider theme={theme}>
                 <Box marginBottom={2} marginRight={2} marginTop={2} >
                     <Typography marginLeft={2} variant="h4" gutterBottom>Hồ Sơ Shop</Typography>
@@ -37,26 +55,26 @@ export default function Updateshop() {
                     </Typography>
                 </Box>
                 <div>
-                    <Stack marginBottom={1} direction="row" spacing={3} justifyContent={"left"} marginLeft={2} >
-                        <Typography paddingTop={2}>Tên Shop</Typography>
+                    <Stack marginBottom={2} direction="row" spacing={3.8} justifyContent={"left"} marginLeft={2} >
+                        <Typography marginBottom={2} paddingTop={2}>Tên Shop</Typography>
                         <TextField margin="" id="outlined-search" label="Tên Shop" type="search" variant="outlined" />
                     </Stack>
-                    <Stack marginBottom={1} direction="row" spacing={2.4} justifyContent={"left"} marginLeft={2}>
-                        <Typography paddingTop={2}>Shop Logo</Typography>
-                        <TextField id="outlined-search" label="JPG/JPEG/PNG" type="search" variant="outlined" />
+                    <Stack marginBottom={1} direction="row" spacing={2.8} justifyContent={"left"} marginLeft={2}>
+                        <Typography >Shop Logo</Typography>
+                        <div style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}>
+                            <input type="file" onChange={handleFileChange} />
+                            {imageURL && <img src={imageURL} alt="Hình ảnh tải lên" style={{ width: '100px', height: '100px' }} />}
+                        </div>
                     </Stack>
-                    <Stack marginBottom={1} direction="row" spacing={1.7} justifyContent={"left"} marginLeft={2}>
+                    <Stack marginBottom={1} direction="row" spacing={1.7} justifyContent={"left"} marginLeft={2} paddingTop='10px'>
                         <Typography paddingTop={2}>Mô Tả Shop</Typography>
                         <TextField id="outlined-search" label="Thông tin mô tả" type="search" variant="outlined" />
                     </Stack>
                 </div>
-                <div style={{marginBottom: '10px' ,display:"flex", justifyContent:"center", alignItems:"center"}}>
+                <div style={{ marginBottom: '10px', display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <Button color="primary" variant="contained">Lưu</Button>
                 </div>
             </ThemeProvider>
         </Paper>
-        </div>
-
     );
 }
-
