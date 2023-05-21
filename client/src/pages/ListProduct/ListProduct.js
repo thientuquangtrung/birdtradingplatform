@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import ProductTable from '../../components/ProductTable/ProductTable';
+import { Stack } from '@mui/system';
 
 function ListProduct() {
     return (
@@ -12,22 +13,28 @@ function ListProduct() {
                 elevation={3}
                 sx={{
                     padding: 3,
-                    textAlign: 'center',
+                    display: 'flex',
+                    justifyContent: 'center',
                 }}
             >
-                <TextField id="outlined-search" label="Tên sản phẩm" type="search" sx={{ width: 400 }}></TextField>
-                <TextField
-                    id="outlined-select-currency"
-                    select
-                    label="Ngành hàng"
-                    defaultValue="EUR"
-                    sx={{ width: 400, marginTop: 5 }}
-                ></TextField>{' '}
-                <br />
-                <br />
-                <Button variant="contained" href="#contained-buttons">
-                    Tìm
-                </Button>
+                <Stack direction="column" gap={3} alignItems="center" width="500px">
+                    <TextField
+                        id="outlined-search"
+                        label="Tên sản phẩm"
+                        type="search"
+                        sx={{ width: '100%' }}
+                    ></TextField>
+                    <TextField
+                        id="outlined-select-currency"
+                        select
+                        label="Ngành hàng"
+                        defaultValue="EUR"
+                        sx={{ width: '100%' }}
+                    ></TextField>
+                    <Button variant="contained" href="#contained-buttons">
+                        Tìm
+                    </Button>
+                </Stack>
             </Paper>
 
             <Paper
