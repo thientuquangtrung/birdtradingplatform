@@ -16,7 +16,7 @@ import Signinup from '../pages/Home/Signinup';
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
-    {path: '/login', component: Login, layout:DefaultLayout}
+    {path: '/login', component: Login, layout:DefaultLayout},
     { path: '/product/new', component: NewProduct, layout: SellerLayout },
     { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
     { path: '/shop/profile', component: Updateshop, layout: SellerLayout },
