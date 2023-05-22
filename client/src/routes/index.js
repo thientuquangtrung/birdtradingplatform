@@ -1,7 +1,7 @@
 // Layouts
 import DefaultLayout from '../layouts/DefaultLayout/DefaultLayout';
 import SellerLayout from '../layouts/SellerLayout/SellerLayout';
-import AuthLayout from '../layouts/AuthLayout/Authlayout';
+import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 
 // Pages
 import Home from '../pages/Home/Home';
