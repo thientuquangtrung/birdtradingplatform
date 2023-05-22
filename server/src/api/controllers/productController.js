@@ -1,36 +1,67 @@
+const createError = require("http-errors");
 const productData = require('../services/product')
 
 const getProducts = async(req, res, next) => {
     try {
-        const products = await productData.getProducts();
-        res.send(products)
+        const list = await productData.getProducts();
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`
+        })
+
+        return res.send(list)
     }
-    catch(err) {   
-        res.status(400).send(err.message)
+    catch(error) {   
+        next(createError(error.status, error.message));
     }
 }
 
 const getProductById = async (req, res, next) => {
     try {
         const product = await productData.getProductById(req.params.id)
-        res.send(product)
+
+        product.image = `${process.env.HOST_URL}/product/${product.image}`
+    
+        return res.send(product)
     } catch (error) {
-        res.status(400).send(error.message)
+        next(createError(error.status, error.message));
+    }
+} 
+
+const getProductsOfSeller = async (req, res, next) => {
+    try {
+        const list = await productData.getProductsOfSeller(req.payload.id)
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`
+        })
+
+        return res.send(list)
+    } catch (error) {
+        next(createError(error.status, error.message));
     }
 }
 
 const createProduct = async (req, res, next) => {
     try {
-        const data = req.body
+        const data = {
+            ...req.body,
+            image: req.file.filename,
+        }
         const created = await productData.createProduct(data)
-        res.send(created)
+
+        return res.send({
+            ...created,
+            image: `${process.env.HOST_URL}/product/${req.file.filename}`
+        })
     } catch (error) {
-        res.status(400).send(error.message)
+        next(createError(error.status, error.message));
     }
 }
 
 module.exports = {
     getProducts,
     getProductById,
+    getProductsOfSeller,
     createProduct
 }
