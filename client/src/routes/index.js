@@ -7,7 +7,7 @@ import SellerLayout from '../layouts/SellerLayout/SellerLayout';
 import Home from '../pages/Home/Home';
 import Login from '../pages/Home/Login';
 import Signup from '../pages/Home/Signup';
-import Updateshop from '../pages/Updateshop.js';
+import UpdateShop from '../pages/UpdateShop/UpdateShop.js';
 import NewProduct from '../pages/NewProduct/NewProduct';
 import ListProduct from '../pages/ListProduct/ListProduct';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';

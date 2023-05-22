@@ -1,9 +1,10 @@
 import { Button, Typography } from '@mui/material';
 import { FileUpload } from '@mui/icons-material';
 import { useState } from 'react';
-import { Box, Stack } from '@mui/system';
+import { Stack } from '@mui/system';
+import { forwardRef } from 'react';
 
-function UploadImage({ inputName, rounded, reverse }) {
+function UploadImage({ inputName, rounded, reverse, title }, ref ) {
     const [uploadFile, setUploadFile] = useState('');
 
     const handleSelectFile = (e) => {
@@ -15,7 +16,7 @@ function UploadImage({ inputName, rounded, reverse }) {
     };
 
     return (
-        <Stack direction={reverse ? 'row' : 'row-reverse'} alignItems="center" gap={2}>
+        <Stack direction={reverse ? 'row' : 'row-reverse'} alignItems="center" gap={2} justifyContent='center'>
             <Stack
                 justifyContent="center"
                 sx={{
@@ -32,11 +33,11 @@ function UploadImage({ inputName, rounded, reverse }) {
                 )}
             </Stack>
             <Button variant="outlined" component="label" color="primary" startIcon={<FileUpload />}>
-                Upload a file
-                <input type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
+                {title ? title : "Upload a file"}
+                <input ref={ref} type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
             </Button>
         </Stack>
     );
 }
 
-export default UploadImage;
+export default forwardRef(UploadImage);

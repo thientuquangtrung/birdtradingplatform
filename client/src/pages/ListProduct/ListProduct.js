@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import ProductTable from '../../components/ProductTable/ProductTable';
+import ProductTable from '../../components/ProductTable';
 import { Stack } from '@mui/system';
 
 function ListProduct() {
