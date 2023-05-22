@@ -75,6 +75,7 @@ const updateSeller = async (data) => {
             .input("image", sql.Char, image)
             .input("phone", sql.VarChar, phone)
             .input("pickUpAddress", sql.VarChar, pickUpAddress)
+            .input("description", sql.NVarChar, description)
             .input("id", sql.UniqueIdentifier, id)
             .query(sqlQueries.updateSeller);
 
