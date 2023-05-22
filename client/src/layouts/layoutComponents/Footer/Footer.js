@@ -5,7 +5,7 @@ function Footer() {
         <Box>
             <Paper elevation={3}>
                 <Container>
-                    <Grid container spacing={2} p={3}>
+                    <Grid container spacing={2} p={3} mt={0}>
                         <Grid item xs={3}>
                             <img style={{ maxWidth: '100px' }} src="/assets/images/logo.png" alt="logo" />
                         </Grid>

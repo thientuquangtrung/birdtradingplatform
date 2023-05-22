@@ -1,0 +1,1 @@
+Select a.*, s.pickUpAddress from account a, Seller s where a.email = @email and a.id = s.id and a.enabled = 'true'
