@@ -11,7 +11,10 @@ const app = express();
 
 app.use(cors())
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false })); 
+app.use(bodyParser.urlencoded({ extended: true })); 
+app.use('/profile', express.static('public/images/profile'));
+app.use('/product', express.static('public/images/product'));
+
 
 app.use('/api', productRoutes.routes)
 app.use('/api', authRoutes.routes)

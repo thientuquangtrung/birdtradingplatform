@@ -1,13 +1,18 @@
-const express = require('express');
-const authController = require('../controllers/authController');
+const express = require("express");
+const authController = require("../controllers/authController");
+const { checkMail } = require("../middlewares/checkMail");
+const { uploadImg } = require("../middlewares/uploadFile");
 
 const router = express.Router();
 
-const { checkMail, createSellerAccount } = authController;
+const { verifyAccessToken } = require("../utils/jwt_utils");
 
-router.post('/auth/verify_mail', checkMail)
-router.post('/auth/seller', createSellerAccount)
+const { createSellerAccount, sellerLogin, updateSeller } = authController;
+
+router.post("/auth/seller/register", checkMail, createSellerAccount);
+router.post("/auth/seller/login", sellerLogin);
+router.patch("/auth/seller/me", verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
 
 module.exports = {
-    routes: router
-}
+    routes: router,
+};

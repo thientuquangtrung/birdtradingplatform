@@ -6,7 +6,7 @@ function DefaultLayout({ children }) {
     return (
         <div>
             <Header />
-            <Container>{children}</Container>
+            <Container sx={{paddingTop: 5, paddingBottom: 5}}>{children}</Container>
             <Footer />
         </div>
     );

@@ -1,1 +1,2 @@
-insert product ([name] , [description], [price], [discount], [categoryId]) values(@name, @description, @price, @discount, @categoryId)
+insert product ([name], [shopId], [description], [price], [image], [categoryId]) values(@name, @shopId, @description, @price, @image, @categoryId)
+select * from product where id = SCOPE_IDENTITY()
