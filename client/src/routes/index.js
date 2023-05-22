@@ -5,22 +5,17 @@ import SellerLayout from '../layouts/SellerLayout/SellerLayout';
 // Pages
 import Home from '../pages/Home/Home';
 import Updateshop from '../pages/Updateshop.js';
-<<<<<<< HEAD
 import NewProduct from '../pages/NewProduct/NewProduct';
 import ListProduct from '../pages/ListProduct/ListProduct';
-=======
-
->>>>>>> 807e091 (updateshop)
+import ProductDetail from '../pages/ProductDetail/ProductDetail';
 
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
-<<<<<<< HEAD
     { path: '/product/new', component: NewProduct, layout: SellerLayout },
     { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
-=======
->>>>>>> 807e091 (updateshop)
     { path: '/shop/profile', component: Updateshop, layout: SellerLayout },
+    { path: '/product/detail', component: ProductDetail, layout: DefaultLayout },
 ];
 
 const privateRoutes = [];
