@@ -2,15 +2,17 @@ import React from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import { blueGrey } from '@mui/material/colors';
+import { Link } from "react-router-dom";
+
 const Signup = () => {
-    const paperStyle = { padding: 20, height: '66vh', width: 600, margin: '20px auto' };
+    const paperStyle = { padding: 20, height: '72vh', width: 600, margin: '20px auto' };
     const avatarStyle={backgroundColor:"lightblue"}
     const marginStyle={margin:"10px 0"}
+    const marginForm={margin:"40px 0"}
     
   const codeStyle = {
     backgroundColor:"#00CED1",
-    padding: '2px 4px',
+    padding: '6px 4px',
     borderRadius: '10px',
     transition: 'background-color 0.3s ease',
     ':hover': {
@@ -19,7 +21,7 @@ const Signup = () => {
    }
     
     return (
-        <Grid>
+        <Grid style={marginForm}>
             <Paper elevation={20} style={paperStyle}>
                 <Grid align="center">
                     <Avatar style={avatarStyle}>
@@ -28,15 +30,21 @@ const Signup = () => {
                     <h1 >Sign up</h1>
                     <Typography variant='caption'>Please fill in this form to create an account!</Typography>
                 </Grid>
-                <form>
+                <form >
                 <PersonIcon></PersonIcon>{' '}
-                    <TextField style={marginStyle} fullWidth label='Name'></TextField>
+                    <TextField style={{marginBottom:"10px"}} fullWidth label='Name'></TextField>
                     <TextField style={marginStyle} fullWidth label='Email' type='email'></TextField>
                     <TextField style={marginStyle} fullWidth label='Phone number'></TextField>
                     <TextField style={marginStyle} fullWidth label='Password' type='password'></TextField>
                     <TextField style={marginStyle} fullWidth label='Confirm Password' type='password' ></TextField>
                     <Button style={codeStyle} fullWidth type='submit' variant='contained'> Sign up</Button>
                 </form>
+                <Typography style={marginStyle}>
+                        Already have an account ?      
+                        <Link to='/login'>
+                               Sign In
+                        </Link>
+                    </Typography>
             </Paper>
         </Grid>
     );
