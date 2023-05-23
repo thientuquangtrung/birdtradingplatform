@@ -2,6 +2,7 @@ import {
     AppBar,
     Badge,
     Box,
+    Breadcrumbs,
     Container,
     IconButton,
     InputBase,
@@ -19,22 +20,39 @@ import { Link } from 'react-router-dom';
 function Header() {
     const ref = useRef();
 
+    const currentUser = false;
+
     return (
         <AppBar position="sticky">
             <Toolbar>
                 <Container sx={{ padding: 3 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
-                        <Link to='/shop/profile'>
+                        <Link to="/shop/profile">
                             <Typography
                                 variant="body2"
-                                component="a"
+                                component="span"
                                 href="#"
                                 sx={{ color: 'white', textDecoration: 'none' }}
                             >
                                 Kênh người bán
                             </Typography>
                         </Link>
-                        <AvaText />
+                        {currentUser ? (
+                            <AvaText />
+                        ) : (
+                            <Breadcrumbs separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
+                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                    <Link style={{ color: 'inherit' }} to="/login">
+                                        Login
+                                    </Link>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                    <Link style={{ color: 'inherit' }} to="/signup">
+                                        Signup
+                                    </Link>
+                                </Typography>
+                            </Breadcrumbs>
+                        )}
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Box flex={1}>
