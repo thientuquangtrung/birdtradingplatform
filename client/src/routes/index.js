@@ -5,8 +5,8 @@ import AuthLayout from '../layouts/AuthLayout/AuthLayout';
 
 // Pages
 import Home from '../pages/Home/Home';
-import Login from '../pages/Home/Login';
-import Signup from '../pages/Home/Signup';
+import Login from '../pages/Login/Login';
+import Signup from '../pages/Signup/Signup';
 import UpdateShop from '../pages/UpdateShop/UpdateShop.js';
 import NewProduct from '../pages/NewProduct/NewProduct';
 import ListProduct from '../pages/ListProduct/ListProduct';

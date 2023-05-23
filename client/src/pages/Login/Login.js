@@ -5,10 +5,9 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
 
-
-const Login = ({ handleChange }) => {
+const Login = () => {
     // Destructure the handleChange prop
-    const paperStyle = { padding: 20, height: '72vh', width: 600, margin: '20px auto' };
+    const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
 
@@ -32,7 +31,7 @@ const Login = ({ handleChange }) => {
                         fullWidth
                         required
                     />
-                    <Grid style={{display:"flex", justifyContent:"space-between"}}>
+                    <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Remember password" />
                         <Typography style={marginStyle}>
                             <Link href="#">Forgot password ?</Link>
@@ -42,10 +41,7 @@ const Login = ({ handleChange }) => {
                         Sign In
                     </Button>
                     <Typography style={marginStyle}>
-                        Do you have an account ?
-                        <Link to="/signup" >
-                            Sign up
-                        </Link>
+                        Do you have an account? <Link to="/signup">Sign up</Link>
                     </Typography>
                 </Paper>
             </Grid>
