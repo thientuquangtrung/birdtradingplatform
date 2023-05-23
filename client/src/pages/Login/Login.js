@@ -33,8 +33,7 @@ const Login = () => {
                 //set current user
                 //chuyen ve home
                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.meta.accessToken}`;
-                console.log(axios.defaults.headers.common['Authorization']);
-                // navigate('/');
+                navigate('/');
             })
             .catch(function (error) {
                 console.log(error);
