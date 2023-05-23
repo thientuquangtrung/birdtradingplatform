@@ -5,6 +5,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     // Destructure the handleChange prop
@@ -13,6 +14,7 @@ const Login = () => {
     const marginStyle = { margin: '10px 0' };
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -30,7 +32,9 @@ const Login = () => {
             .then(function (response) {
                 //set current user
                 //chuyen ve home
-                console.log(response);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.meta.accessToken}`;
+                console.log(axios.defaults.headers.common['Authorization']);
+                // navigate('/');
             })
             .catch(function (error) {
                 console.log(error);
