@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Avatar, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
     // Destructure the handleChange prop
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    function handleChangeEmail(event) {
+        setEmail(event.target.value);
+    }
+    function handleChangePassword(event) {
+        setPassword(event.target.value);
+    }
+
+    function handleSubmit() {
+        axios
+            .post('http://localhost:5000/api/auth/seller/login', {
+                email: email,
+                password: '123',
+            })
+            .then(function (response) {
+                //set current user
+                //chuyen ve home
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     return (
         <div>
@@ -22,8 +48,18 @@ const Login = () => {
                         <h1>Sign In</h1>
                     </Grid>
                     <PersonIcon></PersonIcon>{' '}
-                    <TextField style={marginStyle} label="Email" placeholder="Enter username" fullWidth required />
                     <TextField
+                        value={email}
+                        onChange={handleChangeEmail}
+                        style={marginStyle}
+                        label="Email"
+                        placeholder="Enter username"
+                        fullWidth
+                        required
+                    />
+                    <TextField
+                        value={password}
+                        onChange={handleChangePassword}
                         style={marginStyle}
                         label="Password"
                         type="password"
@@ -37,7 +73,7 @@ const Login = () => {
                             <Link href="#">Forgot password ?</Link>
                         </Typography>
                     </Grid>
-                    <Button variant="contained" type="submit" color="primary" fullWidth>
+                    <Button variant="contained" type="submit" color="primary" fullWidth onClick={handleSubmit}>
                         Sign In
                     </Button>
                     <Typography style={marginStyle}>
