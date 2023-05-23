@@ -45,6 +45,7 @@ const createProduct = async (req, res, next) => {
     try {
         const data = {
             ...req.body,
+            shopId: req.payload.id,
             image: req.file.filename,
         };
         const created = await productData.createProduct(data);

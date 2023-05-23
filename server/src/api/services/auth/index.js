@@ -1,27 +1,21 @@
-const createError = require("http-errors");
-const sql = require("mssql");
-const config = require("../../../config");
-const { loadSqlQueries } = require("../../utils/sql_utils");
+const createError = require('http-errors');
+const sql = require('mssql');
+const config = require('../../../config');
+const { loadSqlQueries } = require('../../utils/sql_utils');
 
 // CRUD sellers
 
-const createSellerAccount = async ({
-    name,
-    phone,
-    email,
-    address,
-    password,
-}) => {
+const createSellerAccount = async ({ name, phone, email, pickUpAddress, password }) => {
     try {
         let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries("auth");
+        const sqlQueries = await loadSqlQueries('auth');
         const createdAccount = await pool
             .request()
-            .input("name", sql.VarChar, name)
-            .input("phone", sql.VarChar, phone)
-            .input("email", sql.VarChar, email)
-            .input("address", sql.VarChar, address)
-            .input("password", sql.Char, password)
+            .input('name', sql.NVarChar, name)
+            .input('phone', sql.VarChar, phone)
+            .input('email', sql.VarChar, email)
+            .input('pickUpAddress', sql.NVarChar, pickUpAddress)
+            .input('password', sql.Char, password)
             .query(sqlQueries.createSellerAccount);
 
         return createdAccount.recordset[0];
@@ -33,11 +27,8 @@ const createSellerAccount = async ({
 const readOneSeller = async (email) => {
     try {
         let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries("auth");
-        const seller = await pool
-            .request()
-            .input("email", sql.VarChar, email)
-            .query(sqlQueries.readOneSeller);
+        const sqlQueries = await loadSqlQueries('auth');
+        const seller = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.readOneSeller);
 
         return seller.recordset[0];
     } catch (error) {
@@ -48,11 +39,8 @@ const readOneSeller = async (email) => {
 const readSellerById = async (id) => {
     try {
         let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries("auth");
-        const seller = await pool
-            .request()
-            .input("id", sql.UniqueIdentifier, id)
-            .query(sqlQueries.readSellerById);
+        const sqlQueries = await loadSqlQueries('auth');
+        const seller = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.readSellerById);
 
         return seller.recordset[0];
     } catch (error) {
@@ -62,21 +50,20 @@ const readSellerById = async (id) => {
 
 const updateSeller = async (data) => {
     try {
-
-        const { name, email, password, phone, pickUpAddress, id, image } = data
+        const { name, email, password, phone, pickUpAddress, id, image } = data;
 
         let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries("auth");
+        const sqlQueries = await loadSqlQueries('auth');
         const seller = await pool
             .request()
-            .input("name", sql.VarChar, name)
-            .input("email", sql.VarChar, email)
-            .input("password", sql.Char, password)
-            .input("image", sql.Char, image)
-            .input("phone", sql.VarChar, phone)
-            .input("pickUpAddress", sql.VarChar, pickUpAddress)
-            .input("description", sql.NVarChar, description)
-            .input("id", sql.UniqueIdentifier, id)
+            .input('name', sql.NVarChar, name)
+            .input('email', sql.VarChar, email)
+            .input('password', sql.Char, password)
+            .input('image', sql.Char, image)
+            .input('phone', sql.VarChar, phone)
+            .input('pickUpAddress', sql.NVarChar, pickUpAddress)
+            .input('description', sql.NVarChar, description)
+            .input('id', sql.UniqueIdentifier, id)
             .query(sqlQueries.updateSeller);
 
         return seller.recordset[0];
@@ -90,11 +77,8 @@ const updateSeller = async (data) => {
 const checkMail = async ({ email }) => {
     try {
         let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries("auth");
-        const count = await pool
-            .request()
-            .input("email", sql.VarChar, email)
-            .query(sqlQueries.checkMail);
+        const sqlQueries = await loadSqlQueries('auth');
+        const count = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.checkMail);
 
         return count.recordset[0].count === 0;
     } catch (error) {
@@ -107,5 +91,5 @@ module.exports = {
     createSellerAccount,
     readOneSeller,
     readSellerById,
-    updateSeller
+    updateSeller,
 };
