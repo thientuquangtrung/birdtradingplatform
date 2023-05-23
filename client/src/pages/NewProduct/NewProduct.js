@@ -5,11 +5,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import UploadImage from '../../components/UploadImage';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import { Stack, styled } from '@mui/system';
+import { Stack } from '@mui/system';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
 
 function NewProduct() {
     return (
-        <Box padding={3} >
+        <Box padding={3}>
             <Paper
                 elevation={3}
                 sx={{
@@ -18,7 +22,7 @@ function NewProduct() {
                     justifyContent: 'center',
                 }}
             >
-                <Stack direction="column" gap={3} alignItems="center" width='500px'>
+                <Stack direction="column" gap={3} alignItems="center" width="500px">
                     <Typography variant="h4" gutterBottom>
                         Thông tin cơ bản
                     </Typography>
@@ -28,7 +32,7 @@ function NewProduct() {
                         </Typography>
                         <UploadImage />
                     </Box>
-                    <TextField id="outlined-basic" label="Tên sản phẩm" variant="outlined" sx={{ width: '100%'}}/>
+                    <TextField id="outlined-basic" label="Tên sản phẩm" variant="outlined" sx={{ width: '100%' }} />
 
                     <TextField
                         id="outlined-select-currency"
@@ -37,6 +41,16 @@ function NewProduct() {
                         defaultValue="EUR"
                         sx={{ width: '100%' }}
                     ></TextField>
+
+                    <FormControl fullWidth >
+                        <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-amount"
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                            label="Giá sản phẩm"
+                            type='number'
+                        />
+                    </FormControl>
 
                     <TextareaAutosize
                         aria-label="minimum height"

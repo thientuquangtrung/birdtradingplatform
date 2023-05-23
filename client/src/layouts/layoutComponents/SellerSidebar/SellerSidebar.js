@@ -1,45 +1,42 @@
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Drafts, ExpandLess, ExpandMore, Inbox, Send, StarBorder } from '@mui/icons-material';
-import { useState } from 'react';
+import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Receipt, ShoppingBasket, Store, TrendingUp } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 function SellerSidebar() {
-    const [open, setOpen] = useState(true);
-
-    const handleClick = () => {
-        setOpen(!open);
-    };
-
     return (
-        <List>
-            <ListItemButton>
-                <ListItemIcon>
-                    <Send />
-                </ListItemIcon>
-                <ListItemText primary="Sent mail" />
-            </ListItemButton>
-            <ListItemButton>
-                <ListItemIcon>
-                    <Drafts />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-            </ListItemButton>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <Inbox />
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                            <StarBorder />
-                        </ListItemIcon>
-                        <ListItemText primary="Starred" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
+        <List sx={{ paddingTop: 5 }}>
+            <Link>
+                <ListItemButton>
+                    <ListItemIcon>
+                        <Receipt />
+                    </ListItemIcon>
+                    <ListItemText primary="Quản lí đơn hàng" />
+                </ListItemButton>
+            </Link>
+            <Link to='/product/list/all'>
+                <ListItemButton>
+                    <ListItemIcon>
+                        <ShoppingBasket />
+                    </ListItemIcon>
+                    <ListItemText primary="Quản lí sản phẩm" />
+                </ListItemButton>
+            </Link>
+            <Link to="/shop/profile">
+                <ListItemButton>
+                    <ListItemIcon>
+                        <TrendingUp />
+                    </ListItemIcon>
+                    <ListItemText primary="Dữ liệu" />
+                </ListItemButton>
+            </Link>
+            <Link to="/shop/profile">
+                <ListItemButton>
+                    <ListItemIcon>
+                        <Store />
+                    </ListItemIcon>
+                    <ListItemText primary="Quản lí shop" />
+                </ListItemButton>
+            </Link>
         </List>
     );
 }

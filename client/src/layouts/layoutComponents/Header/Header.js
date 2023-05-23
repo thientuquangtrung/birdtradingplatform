@@ -1,63 +1,40 @@
 import {
     AppBar,
-    Avatar,
     Badge,
     Box,
     Container,
     IconButton,
     InputBase,
-    ListItemIcon,
-    Menu,
-    MenuItem,
-    Paper,
     Stack,
     Toolbar,
     Typography,
 } from '@mui/material';
-import { Logout, Search, ShoppingCart } from '@mui/icons-material';
+import { Search, ShoppingCart } from '@mui/icons-material';
 import Tippy from '@tippyjs/react/headless';
 import { useRef } from 'react';
 import Cart from '../../../components/Cart';
-import PersonalInfo from '../../../components/PersonalInfo';
+import AvaText from '../../../components/AvaText';
+import { Link } from 'react-router-dom';
 
 function Header() {
     const ref = useRef();
-    const _ref = useRef();
 
     return (
         <AppBar position="sticky">
             <Toolbar>
                 <Container sx={{ padding: 3 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
-                        <Typography
-                            variant="body2"
-                            component="a"
-                            href="#"
-                            sx={{ color: 'white', textDecoration: 'none' }}
-                        >
-                            Kênh người bán
-                        </Typography>
-                        <Tippy
-                            interactive
-                            placement="bottom-end"
-                            render={(attrs) => (
-                                <Box tabIndex="-1" {...attrs}>
-                                    <PersonalInfo />
-                                </Box>
-                            )}
-                        >
-                            <Stack ref={_ref} direction="row" spacing={1} alignItems="center">
-                                <Avatar
-                                    sx={{ width: 26, height: 26 }}
-                                    alt="Remy Sharp"
-                                    src="https://mui.com/static/images/avatar/2.jpg"
-                                />
-
-                                <Typography variant="body2" component="span">
-                                    trungdeptrai
-                                </Typography>
-                            </Stack>
-                        </Tippy>
+                        <Link to='/shop/profile'>
+                            <Typography
+                                variant="body2"
+                                component="a"
+                                href="#"
+                                sx={{ color: 'white', textDecoration: 'none' }}
+                            >
+                                Kênh người bán
+                            </Typography>
+                        </Link>
+                        <AvaText />
                     </Stack>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Box flex={1}>
