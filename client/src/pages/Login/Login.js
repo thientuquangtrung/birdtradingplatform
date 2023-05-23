@@ -25,7 +25,7 @@ const Login = () => {
         axios
             .post('http://localhost:5000/api/auth/seller/login', {
                 email: email,
-                password: '123',
+                password: password,
             })
             .then(function (response) {
                 //set current user
