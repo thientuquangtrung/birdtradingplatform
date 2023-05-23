@@ -4,8 +4,8 @@ import { Avatar, Button, Checkbox, FormControlLabel, Paper, TextField, Typograph
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
 
 const Login = () => {
     // Destructure the handleChange prop
@@ -24,15 +24,13 @@ const Login = () => {
     }
 
     function handleSubmit() {
-        axios
-            .post('http://localhost:5000/api/auth/seller/login', {
+        axiosClient
+            .post('auth/seller/login', {
                 email: email,
                 password: password,
             })
             .then(function (response) {
-                //set current user
-                //chuyen ve home
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.meta.accessToken}`;
+                localStorage.setItem('access_token', response.data.meta.accessToken);
                 navigate('/');
             })
             .catch(function (error) {
@@ -80,7 +78,10 @@ const Login = () => {
                         Sign In
                     </Button>
                     <Typography style={marginStyle}>
-                        Do you have an account? <Link to="/signup">Sign up</Link>
+                        Do you have an account?{' '}
+                        <Link to="/signup" style={{color: 'Highlight'}}>
+                            Sign up
+                        </Link>
                     </Typography>
                 </Paper>
             </Grid>

@@ -41,7 +41,7 @@ function ProductDetail() {
                     <Button
                         variant="contained"
                         startIcon={<AddShoppingCartIcon />}
-                        sx={{ width: '40%', color: '#fff', backgroundColor: '#1976d2', border: '1px solid #fff' }}
+                        sx={{ width: '40%', color: '#fff', backgroundColor: '#1976d2' }}
                     >
                         Thêm vào giỏ hàng
                     </Button>
