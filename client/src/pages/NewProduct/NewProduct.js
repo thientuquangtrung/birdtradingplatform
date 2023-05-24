@@ -23,6 +23,10 @@ function NewProduct() {
 
     const imageRef = useRef();
 
+    const isFullfilled = () => {
+        return !(name && price && description && categoryId && imageRef.current.files[0]);
+    };
+
     function handleSubmit() {
         const image = imageRef.current.files[0];
 
@@ -94,7 +98,7 @@ function NewProduct() {
                         style={{ width: '100%', fontSize: 16, padding: 3 }}
                     />
 
-                    <Button variant="contained" color="success" onClick={handleSubmit}>
+                    <Button disabled={isFullfilled()} variant="contained" color="success" onClick={handleSubmit}>
                         Lưu & Hiển thị
                     </Button>
                 </Stack>

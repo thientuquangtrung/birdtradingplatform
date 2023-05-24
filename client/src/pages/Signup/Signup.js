@@ -4,8 +4,8 @@ import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/materia
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
-import handleError from '../../utils/handleError';
 import AuthContext from '../../contexts/AuthContext';
+import { enqueueSnackbar } from 'notistack';
 
 const Signup = () => {
     const paperStyle = { padding: 20, width: 600, height: '88vh', margin: '20px auto' };
@@ -89,7 +89,7 @@ const Signup = () => {
     function handleChangeConfirmPassword(event) {
         setConfirmPassword(event.target.value);
     }
-  
+
     const handleSubmit = () => {
         const isValidAll = validateAll();
         const isValidElement = validateElement();
@@ -104,9 +104,9 @@ const Signup = () => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
-                setCurrentUser(response.data.data);
-
+                    setCurrentUser(response.data.data);
                     navigate('/');
+                    enqueueSnackbar('Welcome to BTP! Get your first order now.', { variant: 'info' });
                 })
                 .catch(function (error) {
                     setError('Email đã tồn tại ! Vui lòng kiểm tra lại thông tin.');
