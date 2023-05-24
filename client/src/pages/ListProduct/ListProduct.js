@@ -6,8 +6,12 @@ import AddIcon from '@mui/icons-material/Add';
 import ProductTable from '../../components/ProductTable';
 import { Stack } from '@mui/system';
 import { Link } from 'react-router-dom';
+import CategoryList from '../../components/CategoryList';
+import { useState } from 'react';
 
 function ListProduct() {
+    const [categoryId, setCategoryId] = useState('');
+
     return (
         <Box margin={3}>
             <Paper
@@ -25,13 +29,7 @@ function ListProduct() {
                         type="search"
                         sx={{ width: '100%' }}
                     ></TextField>
-                    <TextField
-                        id="outlined-select-currency"
-                        select
-                        label="Ngành hàng"
-                        defaultValue="EUR"
-                        sx={{ width: '100%' }}
-                    ></TextField>
+                    <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
                     <Button variant="contained" href="#contained-buttons">
                         Tìm
                     </Button>

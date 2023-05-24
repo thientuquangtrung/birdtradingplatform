@@ -11,14 +11,15 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRef, useState } from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import handleError from '../../utils/handleError';
 import axiosClient from '../../api/axiosClient';
+import CategoryList from '../../components/CategoryList';
 
 function NewProduct() {
     const [name, setName] = useState('');
-    const [categoryId, setCategoryId] = useState(1);
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
+    const [categoryId, setCategoryId] = useState('');
 
     const imageRef = useRef();
 
@@ -39,7 +40,7 @@ function NewProduct() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }
 
@@ -71,20 +72,7 @@ function NewProduct() {
                         variant="outlined"
                         sx={{ width: '100%' }}
                     />
-
-                    <TextField
-                        value={categoryId}
-                        onChange={(e) => setCategoryId(e.target.value)}
-                        id="outlined-select-currency"
-                        select
-                        label="Ngành hàng"
-                        defaultValue="EUR"
-                        sx={{ width: '100%' }}
-                    >
-                        <MenuItem>1</MenuItem>
-                        <MenuItem>2</MenuItem>
-                    </TextField>
-
+                    <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
                     <FormControl fullWidth>
                         <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
                         <OutlinedInput

@@ -4,6 +4,7 @@ import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/materia
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
+import handleError from '../../utils/handleError';
 
 const Signup = () => {
     const paperStyle = { padding: 20, width: 600, height: '88vh', margin: '20px auto' };
@@ -13,7 +14,7 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [pickUpAddress, setPickUpAdress] = useState('');
+    const [pickUpAddress, setPickUpAddress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
@@ -22,10 +23,19 @@ const Signup = () => {
 
     const [validationMsg, setValidationMsg] = useState('');
     const [messsage, setMessage] = useState('');
+    const [error, setError] = useState('');
+
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Ngăn chặn sự kiện mặc định của phím Enter
+            handleSubmit(); // Gọi hàm handleSubmit để thực hiện đăng nhập
+        }
+    };
 
     function isEmpty(str) {
         return !str || str.length === 0;
     }
+
     const validateAll = () => {
         const msg = {};
         if (
@@ -68,7 +78,7 @@ const Signup = () => {
         setPhone(event.target.value);
     }
     function handleChangeAddress(event) {
-        setPickUpAdress(event.target.value);
+        setPickUpAddress(event.target.value);
     }
     function handleChangePassword(event) {
         setPassword(event.target.value);
@@ -94,6 +104,7 @@ const Signup = () => {
                     navigate('/');
                 })
                 .catch(function (error) {
+                    setError('Email đã tồn tại ! Vui lòng kiểm tra lại thông tin.');
                     console.log(error);
                 });
         }
@@ -126,6 +137,7 @@ const Signup = () => {
                     style={{ marginBottom: '10px' }}
                     fullWidth
                     label="Họ & Tên"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <TextField
                     value={email}
@@ -134,6 +146,7 @@ const Signup = () => {
                     fullWidth
                     label="Email"
                     type="email"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.email}</Typography>
                 <TextField
@@ -142,6 +155,7 @@ const Signup = () => {
                     style={marginStyle}
                     fullWidth
                     label="Số điện thoại"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.phone}</Typography>
                 <TextField
@@ -150,6 +164,7 @@ const Signup = () => {
                     style={marginStyle}
                     fullWidth
                     label="Địa chỉ"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <TextField
                     value={password}
@@ -159,6 +174,7 @@ const Signup = () => {
                     fullWidth
                     label="Mật khẩu"
                     type="password"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <TextField
                     value={confirmPassword}
@@ -168,6 +184,7 @@ const Signup = () => {
                     fullWidth
                     label="Nhập lại mật khẩu"
                     type="password"
+                    onKeyDown={handlePress}
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
                     {messsage.confirmPassword}
@@ -175,9 +192,10 @@ const Signup = () => {
                 <Button style={codeStyle} fullWidth type="submit" variant="contained" onClick={handleSubmit}>
                     Đăng ký
                 </Button>
-                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                <Typography style={{ color: 'red', fontSize: '13px', margin: '5px 0 0 10px' }}>
                     {validationMsg.email}
                 </Typography>
+                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
                 <Typography style={marginStyle}>
                     Đã có tài khoản?{' '}
                     <Link style={{ color: 'blue' }} to="/login">

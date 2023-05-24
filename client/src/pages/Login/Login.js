@@ -6,15 +6,11 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
+import { useSnackbar } from 'notistack';
 
 const Login = () => {
     // Destructure the handleChange prop
-    const input = document.getElementById('btn');
-    input.addEventListener('keyup', (e) => {
-        if (e.keycode == 13) {
-            handleSubmit();
-        }
-    });
+
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
@@ -22,6 +18,8 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const [validationMsg, setValidationMsg] = useState('');
+    const { enqueueSnackbar } = useSnackbar();
+    const [error, setError] = useState('');
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -42,6 +40,12 @@ const Login = () => {
         if (Object.keys(msg).length > 0) return false;
         return true;
     };
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Ngăn chặn sự kiện mặc định của phím Enter
+            handleSubmit(); // Gọi hàm handleSubmit để thực hiện đăng nhập
+        }
+    };
 
     const handleSubmit = () => {
         const isValid = validateAll();
@@ -53,9 +57,11 @@ const Login = () => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    enqueueSnackbar('Welcome back!', { variant: 'info' });
                     navigate('/');
                 })
                 .catch(function (error) {
+                    setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');
                     console.log(error);
                 });
         }
@@ -79,6 +85,7 @@ const Login = () => {
                         label="Tên đăng nhập"
                         fullWidth
                         required
+                        onKeyDown={handlePress}
                     />
                     <TextField
                         value={password}
@@ -88,10 +95,12 @@ const Login = () => {
                         type="password"
                         fullWidth
                         required
+                        onKeyDown={handlePress}
                     />
                     <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
                         {validationMsg.email}
                     </Typography>
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
                         <Typography style={marginStyle}>
