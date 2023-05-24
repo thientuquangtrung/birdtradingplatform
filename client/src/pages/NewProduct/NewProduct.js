@@ -11,19 +11,18 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRef, useState } from 'react';
-import axios from 'axios';
 import MenuItem from '@mui/material/MenuItem';
+import axiosClient from '../../api/axiosClient';
 
 function NewProduct() {
     const [name, setName] = useState('');
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState(1);
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
 
     const imageRef = useRef();
 
     function handleSubmit() {
-        console.log('name');
         const image = imageRef.current.files[0];
 
         const formData = new FormData();
@@ -32,8 +31,8 @@ function NewProduct() {
         formData.append('price', price);
         formData.append('description', description);
         formData.append('image', image);
-        axios
-            .post('http://localhost:5000/api/seller/product', formData)
+        axiosClient
+            .post('seller/product', formData)
             .then(function (response) {
                 // handle success
                 console.log(response);

@@ -1,5 +1,6 @@
 import { AppBar, Divider, Toolbar, Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
+import { Link } from 'react-router-dom';
 
 function AuthLayout({ children }) {
     return (
@@ -7,7 +8,9 @@ function AuthLayout({ children }) {
             <AppBar position="sticky">
                 <Toolbar sx={{ paddingTop: 1, paddingBottom: 1, justifyContent: 'space-between' }}>
                     <Stack direction="row" alignItems="center" gap={3}>
-                        <img width="80px" src="/assets/images/logo.png" alt="logo" />
+                        <Link to="/">
+                            <img width="80px" src="/assets/images/logo.png" alt="logo" />
+                        </Link>
                         <Typography variant="h6" component="h1">
                             Bird Trading Platform
                         </Typography>

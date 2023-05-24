@@ -3,17 +3,17 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from '../../api/axiosClient';
 
 const Signup = () => {
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
-    const [name, setName] = useState('');
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
+    const [pickUpAddress, setPickUpAdress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -29,7 +29,7 @@ const Signup = () => {
         setPhone(event.target.value);
     }
     function handleChangeAddress(event) {
-        setAddress(event.target.value);
+        setPickUpAdress(event.target.value);
     }
     function handleChangePassword(event) {
         setPassword(event.target.value);
@@ -38,16 +38,16 @@ const Signup = () => {
         setConfirmPassword(event.target.value);
     }
     function handleSubmit() {
-        axios
-            .post('http://localhost:5000/api/auth/seller/register', {
+        axiosClient
+            .post('auth/seller/register', {
                 email: email,
                 name: name,
                 password: password,
-                address: address,
+                pickUpAddress: pickUpAddress,
                 phone: phone,
             })
             .then(function (response) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.meta.accessToken}`;
+                localStorage.setItem('access_token', response.data.meta.accessToken);
                 navigate('/');
             })
             .catch(function (error) {
@@ -99,7 +99,7 @@ const Signup = () => {
                     label="Số điện thoại"
                 ></TextField>
                 <TextField
-                    value={address}
+                    value={pickUpAddress}
                     onChange={handleChangeAddress}
                     style={marginStyle}
                     fullWidth

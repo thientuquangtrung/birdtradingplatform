@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import ProductTable from '../../components/ProductTable';
 import { Stack } from '@mui/system';
+import { Link } from 'react-router-dom';
 
 function ListProduct() {
     return (
@@ -44,9 +45,11 @@ function ListProduct() {
                     marginTop: 5,
                 }}
             >
-                <Button variant="contained" startIcon={<AddIcon />} sx={{ marginBottom: 4 }}>
-                    Thêm sản phẩm mới
-                </Button>
+                <Link to="/product/new">
+                    <Button variant="contained" startIcon={<AddIcon />} sx={{ marginBottom: 4 }}>
+                        Thêm sản phẩm mới
+                    </Button>
+                </Link>
 
                 <ProductTable />
             </Paper>
