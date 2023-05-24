@@ -48,15 +48,14 @@ const Login = () => {
                         <Avatar style={avatarStyle}>
                             <LockOpenIcon />
                         </Avatar>
-                        <h1>Sign In</h1>
+                        <h1>Đăng nhập</h1>
                     </Grid>
                     <PersonIcon></PersonIcon>{' '}
                     <TextField
                         value={email}
                         onChange={handleChangeEmail}
                         style={marginStyle}
-                        label="Email"
-                        placeholder="Enter username"
+                        label="Tên đăng nhập"
                         fullWidth
                         required
                     />
@@ -64,23 +63,25 @@ const Login = () => {
                         value={password}
                         onChange={handleChangePassword}
                         style={marginStyle}
-                        label="Password"
+                        label="Mật khẩu"
                         type="password"
-                        placeholder="Enter password"
                         fullWidth
                         required
                     />
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Remember password" />
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
                         <Typography style={marginStyle}>
-                            <Link href="#">Forgot password ?</Link>
+                            <Link href="#">Quên mật khẩu ?</Link>
                         </Typography>
                     </Grid>
                     <Button variant="contained" type="submit" color="primary" fullWidth onClick={handleSubmit}>
-                        Sign In
+                        Đăng nhập
                     </Button>
                     <Typography style={marginStyle}>
-                        Do you have an account? <Link to="/signup">Sign up</Link>
+                        Bạn đã có tài khoản ?{' '}
+                        <Link style={{ color: 'blue' }} to="/signup">
+                            Đăng kí
+                        </Link>
                     </Typography>
                 </Paper>
             </Grid>

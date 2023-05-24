@@ -72,8 +72,8 @@ const Signup = () => {
                     <Avatar style={avatarStyle}>
                         <AddCircleOutlineIcon></AddCircleOutlineIcon>
                     </Avatar>
-                    <h1>Sign up</h1>
-                    <Typography variant="caption">Please fill in this form to create an account!</Typography>
+                    <h1>Đăng kí</h1>
+                    <Typography variant="caption">Vui lòng điền đầy đủ thông tin !</Typography>
                 </Grid>
                 <PersonIcon></PersonIcon>{' '}
                 <TextField
@@ -81,7 +81,7 @@ const Signup = () => {
                     onChange={handleChangeName}
                     style={{ marginBottom: '10px' }}
                     fullWidth
-                    label="Name"
+                    label="Họ & Tên"
                 ></TextField>
                 <TextField
                     value={email}
@@ -96,21 +96,21 @@ const Signup = () => {
                     onChange={handleChangePhone}
                     style={marginStyle}
                     fullWidth
-                    label="Phone number"
+                    label="Số điện thoại"
                 ></TextField>
                 <TextField
                     value={address}
                     onChange={handleChangeAddress}
                     style={marginStyle}
                     fullWidth
-                    label="Address"
+                    label="Địa chỉ"
                 ></TextField>
                 <TextField
                     value={password}
                     onChange={handleChangePassword}
                     style={marginStyle}
                     fullWidth
-                    label="Password"
+                    label="Mật khẩu"
                     type="password"
                 ></TextField>
                 <TextField
@@ -118,14 +118,17 @@ const Signup = () => {
                     onChange={handleChangeConfirmPassword}
                     style={marginStyle}
                     fullWidth
-                    label="Confirm Password"
+                    label="Nhập lại mật khẩu"
                     type="password"
                 ></TextField>
                 <Button style={codeStyle} fullWidth type="submit" variant="contained" onClick={handleSubmit}>
-                    Sign up
+                    Đăng kí
                 </Button>
                 <Typography style={marginStyle}>
-                    Already have an account? <Link to="/login">Sign In</Link>
+                    Đã có tài khoản?{' '}
+                    <Link style={{ color: 'blue' }} to="/login">
+                        Sign In
+                    </Link>
                 </Typography>
             </Paper>
         </Grid>
