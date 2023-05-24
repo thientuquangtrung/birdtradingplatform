@@ -21,6 +21,8 @@ const Login = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState('');
 
+    const { enqueueSnackbar } = useSnackbar();
+
     function handleChangeEmail(event) {
         setEmail(event.target.value);
     }
@@ -30,6 +32,22 @@ const Login = () => {
     function isEmpty(str) {
         return !str || str.length === 0;
     }
+
+    function handleSubmit() {
+        axiosClient
+            .post('auth/seller/login', {
+                email: email,
+                password: password,
+            })
+            .then(function (response) {
+                localStorage.setItem('access_token', response.data.meta.accessToken);
+                enqueueSnackbar('Welcome back!', { variant: 'info' });
+                navigate('/');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+      
     const validateAll = () => {
         const msg = {};
         if (isEmpty(email) || isEmpty(password)) {

@@ -86,6 +86,7 @@ const Signup = () => {
     function handleChangeConfirmPassword(event) {
         setConfirmPassword(event.target.value);
     }
+  
     const handleSubmit = () => {
         const isValidAll = validateAll();
         const isValidElement = validateElement();
