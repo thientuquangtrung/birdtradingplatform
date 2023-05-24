@@ -10,24 +10,25 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useRef, useState } from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import { useEffect, useRef, useState } from 'react';
+
 import axiosClient from '../../api/axiosClient';
+import CategoryList from '../../components/CategoryList';
 
 function NewProduct() {
     const [name, setName] = useState('');
-    const [categoryId, setCategoryId] = useState(1);
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
 
     const imageRef = useRef();
+    const categoryRef = useRef();
 
     function handleSubmit() {
         const image = imageRef.current.files[0];
 
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('categoryId', categoryId);
+        formData.append('categoryId', categoryRef.current.value);
         formData.append('price', price);
         formData.append('description', description);
         formData.append('image', image);
@@ -71,20 +72,7 @@ function NewProduct() {
                         variant="outlined"
                         sx={{ width: '100%' }}
                     />
-
-                    <TextField
-                        value={categoryId}
-                        onChange={(e) => setCategoryId(e.target.value)}
-                        id="outlined-select-currency"
-                        select
-                        label="Ngành hàng"
-                        defaultValue="EUR"
-                        sx={{ width: '100%' }}
-                    >
-                        <MenuItem>1</MenuItem>
-                        <MenuItem>2</MenuItem>
-                    </TextField>
-
+                    <CategoryList ref={categoryRef} />
                     <FormControl fullWidth>
                         <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
                         <OutlinedInput
