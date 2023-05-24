@@ -60,6 +60,7 @@ const Login = () => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    setCurrentUser(response.data.data);
                     enqueueSnackbar('Welcome back!', { variant: 'info' });
                     navigate('/');
                 })

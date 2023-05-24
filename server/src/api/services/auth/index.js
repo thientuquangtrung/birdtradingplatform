@@ -19,7 +19,7 @@ const getCurrentUser = async (id) => {
 
 // CRUD sellers
 
-const createSellerAccount = async ({ name, phone, email, address, password }) => {
+const createSellerAccount = async ({ name, phone, email, pickUpAddress, password }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
@@ -64,7 +64,7 @@ const readSellerById = async (id) => {
 
 const updateSeller = async (data) => {
     try {
-        const { name, email, password, phone, pickUpAddress, id, image } = data;
+        const { name, email, password, phone, pickUpAddress, id, image, description } = data;
 
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');

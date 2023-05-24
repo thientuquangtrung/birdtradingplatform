@@ -15,6 +15,16 @@ export default function UpdateShop() {
 
     const profileRef = useRef();
 
+    const isChange = () => {
+        return !(
+            currentUser.name !== name ||
+            currentUser.pickUpAddress !== pickUpAddress ||
+            currentUser.description !== description ||
+            currentUser.phone !== phone ||
+            profileRef.current?.files[0]
+        );
+    };
+
     function handleSubmit() {
         const profile = profileRef.current.files[0];
 
@@ -86,7 +96,7 @@ export default function UpdateShop() {
                 />
             </Stack>
             <Box mt={3}>
-                <Button onClick={handleSubmit} color="primary" variant="contained">
+                <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
                     Lưu
                 </Button>
             </Box>
