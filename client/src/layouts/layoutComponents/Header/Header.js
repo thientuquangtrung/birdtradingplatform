@@ -12,15 +12,16 @@ import {
 } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
 import Tippy from '@tippyjs/react/headless';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import Cart from '../../../components/Cart';
 import AvaText from '../../../components/AvaText';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../../contexts/AuthContext';
 
 function Header() {
     const ref = useRef();
 
-    const currentUser = false;
+    const { currentUser } = useContext(AuthContext);
 
     return (
         <AppBar position="sticky">
@@ -38,7 +39,7 @@ function Header() {
                             </Typography>
                         </Link>
                         {currentUser ? (
-                            <AvaText />
+                            <AvaText user={currentUser} />
                         ) : (
                             <Breadcrumbs separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
                                 <Typography variant="body2" sx={{ color: 'white' }}>

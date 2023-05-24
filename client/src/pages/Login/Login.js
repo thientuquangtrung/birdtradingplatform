@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Avatar, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { useSnackbar } from 'notistack';
+import AuthContext from '../../contexts/AuthContext';
 
 const Login = () => {
     // Destructure the handleChange prop
@@ -17,6 +18,8 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    const { setCurrentUser } = useContext(AuthContext);
     const [validationMsg, setValidationMsg] = useState('');
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState('');

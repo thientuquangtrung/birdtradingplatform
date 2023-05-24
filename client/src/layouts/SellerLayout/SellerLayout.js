@@ -1,8 +1,12 @@
 import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
+import { useContext } from 'react';
 import AvaText from '../../components/AvaText';
+import AuthContext from '../../contexts/AuthContext';
 import SellerSidebar from '../layoutComponents/SellerSidebar/SellerSidebar';
 
 function SellerLayout({ children }) {
+    const { currentUser } = useContext(AuthContext);
+
     return (
         <>
             <AppBar position="sticky">
@@ -14,7 +18,7 @@ function SellerLayout({ children }) {
                         </Typography>
                     </Stack>
                     <Box>
-                        <AvaText />
+                        <AvaText user={currentUser} />
                     </Box>
                 </Toolbar>
             </AppBar>
