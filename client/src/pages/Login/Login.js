@@ -9,12 +9,19 @@ import axiosClient from '../../api/axiosClient';
 
 const Login = () => {
     // Destructure the handleChange prop
+    const input = document.getElementById('btn');
+    input.addEventListener('keyup', (e) => {
+        if (e.keycode == 13) {
+            handleSubmit();
+        }
+    });
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [validationMsg, setValidationMsg] = useState('');
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -22,21 +29,37 @@ const Login = () => {
     function handleChangePassword(event) {
         setPassword(event.target.value);
     }
-
-    function handleSubmit() {
-        axiosClient
-            .post('auth/seller/login', {
-                email: email,
-                password: password,
-            })
-            .then(function (response) {
-                localStorage.setItem('access_token', response.data.meta.accessToken);
-                navigate('/');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    function isEmpty(str) {
+        return !str || str.length === 0;
     }
+    const validateAll = () => {
+        const msg = {};
+        if (isEmpty(email) || isEmpty(password)) {
+            msg.email = 'Vui lòng nhập lại tài khoản hoặc mật khẩu !';
+        }
+
+        setValidationMsg(msg);
+        if (Object.keys(msg).length > 0) return false;
+        return true;
+    };
+
+    const handleSubmit = () => {
+        const isValid = validateAll();
+        if (isValid) {
+            axiosClient
+                .post('auth/seller/login', {
+                    email: email,
+                    password: password,
+                })
+                .then(function (response) {
+                    localStorage.setItem('access_token', response.data.meta.accessToken);
+                    navigate('/');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    };
 
     return (
         <div>
@@ -66,19 +89,22 @@ const Login = () => {
                         fullWidth
                         required
                     />
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.email}
+                    </Typography>
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
                         <Typography style={marginStyle}>
                             <Link href="#">Quên mật khẩu ?</Link>
                         </Typography>
                     </Grid>
-                    <Button variant="contained" type="submit" color="primary" fullWidth onClick={handleSubmit}>
+                    <Button id="btn" variant="contained" type="button" color="primary" fullWidth onClick={handleSubmit}>
                         Đăng nhập
                     </Button>
                     <Typography style={marginStyle}>
                         Bạn đã có tài khoản ?{' '}
                         <Link style={{ color: 'blue' }} to="/signup">
-                            Đăng kí
+                            Đăng ký
                         </Link>
                     </Typography>
                 </Paper>
