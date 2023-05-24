@@ -21,7 +21,7 @@ const Login = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState('');
 
-    const { enqueueSnackbar } = useSnackbar();
+   
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
