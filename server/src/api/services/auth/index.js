@@ -3,9 +3,23 @@ const sql = require('mssql');
 const config = require('../../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 
+// get current user
+
+const getCurrentUser = async (id) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const currentUser = await pool.request().input('id', sql.VarChar, id).query(sqlQueries.getCurrentUser);
+
+        return currentUser.recordset[0];
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
 // CRUD sellers
 
-const createSellerAccount = async ({ name, phone, email, pickUpAddress, password }) => {
+const createSellerAccount = async ({ name, phone, email, address, password }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
@@ -92,4 +106,5 @@ module.exports = {
     readOneSeller,
     readSellerById,
     updateSeller,
+    getCurrentUser,
 };

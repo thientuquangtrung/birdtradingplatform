@@ -1,10 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { getLoginInfo } from '~/services/Auth/loginService';
-import { logoutCurrentUser } from '~/services/Auth/logoutService';
-import { getCurrentUser } from '~/services/currentUserService';
-import { signupAccount } from '~/services/Auth/signupService';
+import { login as _login, signup as _signup, getCurrentUser, logout as _logout } from '../services/auth.services';
 
 const { createContext, useState, useEffect } = require('react');
 
@@ -22,7 +19,10 @@ export const AuthContextProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 const res = await getCurrentUser(token);
-                setCurrentUser(res);
+                
+                if (res) {
+                    setCurrentUser(res);
+                }
             }
             setLoading(false);
         };
@@ -30,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
     }, []);
 
     const login = async (payload) => {
-        const res = await getLoginInfo(payload);
+        const res = await _login(payload);
 
         if (res) {
             localStorage.setItem('token', res.meta.token);
@@ -38,16 +38,12 @@ export const AuthContextProvider = ({ children }) => {
             const user = await getCurrentUser(res.meta.token);
             setCurrentUser(user);
 
-            if (document.getElementById('modals-root')) {
-                document.body.removeChild(document.getElementById('modals-root'));
-            }
-
             navigate('/');
         }
     };
 
     const logout = async () => {
-        const res = await logoutCurrentUser();
+        const res = await _logout();
 
         if (res.status === 204) {
             localStorage.removeItem('token');
@@ -57,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const signup = async (payload) => {
-        const res = await signupAccount(payload);
+        const res = await _signup(payload);
 
         if (res) {
             login(payload);
