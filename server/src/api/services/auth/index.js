@@ -50,12 +50,7 @@ const readSellerById = async (id) => {
 
 const updateSeller = async (data) => {
     try {
-<<<<<<< Updated upstream
-        const { name, email, password, phone, pickUpAddress, id, image } = data;
-=======
-
-        const { name, email, password, phone, pickUpAddress, id, image, description } = data
->>>>>>> Stashed changes
+        const { name, email, password, phone, pickUpAddress, id, image, description } = data;
 
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
