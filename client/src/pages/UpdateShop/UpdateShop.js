@@ -1,14 +1,17 @@
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
+import AuthContext from '../../contexts/AuthContext';
 
 export default function UpdateShop() {
+    const { currentUser } = useContext(AuthContext);
+
     // function UpdateShop() {
-    const [name, setName] = useState('');
-    const [pickUpAddress, setpickUpAddress] = useState('');
-    const [phone, setPhone] = useState('');
-    const [description, setDescription] = useState('');
+    const [name, setName] = useState(currentUser.name);
+    const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
+    const [phone, setPhone] = useState(currentUser.phone);
+    const [description, setDescription] = useState(currentUser.description);
 
     const profileRef = useRef();
 
@@ -21,9 +24,6 @@ export default function UpdateShop() {
         formData.append('phone', phone);
         formData.append('description', description);
         formData.append('profile', profile);
-
-        // //tam thoi
-        // formData.append('shopId', 'FE1A6EEC-B6E6-4E7E-8D64-28B77ED30C71');
 
         axiosClient
             .patch('/auth/seller/me', formData)
@@ -52,7 +52,7 @@ export default function UpdateShop() {
                 </Typography>
             </Box>
             <Stack direction="column" gap={3} width="500px">
-                <UploadImage rounded title="Select a logo" ref={profileRef} />
+                <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
                 <TextField
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -63,7 +63,7 @@ export default function UpdateShop() {
                 />
                 <TextField
                     value={pickUpAddress}
-                    onChange={(e) => setpickUpAddress(e.target.value)}
+                    onChange={(e) => setPickUpAddress(e.target.value)}
                     id="outlined-search"
                     label="Địa chỉ"
                     type="search"
@@ -77,7 +77,7 @@ export default function UpdateShop() {
                     type="search"
                     variant="outlined"
                 />
-                <TextField id="outlined-search" type="search" variant="outlined" value="trung@gmail.com" disabled />
+                <TextField id="outlined-search" type="search" variant="outlined" value={currentUser.email} disabled />
                 <TextareaAutosize
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Stack } from '@mui/system';
 import { forwardRef } from 'react';
 
-function UploadImage({ inputName, rounded, reverse, title }, ref ) {
-    const [uploadFile, setUploadFile] = useState('');
+function UploadImage({ inputName, rounded, reverse, title, img }, ref) {
+    const [uploadFile, setUploadFile] = useState(img);
 
     const handleSelectFile = (e) => {
         const file = e.target.files[0];
@@ -16,7 +16,7 @@ function UploadImage({ inputName, rounded, reverse, title }, ref ) {
     };
 
     return (
-        <Stack direction={reverse ? 'row' : 'row-reverse'} alignItems="center" gap={2} justifyContent='center'>
+        <Stack direction={reverse ? 'row' : 'row-reverse'} alignItems="center" gap={2} justifyContent="center">
             <Stack
                 justifyContent="center"
                 sx={{
@@ -33,7 +33,7 @@ function UploadImage({ inputName, rounded, reverse, title }, ref ) {
                 )}
             </Stack>
             <Button variant="outlined" component="label" color="primary" startIcon={<FileUpload />}>
-                {title ? title : "Upload a file"}
+                {title ? title : 'Upload a file'}
                 <input ref={ref} type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
             </Button>
         </Stack>

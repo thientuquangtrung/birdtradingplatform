@@ -9,7 +9,7 @@ const getCurrentUser = async (id) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const currentUser = await pool.request().input('id', sql.VarChar, id).query(sqlQueries.getCurrentUser);
+        const currentUser = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.getCurrentUser);
 
         return currentUser.recordset[0];
     } catch (error) {

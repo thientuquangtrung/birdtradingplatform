@@ -1,15 +1,9 @@
-import {
-    Avatar,
-    Box,
-    Stack,
-    Typography,
-} from '@mui/material';
+import { Avatar, Box, Stack, Typography } from '@mui/material';
 import PersonalInfo from './PersonalInfo';
 import Tippy from '@tippyjs/react/headless';
 import { useRef } from 'react';
 
-function AvaText() {
-
+function AvaText({ user }) {
     const _ref = useRef();
 
     return (
@@ -23,14 +17,10 @@ function AvaText() {
             )}
         >
             <Stack ref={_ref} direction="row" spacing={1} alignItems="center">
-                <Avatar
-                    sx={{ width: 26, height: 26 }}
-                    alt="Remy Sharp"
-                    src="https://mui.com/static/images/avatar/2.jpg"
-                />
+                <Avatar sx={{ width: 26, height: 26 }} alt="Remy Sharp" src={user.image} />
 
                 <Typography variant="body2" component="span">
-                    trungdeptrai
+                    {user.name}
                 </Typography>
             </Stack>
         </Tippy>

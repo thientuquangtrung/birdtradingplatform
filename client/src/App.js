@@ -45,7 +45,7 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <CheckAuth>
+                                    <CheckAuth role={route.role}>
                                         <Layout>
                                             <Page />
                                         </Layout>

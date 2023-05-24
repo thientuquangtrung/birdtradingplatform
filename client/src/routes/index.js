@@ -17,13 +17,13 @@ const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
     { path: '/login', component: Login, layout: AuthLayout },
     { path: '/signup', component: Signup, layout: AuthLayout },
+    { path: '/product/detail', component: ProductDetail, layout: DefaultLayout },
 ];
 
 const privateRoutes = [
-    { path: '/shop/profile', component: UpdateShop, layout: SellerLayout },
-    { path: '/product/new', component: NewProduct, layout: SellerLayout },
-    { path: '/product/list/all', component: ListProduct, layout: SellerLayout },
-    { path: '/product/detail', component: ProductDetail, layout: DefaultLayout },
+    { path: '/shop/profile', component: UpdateShop, layout: SellerLayout, role: ['SELLER'] },
+    { path: '/product/new', component: NewProduct, layout: SellerLayout, role: ['SELLER'] },
+    { path: '/product/list/all', component: ListProduct, layout: SellerLayout, role: ['SELLER'] },
 ];
 
 export { publicRoutes, privateRoutes };

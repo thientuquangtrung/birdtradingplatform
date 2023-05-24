@@ -12,9 +12,12 @@ const getCurrentUser = async (req, res, next) => {
 
         delete currentUser.password;
 
-        return res.send(currentUser);
+        return res.send({
+            ...currentUser,
+            image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
+        });
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -30,7 +33,7 @@ const createSellerAccount = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -42,24 +45,26 @@ const updateSeller = async (req, res, next) => {
         }
 
         const seller = await authData.readSellerById(id);
-        if (seller.image) {
-            await fs.remove(`${process.cwd()}/public/images/profile/${seller.image}`);
+        const updatedSeller = Object.assign(seller, req.body);
+
+        if (req.file) {
+            if (seller.image) {
+                await fs.remove(`${process.cwd()}/public/images/profile/${seller.image}`);
+            }
+
+            updatedSeller.image = req.file.filename;
         }
-        const updatedSeller = Object.assign(seller, {
-            ...req.body,
-            image: req.file.filename,
-        });
 
         const response = await authData.updateSeller(updatedSeller);
 
         return res.send({
             data: {
                 ...response,
-                image: `${process.env.HOST_URL}/profile/${req.file.filename}`,
+                image: `${process.env.HOST_URL}/profile/${response.image}`,
             },
         });
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -79,11 +84,15 @@ const sellerLogin = async (req, res, next) => {
             return next(createError.Unauthorized('Incorrect password'));
         }
 
+        if (seller.image) {
+            seller.image = `${process.env.HOST_URL}/profile/${seller.image}`;
+        }
+
         const response = await modifyUserInfo(seller);
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 

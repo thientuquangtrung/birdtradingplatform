@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
+import AuthContext from '../../contexts/AuthContext';
 
 const Signup = () => {
     const paperStyle = { padding: 20, width: 600, height: '88vh', margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
+
+    const { setCurrentUser } = useContext(AuthContext);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -101,6 +104,7 @@ const Signup = () => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                setCurrentUser(response.data.data);
 
                     navigate('/');
                 })
