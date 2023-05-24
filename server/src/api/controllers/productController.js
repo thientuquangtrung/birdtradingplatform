@@ -11,7 +11,7 @@ const getProducts = async (req, res, next) => {
 
         return res.send(list);
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -23,7 +23,7 @@ const getProductById = async (req, res, next) => {
 
         return res.send(product);
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -37,7 +37,7 @@ const getProductsOfSeller = async (req, res, next) => {
 
         return res.send(list);
     } catch (error) {
-        next(createError(error.status, error.message));
+        next(createError(error.message));
     }
 };
 
@@ -45,6 +45,7 @@ const createProduct = async (req, res, next) => {
     try {
         const data = {
             ...req.body,
+            shopId: req.payload.id,
             image: req.file.filename,
         };
         const created = await productData.createProduct(data);

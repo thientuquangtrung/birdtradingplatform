@@ -6,5 +6,5 @@ FROM Account
 WHERE [email] = @email 
 ORDER BY id DESC
 
-Insert Seller ([id], [pickUpAddress]) values(@id, @address) 
+Insert Seller ([id], [pickUpAddress]) values(@id, @pickUpAddress)
 Select a.*, s.pickUpAddress, s.description from account a, Seller s where a.email = @email and a.id = s.id 
