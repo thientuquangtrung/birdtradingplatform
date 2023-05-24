@@ -4,6 +4,7 @@ import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/materia
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
+import handleError from '../../utils/handleError';
 
 const Signup = () => {
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
@@ -13,7 +14,7 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [pickUpAddress, setPickUpAdress] = useState('');
+    const [pickUpAddress, setPickUpAddress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -29,7 +30,7 @@ const Signup = () => {
         setPhone(event.target.value);
     }
     function handleChangeAddress(event) {
-        setPickUpAdress(event.target.value);
+        setPickUpAddress(event.target.value);
     }
     function handleChangePassword(event) {
         setPassword(event.target.value);
@@ -51,7 +52,7 @@ const Signup = () => {
                 navigate('/');
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }
 

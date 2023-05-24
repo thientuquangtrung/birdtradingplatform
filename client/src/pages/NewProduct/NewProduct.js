@@ -10,8 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useEffect, useRef, useState } from 'react';
-
+import { useRef, useState } from 'react';
+import handleError from '../../utils/handleError';
 import axiosClient from '../../api/axiosClient';
 import CategoryList from '../../components/CategoryList';
 
@@ -19,16 +19,16 @@ function NewProduct() {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
+    const [categoryId, setCategoryId] = useState('');
 
     const imageRef = useRef();
-    const categoryRef = useRef();
 
     function handleSubmit() {
         const image = imageRef.current.files[0];
 
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('categoryId', categoryRef.current.value);
+        formData.append('categoryId', categoryId);
         formData.append('price', price);
         formData.append('description', description);
         formData.append('image', image);
@@ -40,7 +40,7 @@ function NewProduct() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }
 
@@ -72,7 +72,7 @@ function NewProduct() {
                         variant="outlined"
                         sx={{ width: '100%' }}
                     />
-                    <CategoryList ref={categoryRef} />
+                    <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
                     <FormControl fullWidth>
                         <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
                         <OutlinedInput

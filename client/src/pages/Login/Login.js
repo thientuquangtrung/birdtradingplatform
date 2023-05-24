@@ -6,6 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
+import { useSnackbar } from 'notistack';
 
 const Login = () => {
     // Destructure the handleChange prop
@@ -15,6 +16,8 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -31,6 +34,7 @@ const Login = () => {
             })
             .then(function (response) {
                 localStorage.setItem('access_token', response.data.meta.accessToken);
+                enqueueSnackbar('Welcome back!', { variant: 'info' });
                 navigate('/');
             })
             .catch(function (error) {
