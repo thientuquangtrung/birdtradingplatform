@@ -1,15 +1,14 @@
+import React, { useState, useRef } from 'react';
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
-import { useRef, useState } from 'react';
 
 export default function UpdateShop() {
-    // function UpdateShop() {
     const [name, setName] = useState('');
-    const [pickUpAddress, setpickUpAddress] = useState('');
+    const [pickUpAddress, setPickUpAddress] = useState('');
     const [phone, setPhone] = useState('');
     const [description, setDescription] = useState('');
-
+    const [updateStatus, setUpdateStatus] = useState(null);
     const profileRef = useRef();
 
     function handleSubmit() {
@@ -22,19 +21,17 @@ export default function UpdateShop() {
         formData.append('description', description);
         formData.append('profile', profile);
 
-        // //tam thoi
-        // formData.append('shopId', 'FE1A6EEC-B6E6-4E7E-8D64-28B77ED30C71');
-
         axiosClient
             .patch('/auth/seller/me', formData)
             .then((response) => {
+                setUpdateStatus('success');
                 console.log(response);
             })
             .catch((error) => {
+                setUpdateStatus('failure');
                 console.log(error);
             });
     }
-    // }
 
     return (
         <Paper
@@ -63,7 +60,7 @@ export default function UpdateShop() {
                 />
                 <TextField
                     value={pickUpAddress}
-                    onChange={(e) => setpickUpAddress(e.target.value)}
+                    onChange={(e) => setPickUpAddress(e.target.value)}
                     id="outlined-search"
                     label="Địa chỉ"
                     type="search"
@@ -90,6 +87,16 @@ export default function UpdateShop() {
                     Lưu
                 </Button>
             </Box>
+            {updateStatus === 'success' && (
+                <div>
+                    <p>Đã cập nhật thành công!</p>
+                </div>
+            )}
+            {updateStatus === 'failure' && (
+                <div>
+                    <p>Có lỗi xảy ra trong quá trình cập nhật.</p>
+                </div>
+            )}
         </Paper>
     );
 }
