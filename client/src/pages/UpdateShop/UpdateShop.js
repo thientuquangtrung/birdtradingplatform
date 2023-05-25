@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
 
-import { useContext, useRef, useState } from 'react';
 import AuthContext from '../../contexts/AuthContext';
 
 export default function UpdateShop() {
@@ -15,7 +14,6 @@ export default function UpdateShop() {
     const [phone, setPhone] = useState(currentUser.phone);
     const [description, setDescription] = useState(currentUser.description);
     const [updateStatus, setUpdateStatus] = useState(currentUser.updateStatus);
-
 
     const profileRef = useRef();
 
