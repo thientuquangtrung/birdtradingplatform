@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import axiosClient from '../api/axiosClient';
-import handleError from '../utils/handleError';
+// import handleError from '../utils/handleError';
 import { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
@@ -21,7 +21,7 @@ export const AuthContextProvider = ({ children }) => {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    handleError(error);
+                    console.log(error);
                     setLoading(false);
                 });
         } else {

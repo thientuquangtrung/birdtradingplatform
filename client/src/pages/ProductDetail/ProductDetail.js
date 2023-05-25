@@ -8,8 +8,8 @@ import TextField from '@mui/material/TextField';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
 import axiosClient from '../../api/axiosClient';
+import handleError from '../../utils/handleError';
 
 function ProductDetail() {
     const { id } = useParams();
@@ -24,7 +24,7 @@ function ProductDetail() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }, []);
     return (
@@ -51,13 +51,15 @@ function ProductDetail() {
                         sx={{ width: '20%' }}
                     />
 
-                    <Button
-                        variant="contained"
-                        startIcon={<AddShoppingCartIcon />}
-                        sx={{ width: '40%', color: '#fff', backgroundColor: '#1976d2' }}
-                    >
-                        Thêm vào giỏ hàng
-                    </Button>
+                    <Box>
+                        <Button
+                            variant="contained"
+                            startIcon={<AddShoppingCartIcon />}
+                            sx={{ color: '#fff', backgroundColor: '#1976d2' }}
+                        >
+                            Thêm vào giỏ hàng
+                        </Button>
+                    </Box>
                 </Stack>
             </Box>
         </Paper>

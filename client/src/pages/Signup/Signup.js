@@ -8,7 +8,7 @@ import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 
 const Signup = () => {
-    const paperStyle = { padding: 20, width: 600, height: '88vh', margin: '20px auto' };
+    const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
 
@@ -133,10 +133,10 @@ const Signup = () => {
                         <AddCircleOutlineIcon></AddCircleOutlineIcon>
                     </Avatar>
                     <h1 style={{ margin: '0' }}>Đăng ký</h1>
-                    {/* <Typography variant="caption">Vui lòng điền vào form này !</Typography> */}
                 </Grid>
                 <PersonIcon></PersonIcon>{' '}
                 <TextField
+                    required
                     value={name}
                     onChange={handleChangeName}
                     style={{ marginBottom: '10px' }}
@@ -145,6 +145,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={email}
                     onChange={handleChangeEmail}
                     style={marginStyle}
@@ -155,6 +156,7 @@ const Signup = () => {
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.email}</Typography>
                 <TextField
+                    required
                     value={phone}
                     onChange={handleChangePhone}
                     style={marginStyle}
@@ -164,6 +166,7 @@ const Signup = () => {
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.phone}</Typography>
                 <TextField
+                    required
                     value={pickUpAddress}
                     onChange={handleChangeAddress}
                     style={marginStyle}
@@ -172,6 +175,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={password}
                     onChange={handleChangePassword}
                     style={marginStyle}
@@ -182,6 +186,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={confirmPassword}
                     onChange={handleChangeConfirmPassword}
                     style={marginStyle}

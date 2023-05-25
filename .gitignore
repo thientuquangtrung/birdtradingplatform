@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+#static
+/server/public/images
+
 # production
 /client/build
 /server/build
