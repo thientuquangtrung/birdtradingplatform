@@ -88,7 +88,7 @@ export default function UpdateShop() {
                     Hồ Sơ Shop
                 </Typography>
             </Box>
-            <Stack direction="column" gap={3} width="500px">
+            <Stack direction="column" gap={3} width="50%">
                 <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
                 <TextField
                     value={name}
@@ -127,8 +127,12 @@ export default function UpdateShop() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     minRows={5}
-                    placeholder="Mô tả shop"
-                    style={{ fontFamily: 'roboto', fontSize: '15px' }}
+                    placeholder="Nhập thông tin mô tả shop"
+                    style={{
+                        padding: 10,
+                        fontSize: 16,
+                        fontFamily: 'Roboto',
+                    }}
                 />
             </Stack>
             <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px', marginTop: '5px' }}>

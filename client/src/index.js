@@ -16,7 +16,7 @@ root.render(
                 action={(snackbarId) => <Clear color="white" onClick={() => closeSnackbar(snackbarId)} />}
                 anchorOrigin={{
                     vertical: 'top',
-                    horizontal: 'right',
+                    horizontal: 'center',
                 }}
             >
                 <AuthContextProvider>

@@ -12,7 +12,7 @@ import axiosClient from '../../api/axiosClient';
 
 function ListProduct() {
     const [categoryId, setCategoryId] = useState('');
-    const [listProduct, setListProduct] = useState('');
+    const [listProduct, setListProduct] = useState([]);
 
     useEffect(() => {
         axiosClient
@@ -37,7 +37,7 @@ function ListProduct() {
                     justifyContent: 'center',
                 }}
             >
-                <Stack direction="column" gap={3} alignItems="center" width="500px">
+                <Stack direction="column" gap={3} alignItems="center" width="50%">
                     <TextField
                         id="outlined-search"
                         label="Tên sản phẩm"

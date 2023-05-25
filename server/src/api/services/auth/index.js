@@ -31,7 +31,6 @@ const createSellerAccount = async ({ name, phone, email, pickUpAddress, password
             .input('pickUpAddress', sql.NVarChar, pickUpAddress)
             .input('password', sql.Char, password)
             .query(sqlQueries.createSellerAccount);
-
         return createdAccount.recordset[0];
     } catch (error) {
         throw createError(error);
