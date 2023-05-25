@@ -11,13 +11,14 @@ export default function UpdateShop() {
     const { currentUser } = useContext(AuthContext);
 
     // function UpdateShop() {
+    const phoneformat = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
     const [name, setName] = useState(currentUser.name);
     const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
     const [phone, setPhone] = useState(currentUser.phone);
     const [description, setDescription] = useState(currentUser.description);
-
+    const [validationMsg, setValidationMsg] = useState('');
     const profileRef = useRef();
-
+    const [message, setMessage] = useState('');
     const isChange = () => {
         return !(
             currentUser.name !== name ||
@@ -26,6 +27,27 @@ export default function UpdateShop() {
             currentUser.phone !== phone ||
             profileRef.current?.files[0]
         );
+    };
+    function isEmpty(str) {
+        return !str || str.length === 0;
+    }
+    const validateAll = () => {
+        const msg = {};
+        if (isEmpty(name) || isEmpty(pickUpAddress) || isEmpty(phone)) {
+            msg.name = 'Vui lòng nhập đầy đủ thông tin !';
+        }
+        setValidationMsg(msg);
+        if (Object.keys(msg).length > 0) return false;
+        return true;
+    };
+    const validateElement = () => {
+        const message = {};
+        if (!phoneformat.test(phone)) {
+            message.phone = 'Nhập sai định dạng số điện thoại';
+        }
+        setMessage(message);
+        if (Object.keys(message).length > 0) return false;
+        return true;
     };
 
     function handleSubmit() {
@@ -37,15 +59,18 @@ export default function UpdateShop() {
         formData.append('phone', phone);
         formData.append('description', description);
         formData.append('profile', profile);
-
-        axiosClient
-            .patch('/auth/seller/me', formData)
-            .then((response) => {
-                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-            })
-            .catch((error) => {
-                handleError(error);
-            });
+        const isValid = validateAll();
+        const isValidElement = validateElement();
+        if (isValid && isValidElement) {
+            axiosClient
+                .patch('/auth/seller/me', formData)
+                .then((response) => {
+                    enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+                })
+                .catch((error) => {
+                    handleError(error);
+                });
+        }
     }
 
     return (
@@ -72,6 +97,7 @@ export default function UpdateShop() {
                     label="Tên Shop"
                     type="search"
                     variant="outlined"
+                    required
                 />
                 <TextField
                     value={pickUpAddress}
@@ -80,38 +106,39 @@ export default function UpdateShop() {
                     label="Địa chỉ"
                     type="search"
                     variant="outlined"
+                    required
                 />
                 <TextField
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     id="outlined-search"
                     label="Số điện thoại"
-                    type="search"
                     variant="outlined"
+                    margin="0"
+                    required
                 />
+                {message.phone && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {message.phone}
+                    </Typography>
+                )}
                 <TextField id="outlined-search" type="search" variant="outlined" value={currentUser.email} disabled />
                 <TextareaAutosize
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     minRows={5}
-                    placeholder="nhập thông tin mô tả shop"
+                    placeholder="Mô tả shop"
+                    style={{ fontFamily: 'roboto', fontSize: '15px' }}
                 />
             </Stack>
-            <Box mt={3}>
+            <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px', marginTop: '5px' }}>
+                {validationMsg.name}
+            </Typography>
+            <Box>
                 <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
                     Lưu
                 </Button>
             </Box>
-            {/* {updateStatus === 'success' && (
-                <div>
-                    <p>Đã cập nhật thành công!</p>
-                </div>
-            )}
-            {updateStatus === 'failure' && (
-                <div>
-                    <p>Có lỗi xảy ra trong quá trình cập nhật.</p>
-                </div>
-            )} */}
         </Paper>
     );
 }
