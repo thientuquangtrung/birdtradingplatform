@@ -2,14 +2,30 @@ import React, { useState, useRef } from 'react';
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
+import { useContext, updateStatus } from 'react';
+import AuthContext from '../../contexts/AuthContext';
 
 export default function UpdateShop() {
-    const [name, setName] = useState('');
-    const [pickUpAddress, setPickUpAddress] = useState('');
-    const [phone, setPhone] = useState('');
-    const [description, setDescription] = useState('');
-    const [updateStatus, setUpdateStatus] = useState(null);
+    const { currentUser } = useContext(AuthContext);
+
+    // function UpdateShop() {
+    const [name, setName] = useState(currentUser.name);
+    const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
+    const [phone, setPhone] = useState(currentUser.phone);
+    const [description, setDescription] = useState(currentUser.description);
+    const [updateStatus, setUpdateStatus] = useState(currentUser.updateStatus);
+
     const profileRef = useRef();
+
+    const isChange = () => {
+        return !(
+            currentUser.name !== name ||
+            currentUser.pickUpAddress !== pickUpAddress ||
+            currentUser.description !== description ||
+            currentUser.phone !== phone ||
+            profileRef.current?.files[0]
+        );
+    };
 
     function handleSubmit() {
         const profile = profileRef.current.files[0];
@@ -49,7 +65,7 @@ export default function UpdateShop() {
                 </Typography>
             </Box>
             <Stack direction="column" gap={3} width="500px">
-                <UploadImage rounded title="Select a logo" ref={profileRef} />
+                <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
                 <TextField
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -74,7 +90,7 @@ export default function UpdateShop() {
                     type="search"
                     variant="outlined"
                 />
-                <TextField id="outlined-search" type="search" variant="outlined" value="trung@gmail.com" disabled />
+                <TextField id="outlined-search" type="search" variant="outlined" value={currentUser.email} disabled />
                 <TextareaAutosize
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -83,7 +99,7 @@ export default function UpdateShop() {
                 />
             </Stack>
             <Box mt={3}>
-                <Button onClick={handleSubmit} color="primary" variant="contained">
+                <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
                     Lưu
                 </Button>
             </Box>
