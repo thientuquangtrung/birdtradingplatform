@@ -4,6 +4,8 @@ import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
 
 import AuthContext from '../../contexts/AuthContext';
+import { enqueueSnackbar } from 'notistack';
+import handleError from '../../utils/handleError';
 
 export default function UpdateShop() {
     const { currentUser } = useContext(AuthContext);
@@ -13,7 +15,6 @@ export default function UpdateShop() {
     const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
     const [phone, setPhone] = useState(currentUser.phone);
     const [description, setDescription] = useState(currentUser.description);
-    const [updateStatus, setUpdateStatus] = useState(currentUser.updateStatus);
 
     const profileRef = useRef();
 
@@ -40,12 +41,10 @@ export default function UpdateShop() {
         axiosClient
             .patch('/auth/seller/me', formData)
             .then((response) => {
-                setUpdateStatus('success');
-                console.log(response);
+                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
             })
             .catch((error) => {
-                setUpdateStatus('failure');
-                console.log(error);
+                handleError(error);
             });
     }
 
@@ -103,7 +102,7 @@ export default function UpdateShop() {
                     Lưu
                 </Button>
             </Box>
-            {updateStatus === 'success' && (
+            {/* {updateStatus === 'success' && (
                 <div>
                     <p>Đã cập nhật thành công!</p>
                 </div>
@@ -112,7 +111,7 @@ export default function UpdateShop() {
                 <div>
                     <p>Có lỗi xảy ra trong quá trình cập nhật.</p>
                 </div>
-            )}
+            )} */}
         </Paper>
     );
 }
