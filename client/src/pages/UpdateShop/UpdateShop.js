@@ -1,6 +1,8 @@
+import React, { useState, useRef } from 'react';
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
+
 import { useContext, useRef, useState } from 'react';
 import AuthContext from '../../contexts/AuthContext';
 
@@ -12,6 +14,8 @@ export default function UpdateShop() {
     const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
     const [phone, setPhone] = useState(currentUser.phone);
     const [description, setDescription] = useState(currentUser.description);
+    const [updateStatus, setUpdateStatus] = useState(currentUser.updateStatus);
+
 
     const profileRef = useRef();
 
@@ -38,13 +42,14 @@ export default function UpdateShop() {
         axiosClient
             .patch('/auth/seller/me', formData)
             .then((response) => {
+                setUpdateStatus('success');
                 console.log(response);
             })
             .catch((error) => {
+                setUpdateStatus('failure');
                 console.log(error);
             });
     }
-    // }
 
     return (
         <Paper
@@ -100,6 +105,16 @@ export default function UpdateShop() {
                     Lưu
                 </Button>
             </Box>
+            {updateStatus === 'success' && (
+                <div>
+                    <p>Đã cập nhật thành công!</p>
+                </div>
+            )}
+            {updateStatus === 'failure' && (
+                <div>
+                    <p>Có lỗi xảy ra trong quá trình cập nhật.</p>
+                </div>
+            )}
         </Paper>
     );
 }

@@ -11,9 +11,9 @@ export const AuthContextProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         const accessToken = localStorage.getItem('access_token');
         if (accessToken) {
-            setLoading(true);
             axiosClient
                 .get('auth/me')
                 .then((response) => {
@@ -24,13 +24,15 @@ export const AuthContextProvider = ({ children }) => {
                     handleError(error);
                     setLoading(false);
                 });
+        } else {
+            setLoading(false);
         }
     }, []);
 
-    return (
-        !loading && (
-            <AuthContext.Provider value={{ setCurrentUser, currentUser, loading }}>{children}</AuthContext.Provider>
-        )
+    return !loading ? (
+        <AuthContext.Provider value={{ setCurrentUser, currentUser, loading }}>{children}</AuthContext.Provider>
+    ) : (
+        <></>
     );
 };
 
