@@ -7,10 +7,25 @@ import ProductTable from '../../components/ProductTable';
 import { Stack } from '@mui/system';
 import { Link } from 'react-router-dom';
 import CategoryList from '../../components/CategoryList';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axiosClient from '../../api/axiosClient';
 
 function ListProduct() {
     const [categoryId, setCategoryId] = useState('');
+    const [listProduct, setListProduct] = useState('');
+
+    useEffect(() => {
+        axiosClient
+            .get('seller/product')
+            .then(function (response) {
+                // handle success
+                setListProduct(response.data);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    }, []);
 
     return (
         <Box margin={3}>
@@ -49,7 +64,7 @@ function ListProduct() {
                     </Button>
                 </Link>
 
-                <ProductTable />
+                <ProductTable rows={listProduct} />
             </Paper>
         </Box>
     );

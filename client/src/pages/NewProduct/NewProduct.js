@@ -11,15 +11,19 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import handleError from '../../utils/handleError';
 import axiosClient from '../../api/axiosClient';
 import CategoryList from '../../components/CategoryList';
+import { enqueueSnackbar } from 'notistack';
 
 function NewProduct() {
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
+
+    const navigate = useNavigate();
 
     const imageRef = useRef();
 
@@ -40,7 +44,8 @@ function NewProduct() {
             .post('seller/product', formData)
             .then(function (response) {
                 // handle success
-                console.log(response);
+                enqueueSnackbar('Sản phẩm được thêm thành công!', { variant: 'success' });
+                navigate('/product/list/all');
             })
             .catch(function (error) {
                 // handle error
@@ -95,7 +100,7 @@ function NewProduct() {
                         aria-label="minimum height"
                         placeholder=" Mô tả"
                         minRows={3}
-                        style={{ width: '100%', fontSize: 16, padding: 3 }}
+                        style={{ width: '100%', fontSize: 16, padding: 3, fontFamily: 'Roboto' }}
                     />
 
                     <Button disabled={isFullfilled()} variant="contained" color="success" onClick={handleSubmit}>

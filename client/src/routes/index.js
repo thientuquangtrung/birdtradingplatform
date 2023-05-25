@@ -17,7 +17,7 @@ const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout },
     { path: '/login', component: Login, layout: AuthLayout },
     { path: '/signup', component: Signup, layout: AuthLayout },
-    { path: '/product/detail', component: ProductDetail, layout: DefaultLayout },
+    { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout },
 ];
 
 const privateRoutes = [
