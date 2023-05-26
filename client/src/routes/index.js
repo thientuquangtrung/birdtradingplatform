@@ -11,19 +11,22 @@ import UpdateShop from '../pages/UpdateShop/UpdateShop.js';
 import NewProduct from '../pages/NewProduct/NewProduct';
 import ListProduct from '../pages/ListProduct/ListProduct';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';
+import SellerLogin from '../pages/Login/SellerLogin';
+import SellerSignup from '../pages/Signup/SellerSignup';
 
 // Public routes
 const publicRoutes = [
-    { path: '/', component: Home, layout: DefaultLayout },
-    { path: '/login', component: Login, layout: AuthLayout },
-    { path: '/signup', component: Signup, layout: AuthLayout },
-    { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout },
+    { path: '/', component: Home, layout: DefaultLayout, subdomain: 'common' },
+    { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
+    { path: '/signup', component: SellerSignup, layout: AuthLayout, subdomain: 'seller' },
+    { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
 ];
 
 const privateRoutes = [
-    { path: '/shop/profile', component: UpdateShop, layout: SellerLayout, role: ['SELLER'] },
-    { path: '/product/new', component: NewProduct, layout: SellerLayout, role: ['SELLER'] },
-    { path: '/product/list/all', component: ListProduct, layout: SellerLayout, role: ['SELLER'] },
+    { path: '/shop/profile', component: UpdateShop, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
+    { path: '/', component: UpdateShop, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' }, //homepage of seller
+    { path: '/product/new', component: NewProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
+    { path: '/product/list/all', component: ListProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
 ];
 
 export { publicRoutes, privateRoutes };

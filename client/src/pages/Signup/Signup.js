@@ -7,7 +7,7 @@ import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 
-const Signup = () => {
+const Signup = ({ role }) => {
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
@@ -95,7 +95,7 @@ const Signup = () => {
         const isValidElement = validateElement();
         if (isValidAll && isValidElement) {
             axiosClient
-                .post('auth/seller/register', {
+                .post(`auth/${role ? role : 'customer'}/register`, {
                     email: email,
                     name: name,
                     password: password,
