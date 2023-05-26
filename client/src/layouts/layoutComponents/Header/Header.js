@@ -1,35 +1,65 @@
-import { AppBar, Avatar, Box, Container, IconButton, InputBase, Menu, Stack, Toolbar, Typography } from '@mui/material';
+import {
+    AppBar,
+    Badge,
+    Box,
+    Breadcrumbs,
+    Container,
+    IconButton,
+    InputBase,
+    Stack,
+    Toolbar,
+    Typography,
+} from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
+import Tippy from '@tippyjs/react/headless';
+import { useContext, useRef } from 'react';
+import Cart from '../../../components/Cart';
+import AvaText from '../../../components/AvaText';
+import { Link } from 'react-router-dom';
+import AuthContext from '../../../contexts/AuthContext';
 
 function Header() {
+    const ref = useRef();
+
+    const { currentUser } = useContext(AuthContext);
+
     return (
         <AppBar position="sticky">
             <Toolbar>
                 <Container sx={{ padding: 3 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
-                        <Typography
-                            variant="body2"
-                            component="a"
-                            href="#"
-                            sx={{ color: 'white', textDecoration: 'none' }}
-                        >
-                            Kênh người bán
-                        </Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Avatar
-                                sx={{ width: 26, height: 26 }}
-                                alt="Remy Sharp"
-                                src="https://mui.com/static/images/avatar/2.jpg"
-                            />
-
-                            <Typography variant="body2" component="span">
-                                trungdeptrai
+                        <Link to="/shop/profile">
+                            <Typography
+                                variant="body2"
+                                component="span"
+                                href="#"
+                                sx={{ color: 'white', textDecoration: 'none' }}
+                            >
+                                Kênh người bán
                             </Typography>
-                        </Stack>
+                        </Link>
+                        {currentUser ? (
+                            <AvaText user={currentUser} />
+                        ) : (
+                            <Breadcrumbs separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
+                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                    <Link style={{ color: 'inherit' }} to="/login">
+                                        Login
+                                    </Link>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                    <Link style={{ color: 'inherit' }} to="/signup">
+                                        Signup
+                                    </Link>
+                                </Typography>
+                            </Breadcrumbs>
+                        )}
                     </Stack>
-                    <Stack direction="row" justifyContent="space-between">
-                        <Box flex={1}>LOGO</Box>
-                        <Stack bgcolor="white" direction="row" flex={5} borderRadius>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Box flex={1}>
+                            <img style={{ maxWidth: '88px' }} src="/assets/images/logo.png" alt="logo" />
+                        </Box>
+                        <Stack height={50} bgcolor="white" direction="row" flex={5} borderRadius>
                             <InputBase
                                 sx={{ ml: 1, flex: 1 }}
                                 placeholder="Search..."
@@ -40,7 +70,19 @@ function Header() {
                             </IconButton>
                         </Stack>
                         <Box flex={1} sx={{ textAlign: 'center' }}>
-                            <ShoppingCart sx={{ width: 40, height: 40 }} />
+                            <Tippy
+                                interactive
+                                placement="bottom-end"
+                                render={(attrs) => (
+                                    <Box tabIndex="-1" {...attrs}>
+                                        <Cart />
+                                    </Box>
+                                )}
+                            >
+                                <Badge badgeContent={4} color="error">
+                                    <ShoppingCart sx={{ width: 40, height: 40 }} ref={ref} />
+                                </Badge>
+                            </Tippy>
                         </Box>
                     </Stack>
                 </Container>
