@@ -9,7 +9,7 @@ import axiosClient from '../../api/axiosClient';
 import { useSnackbar } from 'notistack';
 import AuthContext from '../../contexts/AuthContext';
 
-const Login = () => {
+const Login = ({ role }) => {
     // Destructure the handleChange prop
 
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
@@ -54,7 +54,7 @@ const Login = () => {
         const isValid = validateAll();
         if (isValid) {
             axiosClient
-                .post('auth/seller/login', {
+                .post(`auth/${role ? role : 'customer'}/login`, {
                     email: email,
                     password: password,
                 })
@@ -62,7 +62,7 @@ const Login = () => {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
                     setCurrentUser(response.data.data);
                     enqueueSnackbar('Welcome back!', { variant: 'info' });
-                    navigate('/');
+                    navigate('/shop/profile');
                 })
                 .catch(function (error) {
                     setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');

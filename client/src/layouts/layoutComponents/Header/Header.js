@@ -28,7 +28,7 @@ function Header() {
             <Toolbar>
                 <Container sx={{ padding: 3 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
-                        <Link to="/shop/profile">
+                        <Link to={`${window.location.protocol}//seller.${window.location.host}/shop/profile`}>
                             <Typography
                                 variant="body2"
                                 component="span"
