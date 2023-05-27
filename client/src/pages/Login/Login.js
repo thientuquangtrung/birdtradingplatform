@@ -60,6 +60,7 @@ const Login = ({ role }) => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     enqueueSnackbar('Welcome back!', { variant: 'info' });
                     navigate('/shop/profile');
