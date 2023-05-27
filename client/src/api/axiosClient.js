@@ -23,9 +23,25 @@ axiosClient.interceptors.request.use(
 
 // Add a response interceptor
 axiosClient.interceptors.response.use(
-    function (response) {
+    async function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
+
+        const { status, message } = response.data;
+        if (status && status === 401) {
+            if (message && message === 'jwt expired') {
+                axiosClient.defaults.headers.common['x-token'] = localStorage.getItem('refresh_token');
+
+                const { accessToken } = await refreshToken();
+                if (accessToken) {
+                    response.config.headers['Authorization'] = `Bearer ${accessToken}`;
+                    localStorage.setItem('access_token', accessToken);
+
+                    return axiosClient(response.config);
+                }
+            }
+        }
+
         return response;
     },
     function (error) {
@@ -34,5 +50,7 @@ axiosClient.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+const refreshToken = async () => (await axiosClient.get('/refresh_token')).data;
 
 export default axiosClient;

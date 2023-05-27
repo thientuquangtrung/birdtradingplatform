@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
                     setLoading(false);
                 }
             }
+            setLoading(false);
         }
         fetchApi();
     }, []);

@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const authData = require('../services/auth');
 const { hashing, compareHashing } = require('../utils/hash_utils');
 const { modifyUserInfo } = require('../utils/response_modifiers');
+const { signAccessToken } = require('../utils/jwt_utils');
 
 const getCurrentUser = async (req, res, next) => {
     try {
@@ -15,6 +16,19 @@ const getCurrentUser = async (req, res, next) => {
         return res.send({
             ...currentUser,
             image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const getNewAccessToken = async (req, res, next) => {
+    try {
+        const id = req.payload.id;
+        const accessToken = await signAccessToken(id);
+
+        return res.send({
+            accessToken,
         });
     } catch (error) {
         next(createError(error.message));
@@ -101,4 +115,5 @@ module.exports = {
     sellerLogin,
     updateSeller,
     getCurrentUser,
+    getNewAccessToken,
 };

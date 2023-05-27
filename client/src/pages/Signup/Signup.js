@@ -104,6 +104,7 @@ const Signup = ({ role }) => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     navigate('/');
                     enqueueSnackbar('Welcome to BTP! Get your first order now.', { variant: 'info' });
