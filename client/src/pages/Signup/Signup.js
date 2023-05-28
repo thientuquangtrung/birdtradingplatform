@@ -7,8 +7,8 @@ import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 
-const Signup = () => {
-    const paperStyle = { padding: 20, width: 600, height: '88vh', margin: '20px auto' };
+const Signup = ({ role }) => {
+    const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
 
@@ -95,7 +95,7 @@ const Signup = () => {
         const isValidElement = validateElement();
         if (isValidAll && isValidElement) {
             axiosClient
-                .post('auth/seller/register', {
+                .post(`auth/${role ? role : 'customer'}/register`, {
                     email: email,
                     name: name,
                     password: password,
@@ -104,6 +104,7 @@ const Signup = () => {
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     navigate('/');
                     enqueueSnackbar('Welcome to BTP! Get your first order now.', { variant: 'info' });
@@ -133,10 +134,10 @@ const Signup = () => {
                         <AddCircleOutlineIcon></AddCircleOutlineIcon>
                     </Avatar>
                     <h1 style={{ margin: '0' }}>Đăng ký</h1>
-                    {/* <Typography variant="caption">Vui lòng điền vào form này !</Typography> */}
                 </Grid>
                 <PersonIcon></PersonIcon>{' '}
                 <TextField
+                    required
                     value={name}
                     onChange={handleChangeName}
                     style={{ marginBottom: '10px' }}
@@ -145,6 +146,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={email}
                     onChange={handleChangeEmail}
                     style={marginStyle}
@@ -155,6 +157,7 @@ const Signup = () => {
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.email}</Typography>
                 <TextField
+                    required
                     value={phone}
                     onChange={handleChangePhone}
                     style={marginStyle}
@@ -164,6 +167,7 @@ const Signup = () => {
                 ></TextField>
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.phone}</Typography>
                 <TextField
+                    required
                     value={pickUpAddress}
                     onChange={handleChangeAddress}
                     style={marginStyle}
@@ -172,6 +176,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={password}
                     onChange={handleChangePassword}
                     style={marginStyle}
@@ -182,6 +187,7 @@ const Signup = () => {
                     onKeyDown={handlePress}
                 ></TextField>
                 <TextField
+                    required
                     value={confirmPassword}
                     onChange={handleChangeConfirmPassword}
                     style={marginStyle}

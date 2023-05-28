@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import ProductCard from '../../components/ProductCard';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -9,15 +9,19 @@ import handleError from '../../utils/handleError';
 
 function Home() {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(function () {
+        setLoading(true);
         axiosClient
             .get('/product')
             .then((response) => {
                 setProducts(response.data);
+                setLoading(false);
             })
             .catch((error) => {
                 handleError(error);
+                setLoading(false);
             });
     }, []);
 
@@ -25,10 +29,16 @@ function Home() {
         <div className="App">
             <Container>
                 <Grid container spacing={1.5}>
-                    {products.length > 0 &&
+                    {loading ? (
+                        <Box sx={{ width: '100%', textAlign: 'center' }}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        products.length > 0 &&
                         products.map(function (product) {
                             return <ProductCard key={product.id} data={product} />;
-                        })}
+                        })
+                    )}
                 </Grid>
                 <Box
                     sx={{
