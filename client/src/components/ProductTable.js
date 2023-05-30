@@ -13,6 +13,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
+import { Chip } from '@mui/material';
 import axiosClient from '../api/axiosClient';
 import handleError from '../utils/handleError';
 import { enqueueSnackbar } from 'notistack';
@@ -94,9 +97,21 @@ const columns = [
     { field: 'price', headerName: 'Giá', width: 100 },
     { field: 'description', headerName: 'Mô tả', width: 200 },
     {
+        field: 'enabled',
+        headerName: 'Trạng thái',
+        width: 100,
+        renderCell: (rowData) => {
+            if (rowData.value === true) {
+                return <Chip icon={<DoneIcon />} label="active" variant="outlined" size="small" color="primary" />;
+            } else {
+                return <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" />;
+            }
+        },
+    },
+    {
         field: 'id',
         headerName: 'Thao tác',
-        width: 150,
+        width: 100,
         renderCell: (rowAction) => <Actions data={rowAction} />,
     },
 ];
