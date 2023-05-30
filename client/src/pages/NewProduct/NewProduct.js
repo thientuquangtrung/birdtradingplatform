@@ -74,6 +74,7 @@ function NewProduct() {
                         <UploadImage ref={imageRef} />
                     </Box>
                     <TextField
+                        required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         id="outlined-basic"
@@ -83,8 +84,11 @@ function NewProduct() {
                     />
                     <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
                     <FormControl fullWidth>
-                        <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
+                        <InputLabel required htmlFor="outlined-adornment-amount">
+                            Giá sản phẩm
+                        </InputLabel>
                         <OutlinedInput
+                            required
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                             id="outlined-adornment-amount"
@@ -95,10 +99,11 @@ function NewProduct() {
                     </FormControl>
 
                     <TextareaAutosize
+                        required
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         aria-label="minimum height"
-                        placeholder=" Mô tả"
+                        placeholder=" Mô tả *"
                         minRows={3}
                         style={{ width: '100%', fontSize: 16, padding: 3, fontFamily: 'Roboto' }}
                     />

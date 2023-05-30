@@ -24,8 +24,11 @@ function CategoryList({ categoryId, setCategoryId }, ref) {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Phân loại</InputLabel>
+            <InputLabel required id="demo-simple-select-label">
+                Phân loại
+            </InputLabel>
             <Select
+                required
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={categoryId}
