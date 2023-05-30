@@ -14,7 +14,7 @@ const {
     deleteProduct,
     searchProducts,
     getProductByCategory,
-    filterProducts
+    filterProducts,
 } = productController;
 
 const { verifyAccessToken } = require('../utils/jwt_utils');
@@ -29,7 +29,7 @@ router.get('/seller/product', verifyAccessToken, getProductsOfSeller);
 router.get('/seller/product/search', verifyAccessToken, searchSellerProducts);
 router.post('/seller/product', verifyAccessToken, uploadImg('product').single('image'), createProduct);
 router.patch('/seller/product', verifyAccessToken, uploadImg('product').single('image'), updateProduct);
-router.delete('/seller/product', verifyAccessToken, deleteProduct);
+router.delete('/seller/product/:id', verifyAccessToken, deleteProduct);
 
 module.exports = {
     routes: router,

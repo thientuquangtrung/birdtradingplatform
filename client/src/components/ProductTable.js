@@ -13,6 +13,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
+import axiosClient from '../api/axiosClient';
+import handleError from '../utils/handleError';
+import { enqueueSnackbar } from 'notistack';
 
 const Actions = ({ data }) => {
     const [open, setOpen] = useState(false);
@@ -23,6 +26,20 @@ const Actions = ({ data }) => {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleDelete = () => {
+        axiosClient
+            .delete(`seller/product/${data.value}`)
+            .then(function (response) {
+                // handle success
+                enqueueSnackbar('Đã xóa sản phẩm thành công', { variant: 'success' })
+                setOpen(false);
+            })
+            .catch(function (error) {
+                // handle error
+                handleError(error);
+            });
     };
 
     return (
@@ -54,7 +71,7 @@ const Actions = ({ data }) => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Không</Button>
-                        <Button onClick={handleClose} autoFocus>
+                        <Button onClick={handleDelete} autoFocus>
                             Có
                         </Button>
                     </DialogActions>

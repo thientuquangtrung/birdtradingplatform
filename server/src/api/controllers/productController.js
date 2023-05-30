@@ -142,7 +142,7 @@ const updateProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
     try {
         const shopId = req.payload.id;
-        const id = req.body.id;
+        const id = req.params.id;
 
         const deleted = await productData.deleteProduct(id, shopId);
 
