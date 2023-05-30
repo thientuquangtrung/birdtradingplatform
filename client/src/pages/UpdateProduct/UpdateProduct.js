@@ -10,22 +10,38 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import handleError from '../../utils/handleError';
 import axiosClient from '../../api/axiosClient';
 import CategoryList from '../../components/CategoryList';
 import { enqueueSnackbar } from 'notistack';
-import AuthContext from '../../contexts/AuthContext';
+import { useParams } from 'react-router-dom';
 
 function UpdateProduct() {
+    const { id } = useParams();
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState('');
+    const [categoryId, setCategoryId] = useState('');
+    const [image, setImage] = useState(null);
 
-    const { currentUser } = useContext(AuthContext);
-
-    const [name, setName] = useState(currentUser.name);
-    const [price, setPrice] = useState(currentUser.price);
-    const [description, setDescription] = useState(currentUser.description);
-    const [categoryId, setCategoryId] = useState(currentUser.categoryId);
+    useEffect(() => {
+        axiosClient
+            .get(`product/${id}`)
+            .then((response) => {
+                const product = response.data;
+                setCategoryId(product.categoryId);
+                setName(product.name);
+                setPrice(product.price);
+                setDescription(product.description);
+                setImage(product.image);
+            })
+            .catch(function (error) {
+                // handle error
+                handleError(error);
+            });
+    }, []);
 
     const navigate = useNavigate();
 
@@ -39,16 +55,19 @@ function UpdateProduct() {
         const image = imageRef.current.files[0];
 
         const formData = new FormData();
+        formData.append('id', id);
         formData.append('name', name);
         formData.append('categoryId', categoryId);
         formData.append('price', price);
         formData.append('description', description);
         formData.append('image', image);
+
         axiosClient
-            .post('seller/product', formData)
+            .patch('seller/product', formData)
             .then(function (response) {
                 // handle success
-                enqueueSnackbar('Sản phẩm được thêm thành công!', { variant: 'success' });
+
+                enqueueSnackbar('Sản phẩm được cập nhật thành công!', { variant: 'success' });
                 navigate('/product/list/all');
             })
             .catch(function (error) {
@@ -75,10 +94,10 @@ function UpdateProduct() {
                         <Typography variant="h6" gutterBottom>
                             Hình ảnh sản phẩm:
                         </Typography>
-                        <UploadImage ref={imageRef} img={currentUser.image}/>
+                        <UploadImage ref={imageRef} img={image} />
                     </Box>
                     <TextField
-                        value={currentUser.name}
+                        value={name}
                         onChange={(e) => setName(e.target.value)}
                         id="outlined-basic"
                         label="Tên sản phẩm"
@@ -89,7 +108,7 @@ function UpdateProduct() {
                     <FormControl fullWidth>
                         <InputLabel htmlFor="outlined-adornment-amount">Giá sản phẩm</InputLabel>
                         <OutlinedInput
-                            value={currentUser.price}
+                            value={price}
                             onChange={(e) => setPrice(e.target.value)}
                             id="outlined-adornment-amount"
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}

@@ -58,7 +58,7 @@ const updateSeller = async (req, res, next) => {
             return next(createError.InternalServerError('Cannot get id'));
         }
 
-        const seller = await authData.readSellerById(id);
+        const seller = await authData.readAccountById(id, 'seller');
         const updatedSeller = Object.assign(seller, req.body);
 
         if (req.file) {
