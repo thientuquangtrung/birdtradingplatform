@@ -9,16 +9,18 @@ import { Link } from 'react-router-dom';
 import CategoryList from '../../components/CategoryList';
 import { useState, useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
-import Typography from '@mui/material/Typography';
-import Autocomplete from '@mui/material/Autocomplete';
-
-import { Icon } from '@mui/material';
 
 function ListProduct() {
     const [categoryId, setCategoryId] = useState('');
     const [listProduct, setListProduct] = useState([]);
     const [productName, setProductName] = useState([]);
 
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearchProduct();
+        }
+    };
     useEffect(() => {
         axiosClient
             .get('seller/product')
@@ -36,9 +38,9 @@ function ListProduct() {
         axiosClient
             .get('seller/product/search', {
                 params: {
-                    categoryId: categoryId, 
-                    q : productName
-                }
+                    categoryId: categoryId,
+                    q: productName,
+                },
             })
             .then(function (response) {
                 // handle success
@@ -68,6 +70,7 @@ function ListProduct() {
                         sx={{ width: '100%' }}
                         onChange={(e) => setProductName(e.target.value)}
                         value={productName}
+                        onKeyDown={handlePress}
                     ></TextField>
                     <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
                     <Button variant="contained" href="#contained-buttons" onClick={handleSearchProduct}>
