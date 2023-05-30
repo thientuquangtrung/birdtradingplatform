@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Grid, Icon, Paper, Stack, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, CircularProgress, Grid, Icon, Paper, Stack, Typography } from '@mui/material';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -11,9 +11,21 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState} from 'react';
+import ProductCard from '../../components/ProductCard';
 import Pagination from '@mui/material/Pagination';
 
 function Shopping() {
+
+    const location = useLocation();
+    const [listProduct, setListProduct] = useState(location.state.list);
+    useEffect(function(){
+        setListProduct(location.state.list)
+    }, [location.state.list]);
+
+    console.log(listProduct);
+
     const price = [{ label: 'Giá: Thấp đến Cao' }, { label: 'Giá: Cao đến Thấp' }];
 
     return (
@@ -99,6 +111,11 @@ function Shopping() {
                         </Stack>
                     </Box>
                 </Paper>
+                <Grid sx={{paddingTop: 3}} container spacing={1.5}>
+                {listProduct.map(function (product) {
+                            return <ProductCard key={product.id} data={product} />;
+                        })}
+                </Grid>
                 <Pagination count={10} color="primary" shape='rounded' style={{ display: 'flex', justifyContent: 'center'}}/>
             </Grid>
         </Grid>
