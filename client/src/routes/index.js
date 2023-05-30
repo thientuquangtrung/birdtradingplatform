@@ -13,6 +13,7 @@ import ListProduct from '../pages/ListProduct/ListProduct';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';
 import SellerLogin from '../pages/Login/SellerLogin';
 import SellerSignup from '../pages/Signup/SellerSignup';
+import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
 
 // Public routes
 const publicRoutes = [
@@ -27,6 +28,7 @@ const privateRoutes = [
     { path: '/', component: UpdateShop, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' }, //homepage of seller
     { path: '/product/new', component: NewProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/product/list/all', component: ListProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
+    { path: '/product/update/:id', component: UpdateProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
 ];
 
 export { publicRoutes, privateRoutes };
