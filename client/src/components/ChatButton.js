@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Button from '@mui/material/Button';
 import ForumIcon from '@mui/icons-material/Forum';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -8,8 +8,13 @@ import { Stack, MenuItem } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
 import ChatRoom from './ChatRoom';
+import { ChatContext } from '../contexts/ChatContext';
+import AuthContext from '../contexts/AuthContext';
+import UserChat from './UserChat';
 
 function ChatButton() {
+    const { currentUser } = useContext(AuthContext);
+    const { userChats, isUserChatsLoading, updateCurrentChat, currentChat } = useContext(ChatContext);
     const [isChatOpen, setIsChatOpen] = useState(false);
 
     const handleChatToggle = () => {
@@ -62,336 +67,35 @@ function ChatButton() {
                     <Divider variant="middle" />
                     <Stack direction="row" height="100%">
                         <Stack direction="column" width="210px" height="85%" sx={{ overflowY: 'scroll' }}>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
-                            <MenuItem>
-                                <Stack direction="row" gap={1} alignItems="center">
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="https://sieusao.vn/wp-content/uploads/2020/09/noo-phuoc-thinh.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
-                                    <Stack direction="column">
-                                        <Stack
-                                            direction="row"
-                                            gap={1}
-                                            justifyContent="space-between"
-                                            alignItems="center"
-                                        >
-                                            <Typography
-                                                variant="h6"
-                                                fontSize={14}
-                                                sx={{
-                                                    maxWidth: 'calc(100% - 50px)',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                hangfei.three.vn
-                                            </Typography>
-                                            <Typography color="#666" fontSize={10}>
-                                                11:14
-                                            </Typography>
-                                        </Stack>
-                                        <Typography
-                                            variant="body2"
-                                            fontSize={12}
-                                            sx={{
-                                                maxWidth: 'calc(100% - 5px)',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                overflow: 'hidden',
-                                            }}
-                                        >
-                                            Có rất nhiều mã giảm giá
-                                        </Typography>
-                                    </Stack>
-                                </Stack>
-                            </MenuItem>
+                            {isUserChatsLoading && <p>Loading chats...</p>}
+                            {userChats.length > 0 &&
+                                userChats.map((chat, index) => {
+                                    return (
+                                        <div key={index} onClick={() => updateCurrentChat()}>
+                                            <UserChat chat={chat} user={currentUser} />;
+                                        </div>
+                                    );
+                                })}
                         </Stack>
-                        <Stack flex={1} direction="column" gap={1} alignItems="center" padding={4} height="80%">
-                            <img
-                                style={{ objectFit: 'contain' }}
-                                width="100%"
-                                height="100%"
-                                src="assets/images/Chat.png"
-                            />
-                            <Typography variant="poster" fontWeight={700} textAlign="center" color="#7b8593">
-                                Xin Chào!
-                            </Typography>
-                        </Stack>
-                        {/* <Stack flex={1} direction="column" height="85%">
-                            <ChatRoom />
-                        </Stack> */}
+                        <Divider variant="fullWidth" orientation="vertical" flexItem />
+                        {!currentChat ? (
+                            <Stack flex={1} direction="column" gap={1} alignItems="center" padding={4} height="80%">
+                                <img
+                                    style={{ objectFit: 'contain' }}
+                                    width="100%"
+                                    height="100%"
+                                    src="assets/images/Chat.png"
+                                    alt=""
+                                />
+                                <Typography variant="poster" fontWeight={700} textAlign="center" color="#7b8593">
+                                    Xin Chào!
+                                </Typography>
+                            </Stack>
+                        ) : (
+                            <Stack flex={1} direction="column" height="85%">
+                                <ChatRoom />
+                            </Stack>
+                        )}
                     </Stack>
                 </div>
             )}

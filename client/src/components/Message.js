@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper';
 
 
-function Message({ own }) {
+function Message({ own, data }) {
     const style = {
         backgroundColor: '#f5f5f5',
         alignSelf: 'self-start',

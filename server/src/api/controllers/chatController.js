@@ -1,9 +1,17 @@
+const chatData = require('../services/chat');
+
 const createChat = async (req, res, next) => {
     try {
-    } catch (error) {
         // get 2 ids from req.body
-        // check if chat is already
-        // create new chat
+        const { firstId, secondId } = req.body;
+        const result = await chatData.createChat({ firstId, secondId });
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
+    } catch (error) {
         next(error);
     }
 };
@@ -12,7 +20,13 @@ const createChat = async (req, res, next) => {
 const getUserChats = async (req, res, next) => {
     try {
         // get userId from req.params
-        // get all chat rooms containing userId
+        const userChats = await chatData.getUserChats(req.params.userId);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: userChats,
+        });
     } catch (error) {
         next(error);
     }
@@ -21,8 +35,14 @@ const getUserChats = async (req, res, next) => {
 const getOneChat = async (req, res, next) => {
     try {
         // get two ids from req.params '/:firstId/:secondId'
-        // get chat room containing both ids
+        const { firstId, secondId } = req.body;
+        const result = await chatData.getOneChat({ firstId, secondId });
 
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
     } catch (error) {
         next(error);
     }
@@ -31,5 +51,5 @@ const getOneChat = async (req, res, next) => {
 module.exports = {
     createChat,
     getUserChats,
-    getOneChat
+    getOneChat,
 };
