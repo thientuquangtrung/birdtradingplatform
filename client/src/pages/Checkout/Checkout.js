@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AuthContext from '../../contexts/AuthContext';
@@ -16,10 +16,13 @@ import CartContext from '../../contexts/CartContext';
 import Payment from '../../components/Payment';
 import PaypalButton from '../../components/PaypalButton';
 import VNPayButton from '../../components/VNPayButton';
-import Button from '@mui/joy/Button';
+import { Button as JoyButton } from '@mui/joy';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import MoMoButton from '../../components/MoMoButton';
+<<<<<<< HEAD
 import { fontSize } from '@mui/system';
+=======
+>>>>>>> 37a74d4a0417cee82003a70afafda08800115457
 
 function Checkout() {
     const location = useLocation();
@@ -176,11 +179,16 @@ function Checkout() {
                     <Box align="center">
                         <Stack
                             gap={3}
+<<<<<<< HEAD
                             direction={'column'}
+=======
+                            direction={'row'}
+>>>>>>> 37a74d4a0417cee82003a70afafda08800115457
                             justifyContent="flex-end"
                             alignItems={'center'}
                             flexDirection="column"
                         >
+<<<<<<< HEAD
                             <div style={{ margin: '30px 0 10px 0', display: 'flex', alignItems: 'center' }}>
                                 <div style={{ margin: '0 10px 0 0' }}>
                                     <Typography style={{ fontSize: '20px', color: '#212121', fontWeight: '400' }}>
@@ -227,6 +235,38 @@ function Checkout() {
                             {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                                 <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             )}
+=======
+                            <div style={{ margin: '10px 0 10px 0' }}>
+                                <Typography style={{ fontSize: '22px', color: 'red' }}>
+                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
+                                </Typography>
+                            </div>
+                            <JoyButton
+                                onClick={handlePlaceOrder}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    marginTop: '10px',
+                                    width: '250px',
+                                    height: '40px',
+                                }}
+                                size="large"
+                                variant="soft"
+                                color="neutral"
+                                startDecorator={<PaymentsIcon />}
+                            >
+                                <Stack direction="row" alignItems="center" gap={1} marginLeft={2}>
+                                    <Typography variant="h6" fontSize={16}>
+                                        Thanh toán khi nhận hàng
+                                    </Typography>
+                                </Stack>
+                            </JoyButton>
+                            <MoMoButton />
+                            <VNPayButton />
+                            <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            {/* {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
+                            )} */}
+>>>>>>> 37a74d4a0417cee82003a70afafda08800115457
                         </Stack>
                     </Box>
                     <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>
