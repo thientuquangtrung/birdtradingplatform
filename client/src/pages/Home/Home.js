@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
+import Pagination from '@mui/material/Pagination';
 
 function Home() {
     const [products, setProducts] = useState([]);
@@ -49,6 +50,8 @@ function Home() {
                 >
                     <Button variant="outlined">Xem Thêm</Button>
                 </Box>
+
+                <Pagination count={10} color="primary" shape='rounded'/>
             </Container>
         </div>
     );
