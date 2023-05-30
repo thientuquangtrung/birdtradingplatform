@@ -13,10 +13,12 @@ import ListProduct from '../pages/ListProduct/ListProduct';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';
 import SellerLogin from '../pages/Login/SellerLogin';
 import SellerSignup from '../pages/Signup/SellerSignup';
+import Shopping from '../pages/Shopping/Shopping';
 
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout, subdomain: 'common' },
+    { path: '/shopping', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
     { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
     { path: '/signup', component: SellerSignup, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
