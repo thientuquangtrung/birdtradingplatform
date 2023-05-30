@@ -26,7 +26,7 @@ function Header() {
     return (
         <AppBar position="sticky">
             <Toolbar>
-                <Container sx={{ padding: 3 }}>
+                <Container sx={{ padding: 1 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
                         <Link to={`${window.location.protocol}//seller.${window.location.host}/shop/profile`}>
                             <Typography

@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const config = require('../../../config');
+const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const createError = require('http-errors');
 
