@@ -24,7 +24,7 @@ function UpdateProduct() {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
-    const [image, setImage] = useState(null);
+    const [img, setImg] = useState('');
 
     useEffect(() => {
         axiosClient
@@ -35,7 +35,7 @@ function UpdateProduct() {
                 setName(product.name);
                 setPrice(product.price);
                 setDescription(product.description);
-                setImage(product.image);
+                setImg(product.image);
             })
             .catch(function (error) {
                 // handle error
@@ -45,22 +45,18 @@ function UpdateProduct() {
 
     const navigate = useNavigate();
 
-    const imageRef = useRef();
-
     const isFullfilled = () => {
-        return !(name && price && description && categoryId && imageRef.current.files[0]);
+        return !(name && price && description && categoryId && img);
     };
 
     function handleSubmit() {
-        const image = imageRef.current.files[0];
-
         const formData = new FormData();
         formData.append('id', id);
         formData.append('name', name);
         formData.append('categoryId', categoryId);
         formData.append('price', price);
         formData.append('description', description);
-        formData.append('image', image);
+        formData.append('image', img);
 
         axiosClient
             .patch('seller/product', formData)
@@ -94,7 +90,7 @@ function UpdateProduct() {
                         <Typography variant="h6" gutterBottom>
                             Hình ảnh sản phẩm:
                         </Typography>
-                        <UploadImage ref={imageRef} img={image} />
+                        <UploadImage uploadFile={img} setUploadFile={setImg} />
                     </Box>
                     <TextField
                         value={name}
