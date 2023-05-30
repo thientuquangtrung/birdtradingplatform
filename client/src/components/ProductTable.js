@@ -7,7 +7,9 @@ const columns = [
         field: 'image',
         headerName: 'Hình ảnh',
         width: 100,
-        renderCell: (rowData) => <img src={rowData.value} style={{ width: '100%', height: '100%' }} alt="" />,
+        renderCell: (rowData) => (
+            <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+        ),
     },
     { field: 'name', headerName: 'Tên sản phẩm', width: 180 },
     { field: 'price', headerName: 'Giá', width: 100 },
