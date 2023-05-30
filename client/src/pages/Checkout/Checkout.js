@@ -19,11 +19,7 @@ import VNPayButton from '../../components/VNPayButton';
 import { Button as JoyButton } from '@mui/joy';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import MoMoButton from '../../components/MoMoButton';
-<<<<<<< HEAD
 import { fontSize } from '@mui/system';
-=======
->>>>>>> 37a74d4a0417cee82003a70afafda08800115457
-
 function Checkout() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -179,16 +175,11 @@ function Checkout() {
                     <Box align="center">
                         <Stack
                             gap={3}
-<<<<<<< HEAD
                             direction={'column'}
-=======
-                            direction={'row'}
->>>>>>> 37a74d4a0417cee82003a70afafda08800115457
                             justifyContent="flex-end"
                             alignItems={'center'}
                             flexDirection="column"
                         >
-<<<<<<< HEAD
                             <div style={{ margin: '30px 0 10px 0', display: 'flex', alignItems: 'center' }}>
                                 <div style={{ margin: '0 10px 0 0' }}>
                                     <Typography style={{ fontSize: '20px', color: '#212121', fontWeight: '400' }}>
@@ -235,7 +226,6 @@ function Checkout() {
                             {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                                 <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             )}
-=======
                             <div style={{ margin: '10px 0 10px 0' }}>
                                 <Typography style={{ fontSize: '22px', color: 'red' }}>
                                     Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
@@ -266,7 +256,6 @@ function Checkout() {
                             <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             {/* {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                             )} */}
->>>>>>> 37a74d4a0417cee82003a70afafda08800115457
                         </Stack>
                     </Box>
                     <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>
