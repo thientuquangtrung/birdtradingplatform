@@ -27,9 +27,70 @@ const getProductById = async (req, res, next) => {
     }
 };
 
+const getProductByCategory = async (req, res, next) => {
+    try {
+        const list = await productData.getProductByCategory(req.params.id);
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        });
+
+        return res.send(list);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const searchProducts = async (req, res, next) => {
+    try {
+        const { q } = req.query;
+        const list = await productData.searchProducts(q);
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        });
+
+        return res.send(list);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const filterProducts = async (req, res, next) => {
+    try {
+        const { sortBy, order, categoryId } = req.query;
+        const list = await productData.filterProducts(sortBy, order, categoryId);
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        });
+
+        return res.send(list);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 const getProductsOfSeller = async (req, res, next) => {
     try {
         const list = await productData.getProductsOfSeller(req.payload.id);
+
+        list.map((product) => {
+            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        });
+
+        return res.send(list);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const searchSellerProducts = async (req, res, next) => {
+    try {
+        const shopId = req.payload.id;
+        const { q, categoryId } = req.query;
+
+        const list = await productData.searchSellerProducts(shopId, q, categoryId ? categoryId : 'all');
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
@@ -59,9 +120,47 @@ const createProduct = async (req, res, next) => {
     }
 };
 
+const updateProduct = async (req, res, next) => {
+    try {
+        const data = {
+            ...req.body,
+            shopId: req.payload.id,
+            image: req.file.filename,
+        };
+
+        const updated = await productData.updateProduct(data);
+
+        return res.send({
+            ...updated,
+            image: `${process.env.HOST_URL}/product/${req.file.filename}`,
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const deleteProduct = async (req, res, next) => {
+    try {
+        const shopId = req.payload.id;
+        const id = req.body.id;
+
+        const deleted = await productData.deleteProduct(id, shopId);
+
+        return res.send(deleted);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 module.exports = {
     getProducts,
     getProductById,
     getProductsOfSeller,
     createProduct,
+    searchSellerProducts,
+    updateProduct,
+    deleteProduct,
+    searchProducts,
+    getProductByCategory,
+    filterProducts,
 };

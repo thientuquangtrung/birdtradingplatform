@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 const sql = require('mssql');
-const config = require('../../../config');
+const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 
 // get current user
@@ -37,25 +37,33 @@ const createSellerAccount = async ({ name, phone, email, pickUpAddress, password
     }
 };
 
-const readOneSeller = async (email) => {
+const readOneAccount = async (email, role) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const seller = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.readOneSeller);
+        const account = await pool
+            .request()
+            .input('email', sql.VarChar, email)
+            .input('role', sql.VarChar, role)
+            .query(sqlQueries.readOneAccount);
 
-        return seller.recordset[0];
+        return account.recordset[0];
     } catch (error) {
         throw createError(error);
     }
 };
 
-const readSellerById = async (id) => {
+const readAccountById = async (id, role) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const seller = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.readSellerById);
+        const account = await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('role', sql.VarChar, role)
+            .query(sqlQueries.readAccountById);
 
-        return seller.recordset[0];
+        return account.recordset[0];
     } catch (error) {
         throw createError(error);
     }
@@ -85,6 +93,24 @@ const updateSeller = async (data) => {
     }
 };
 
+const createCustomerAccount = async ({ name, phone, email, shipToAddress, password }) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const createdAccount = await pool
+            .request()
+            .input('name', sql.NVarChar, name)
+            .input('phone', sql.VarChar, phone)
+            .input('email', sql.VarChar, email)
+            .input('shipToAddress', sql.NVarChar, shipToAddress)
+            .input('password', sql.Char, password)
+            .query(sqlQueries.createCustomerAccount);
+        return createdAccount.recordset[0];
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
 // helper methods
 
 const checkMail = async ({ email }) => {
@@ -99,11 +125,35 @@ const checkMail = async ({ email }) => {
     }
 };
 
+const updateCustomer = async (data) => {
+    try {
+        const { name, email, password, phone, shipToAddress, id, image } = data;
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const seller = await pool
+            .request()
+            .input('name', sql.NVarChar, name)
+            .input('email', sql.VarChar, email)
+            .input('password', sql.Char, password)
+            .input('image', sql.Char, image)
+            .input('phone', sql.VarChar, phone)
+            .input('shipToAddress', sql.NVarChar, shipToAddress)
+            .input('id', sql.UniqueIdentifier, id)
+            .query(sqlQueries.updateCustomer);
+
+        return seller.recordset[0];
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
 module.exports = {
     checkMail,
     createSellerAccount,
-    readOneSeller,
-    readSellerById,
+    readOneAccount,
+    readAccountById,
     updateSeller,
     getCurrentUser,
+    createCustomerAccount,
+    updateCustomer,
 };
