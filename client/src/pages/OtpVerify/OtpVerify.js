@@ -132,14 +132,8 @@ const OtpVerify = () => {
                     sx={{
                         marginTop: '20px',
                         '&:disabled': {
-<<<<<<< HEAD
                             backgroundColor: !otp.every((digit) => digit !== '') ? 'lightblue' : '#43a99c',
-=======
-                            backgroundColor: !otp.every((digit) => digit !== '') ? 'rgb(58 152 140 / 45%)' : '#43a99c',
->>>>>>> b358b77d329afabde8fc2a3f08705e000f01cf26
                         },
-                        backgroundColor: '#43a99c',
-                        '&:hover': { backgroundColor: '#43a99c' },
                     }}
                     variant="contained"
                     onClick={handleSubmit}
