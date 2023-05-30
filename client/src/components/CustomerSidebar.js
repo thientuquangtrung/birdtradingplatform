@@ -4,7 +4,7 @@ import PersonPinIcon from '@mui/icons-material/PersonPin';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 
-function SellerSidebar() {
+function CustomerSidebar() {
     return (
         <List sx={{ paddingTop: 5 }}>
             <Link>
@@ -35,4 +35,4 @@ function SellerSidebar() {
     );
 }
 
-export default SellerSidebar;
+export default CustomerSidebar;

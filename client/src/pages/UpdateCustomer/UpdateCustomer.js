@@ -6,6 +6,7 @@ import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import handleError from '../../utils/handleError';
+import CustomerSidebar from '../../components/CustomerSidebar';
 
 export default function UpdateCustomer() {
     const { currentUser } = useContext(AuthContext);
@@ -13,17 +14,16 @@ export default function UpdateCustomer() {
     // function UpdateShop() {
     const phoneformat = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
     const [name, setName] = useState(currentUser.name);
-    const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
+    const [shipToAddress, setShipToAddress] = useState(currentUser.shipToAddress);
     const [phone, setPhone] = useState(currentUser.phone);
-    const [description, setDescription] = useState(currentUser.description);
+
     const [validationMsg, setValidationMsg] = useState('');
     const profileRef = useRef();
     const [message, setMessage] = useState('');
     const isChange = () => {
         return !(
             currentUser.name !== name ||
-            currentUser.pickUpAddress !== pickUpAddress ||
-            currentUser.description !== description ||
+            currentUser.shipToAddress !== shipToAddress ||
             currentUser.phone !== phone ||
             profileRef.current?.files[0]
         );
@@ -33,7 +33,7 @@ export default function UpdateCustomer() {
     }
     const validateAll = () => {
         const msg = {};
-        if (isEmpty(name) || isEmpty(pickUpAddress) || isEmpty(phone)) {
+        if (isEmpty(name) || isEmpty(shipToAddress) || isEmpty(phone)) {
             msg.name = 'Vui lòng nhập đầy đủ thông tin !';
         }
         setValidationMsg(msg);
@@ -55,15 +55,15 @@ export default function UpdateCustomer() {
 
         const formData = new FormData();
         formData.append('name', name);
-        formData.append('pickUpAddress', pickUpAddress);
+        formData.append('shipToAddress', shipToAddress);
         formData.append('phone', phone);
-        formData.append('description', description);
+
         formData.append('profile', profile);
         const isValid = validateAll();
         const isValidElement = validateElement();
         if (isValid && isValidElement) {
             axiosClient
-                .patch('/auth/seller/me', formData)
+                .patch('/auth/customer/me', formData)
                 .then((response) => {
                     enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
                 })
@@ -74,75 +74,74 @@ export default function UpdateCustomer() {
     }
 
     return (
-        <Paper
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-                padding: 3,
-            }}
-        >
-            <Box marginBottom={2} marginRight={2} marginTop={2}>
-                <Typography marginLeft={2} variant="h4" gutterBottom>
-                    Hồ Sơ Shop
-                </Typography>
-            </Box>
-            <Stack direction="column" gap={3} width="50%">
-                <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
-                <TextField
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    id="outlined-search"
-                    label="Tên Shop"
-                    type="search"
-                    variant="outlined"
-                    required
-                />
-                <TextField
-                    value={pickUpAddress}
-                    onChange={(e) => setPickUpAddress(e.target.value)}
-                    id="outlined-search"
-                    label="Địa chỉ"
-                    type="search"
-                    variant="outlined"
-                    required
-                />
-                <TextField
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    id="outlined-search"
-                    label="Số điện thoại"
-                    variant="outlined"
-                    margin="0"
-                    required
-                />
-                {message.phone && (
-                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
-                        {message.phone}
+        <Stack direction={'row'} gap={2}>
+            <CustomerSidebar></CustomerSidebar>
+            <Paper
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    padding: 3,
+                    flex: 1,
+                }}
+            >
+                <Box marginBottom={2} marginRight={2} marginTop={2}>
+                    <Typography marginLeft={2} variant="h4" gutterBottom>
+                        Hồ Sơ Shop
                     </Typography>
-                )}
-                <TextField id="outlined-search" type="search" variant="outlined" value={currentUser.email} disabled />
-                <TextareaAutosize
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    minRows={5}
-                    placeholder="Nhập thông tin mô tả shop"
-                    style={{
-                        padding: 10,
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                    }}
-                />
-            </Stack>
-            <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px', marginTop: '5px' }}>
-                {validationMsg.name}
-            </Typography>
-            <Box>
-                <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
-                    Lưu
-                </Button>
-            </Box>
-        </Paper>
+                </Box>
+                <Stack direction="column" gap={3} width="50%">
+                    <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
+                    <TextField
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        id="outlined-search"
+                        label="Tên Shop"
+                        type="search"
+                        variant="outlined"
+                        required
+                    />
+                    <TextField
+                        value={shipToAddress}
+                        onChange={(e) => setShipToAddress(e.target.value)}
+                        id="outlined-search"
+                        label="Địa chỉ"
+                        type="search"
+                        variant="outlined"
+                        required
+                    />
+                    <TextField
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        id="outlined-search"
+                        label="Số điện thoại"
+                        variant="outlined"
+                        margin="0"
+                        required
+                    />
+                    {message.phone && (
+                        <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                            {message.phone}
+                        </Typography>
+                    )}
+                    <TextField
+                        id="outlined-search"
+                        type="search"
+                        variant="outlined"
+                        value={currentUser.email}
+                        disabled
+                    />
+                </Stack>
+                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px', marginTop: '5px' }}>
+                    {validationMsg.name}
+                </Typography>
+                <Box>
+                    <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
+                        Lưu
+                    </Button>
+                </Box>
+            </Paper>
+        </Stack>
     );
 }
