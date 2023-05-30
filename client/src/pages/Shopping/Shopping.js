@@ -11,6 +11,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import Pagination from '@mui/material/Pagination';
 
 function Shopping() {
     const price = [{ label: 'Giá: Thấp đến Cao' }, { label: 'Giá: Cao đến Thấp' }];
@@ -98,6 +99,7 @@ function Shopping() {
                         </Stack>
                     </Box>
                 </Paper>
+                <Pagination count={10} color="primary" shape='rounded' style={{ display: 'flex', justifyContent: 'center'}}/>
             </Grid>
         </Grid>
     );

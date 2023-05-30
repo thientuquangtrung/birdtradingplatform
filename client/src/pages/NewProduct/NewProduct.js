@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import handleError from '../../utils/handleError';
 import axiosClient from '../../api/axiosClient';
@@ -22,24 +22,21 @@ function NewProduct() {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
+    const [img, setImg] = useState('');
 
     const navigate = useNavigate();
 
-    const imageRef = useRef();
-
     const isFullfilled = () => {
-        return !(name && price && description && categoryId && imageRef.current.files[0]);
+        return !(name && price && description && categoryId && img);
     };
 
     function handleSubmit() {
-        const image = imageRef.current.files[0];
-
         const formData = new FormData();
         formData.append('name', name);
         formData.append('categoryId', categoryId);
         formData.append('price', price);
         formData.append('description', description);
-        formData.append('image', image);
+        formData.append('image', img);
         axiosClient
             .post('seller/product', formData)
             .then(function (response) {
@@ -71,7 +68,7 @@ function NewProduct() {
                         <Typography variant="h6" gutterBottom>
                             Hình ảnh sản phẩm:
                         </Typography>
-                        <UploadImage ref={imageRef} />
+                        <UploadImage setUploadFile={setImg} uploadFile={img} />
                     </Box>
                     <TextField
                         required
