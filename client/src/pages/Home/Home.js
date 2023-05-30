@@ -15,9 +15,18 @@ function Home() {
     useEffect(function () {
         setLoading(true);
         axiosClient
-            .get('/product')
+            .get('/product/search', {
+                params: {
+                    categoryId: '0',
+                    q: '',
+                    sortBy: '',
+                    order: 'asc',
+                    page: 1,
+                },
+            })
             .then((response) => {
-                setProducts(response.data.data);
+                const list = response.data.data.flatMap((document) => document.value);
+                setProducts(list);
                 setLoading(false);
             })
             .catch((error) => {

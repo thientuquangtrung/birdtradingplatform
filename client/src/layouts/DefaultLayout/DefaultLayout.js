@@ -7,7 +7,7 @@ function DefaultLayout({ children }) {
     return (
         <CartContextProvider>
             <Header />
-            <Container sx={{ paddingTop: 5, paddingBottom: 5 }}>{children}</Container>
+            <Container sx={{ paddingTop: 5, paddingBottom: 5, minHeight: 'calc(100vh - 145px)' }}>{children}</Container>
             <Footer />
         </CartContextProvider>
     );

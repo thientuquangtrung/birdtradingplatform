@@ -6,6 +6,7 @@ const { readAccountById } = require('../auth');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { redisClient } = require('../../config');
+const { updateSold } = require('../product/product.repo');
 
 /* 
     {
@@ -99,6 +100,7 @@ const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
                     .replaceInput('quantity', sql.Int, product.quantity)
                     .replaceInput('price', sql.Float, product.price);
                 await request.query(sqlQueries.insertOrderDetail);
+                await updateSold(product.id, product.quantity);
             }
 
             orderHeaderIds.push(orderHeaderId);
@@ -108,41 +110,6 @@ const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
         throw error;
     }
 };
-
-// const insertOrderDetail = async (request, query, shopOrderIdsNew, orderHeaderId) => {
-//     try {
-//         for (let index = 0; index < shopOrderIdsNew.length; index++) {
-//             const element = shopOrderIdsNew[index];
-//             const items = element.items;
-//             for (let j = 0; j < items.length; j++) {
-//                 const product = items[j];
-
-//                 request
-//                     .replaceInput('productId', sql.UniqueIdentifier, product.id)
-//                     .replaceInput('quantity', sql.Int, product.quantity)
-//                     .replaceInput('price', sql.Float, product.price);
-//                 await request.query(query);
-//             }
-//         }
-//         return 'OK';
-//     } catch (error) {
-//         throw error;
-//     }
-// };
-
-// const insertShopIds = async (request, query, shopOrderIdsNew, orderHeaderId) => {
-//     try {
-//         for (let index = 0; index < shopOrderIdsNew.length; index++) {
-//             const element = shopOrderIdsNew[index];
-//             const shopId = element.shop.id;
-//             request.replaceInput('shopId', sql.UniqueIdentifier, shopId);
-//             await request.query(query);
-//         }
-//         return 'OK';
-//     } catch (error) {
-//         throw error;
-//     }
-// };
 
 const placeOrder = async ({ shopOrderIds, userId }) => {
     try {

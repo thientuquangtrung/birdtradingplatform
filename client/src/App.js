@@ -1,7 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { privateRoutes, publicRoutes } from './routes';
 import CheckAuth from './components/CheckAuth';
+import axiosClient from './api/axiosClient';
 
 function App() {
     const host = window.location.host;
@@ -13,6 +14,13 @@ function App() {
         ...privateRoutes.filter((route) => route.subdomain === subdomain),
         ...publicRoutes.filter((route) => route.subdomain === subdomain),
     ];
+
+    useEffect(() => {
+        axiosClient
+            .post('init_product')
+            .then((response) => {})
+            .catch((error) => console.log(error));
+    });
 
     return (
         <div className="App">

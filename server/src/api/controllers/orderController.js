@@ -71,7 +71,7 @@ const changeOrderStatus = async (req, res, next) => {
 
 const getRevenue = async (req, res, next) => {
     try {
-        const data = await orderData.getRevenue(req.query);
+        const data = await orderData.getRevenue({...req.query, id: req.params.id});
 
         return res.send({
             status: 200,
