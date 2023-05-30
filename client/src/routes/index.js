@@ -13,6 +13,7 @@ import ListProduct from '../pages/ListProduct/ListProduct';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';
 import SellerLogin from '../pages/Login/SellerLogin';
 import SellerSignup from '../pages/Signup/SellerSignup';
+import UpdateCustomer from '../pages/UpdateCustomer/UpdateCustomer';
 import Shopping from '../pages/Shopping/Shopping';
 import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
 
@@ -22,10 +23,19 @@ const publicRoutes = [
     { path: '/shopping', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
     { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
     { path: '/signup', component: SellerSignup, layout: AuthLayout, subdomain: 'seller' },
+    { path: '/signup', component: Signup, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
+    { path: '/login', component: Login, layout: AuthLayout, subdomain: 'common' },
 ];
 
 const privateRoutes = [
+    {
+        path: '/customer/profile',
+        component: UpdateCustomer,
+        layout: DefaultLayout,
+        role: ['CUSTOMER'],
+        subdomain: 'common',
+    },
     { path: '/shop/profile', component: UpdateShop, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/', component: UpdateShop, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' }, //homepage of seller
     { path: '/product/new', component: NewProduct, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },

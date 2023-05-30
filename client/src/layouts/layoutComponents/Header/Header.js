@@ -41,7 +41,7 @@ function Header() {
                         {currentUser ? (
                             <AvaText user={currentUser} />
                         ) : (
-                            <Breadcrumbs separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
+                            <Breadcrumbs     separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
                                 <Typography variant="body2" sx={{ color: 'white' }}>
                                     <Link style={{ color: 'inherit' }} to="/login">
                                         Login

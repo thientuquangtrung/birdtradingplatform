@@ -63,7 +63,7 @@ const Login = ({ role }) => {
                     localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     enqueueSnackbar('Welcome back!', { variant: 'info' });
-                    navigate('/shop/profile');
+                    navigate('/');
                 })
                 .catch(function (error) {
                     setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');
@@ -80,7 +80,7 @@ const Login = ({ role }) => {
                         <Avatar style={avatarStyle}>
                             <LockOpenIcon />
                         </Avatar>
-                        <h1>Đăng nhập</h1>
+                        <h2>Đăng nhập</h2>
                     </Grid>
                     <PersonIcon></PersonIcon>{' '}
                     <TextField

@@ -29,14 +29,10 @@ function ProductDetail() {
     }, []);
     return (
         <Paper sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ padding: 3 }}>
-                <img
-                    style={{ width: '100%', height: '100%', backgroundSize: 'contain', objectFit: 'contain' }}
-                    src={product.image}
-                    alt="Bird"
-                />
+            <Box sx={{ padding: 2 }}>
+                <img style={{ width: '500px', height: '500px', objectFit: 'contain' }} src={product.image} alt="Bird" />
             </Box>
-            <Box sx={{ padding: 4, width: '60%' }}>
+            <Box sx={{ padding: 4, width: '70%' }}>
                 <Stack direction="column" gap={5}>
                     <Typography variant="h5" gutterBottom fontWeight={'bold'}>
                         {product.name}
