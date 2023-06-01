@@ -94,20 +94,6 @@ function Shopping() {
                                     />
                                 </Stack>
                             </Box>
-                            <Box>
-                                <ButtonGroup variant="outlined" aria-label="outlined button group">
-                                    <Button>
-                                        <Icon>
-                                            <ArrowBackIosIcon style={{ paddingLeft: 6, paddingBottom: 6 }} />
-                                        </Icon>
-                                    </Button>
-                                    <Button>
-                                        <Icon>
-                                            <ArrowForwardIosIcon style={{ paddingRight: 6, paddingBottom: 6 }} />
-                                        </Icon>
-                                    </Button>
-                                </ButtonGroup>
-                            </Box>
                         </Stack>
                     </Box>
                 </Paper>
