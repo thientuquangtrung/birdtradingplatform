@@ -21,6 +21,19 @@ import handleError from '../utils/handleError';
 import { enqueueSnackbar } from 'notistack';
 
 const Actions = ({ data }) => {
+    function createData(image, name, amount, price) {
+        return { image, name, amount, price };
+    }
+
+    const rows = [
+        createData(
+            'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+            'Quần què',
+            1,
+            '138$',
+        ),
+        createData('Ice cream sandwich', 1, '20$'),
+    ];
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -32,31 +45,15 @@ const Actions = ({ data }) => {
     };
 
     const handleDelete = () => {
-        axiosClient
-            .delete(`seller/product/${data.value}`)
-            .then(function (response) {
-                // handle success
-                enqueueSnackbar('Đã xóa sản phẩm thành công', { variant: 'success' });
-                setOpen(false);
-            })
-            .catch(function (error) {
-                // handle error
-                handleError(error);
-            });
+        // Implement your delete logic here
+        console.log('Delete item with ID:', data.value);
+        // Close the dialog
+        handleClose();
     };
 
     return (
         <Stack direction="row" spacing={0.5}>
             <React.Fragment>
-                <Link
-                    to={{
-                        pathname: `/product/update/${data.value}`,
-                    }}
-                >
-                    <IconButton color="primary" aria-label="edit">
-                        <EditIcon />
-                    </IconButton>
-                </Link>
                 <IconButton color="primary" aria-label="delete" onClick={handleClickOpen}>
                     <DeleteIcon />
                 </IconButton>
@@ -83,58 +80,69 @@ const Actions = ({ data }) => {
         </Stack>
     );
 };
+export default function CartTable({ rows = [] }) {
+    const [cartItems, setCartItems] = useState(rows);
 
-const columns = [
-    {
-        field: 'image',
-        headerName: 'Hình ảnh',
-        width: 100,
-        renderCell: (rowData) => (
-            <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-        ),
-        headerAlign: 'center',
-        align: 'center',
-    },
-    { field: 'name', headerName: 'Tên sản phẩm', width: 180 },
-    { field: 'price', headerName: 'Giá', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'description', headerName: 'Mô tả', width: 200 },
-    {
-        field: 'enabled',
-        headerName: 'Trạng thái',
-        width: 100,
-        headerAlign: 'center',
-        align: 'center',
-        renderCell: (rowData) => {
-            if (rowData.value === true) {
-                return <Chip icon={<DoneIcon />} label="active" variant="outlined" size="small" color="primary" />;
-            } else {
-                return <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" />;
-            }
-        },
-    },
-    {
-        field: 'id',
-        headerName: 'Thao tác',
-        headerAlign: 'center',
-        align: 'center',
-        width: 200,
-        renderCell: (rowAction) => <Actions data={rowAction} />,
-    },
-];
+    const handleMinus = (index) => {
+        const updatedCartItems = [...cartItems];
+        if (updatedCartItems[index].amount > 1) {
+            updatedCartItems[index].amount -= 1;
+            setCartItems(updatedCartItems);
+        }
+    };
 
-export default function ProductTable({ rows = [] }) {
-    if (rows.length > 0) {
-        rows.forEach((row) => {
-            delete row.shopId;
-            delete row.categoryId;
+    const handlePlus = (index) => {
+        const updatedCartItems = [...cartItems];
+        updatedCartItems[index].amount += 1;
+        setCartItems(updatedCartItems);
+    };
+
+    const handleDelete = (index) => {
+        const updatedCartItems = [...cartItems];
+        updatedCartItems.splice(index, 1);
+        setCartItems(updatedCartItems);
+    };
+
+    if (cartItems.length > 0) {
+        cartItems.forEach((item) => {
+            delete item.shopId;
+            delete item.categoryId;
         });
     }
 
     return (
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
-                rows={rows}
-                columns={columns}
+                rows={cartItems}
+                columns={[
+                    {
+                        field: 'image',
+                        headerName: 'Hình ảnh',
+                        width: 100,
+                        renderCell: (rowData) => (
+                            <img
+                                src={rowData.value}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                alt=""
+                            />
+                        ),
+                    },
+                    { field: 'name', headerName: 'Tên sản phẩm', width: 180 },
+                    { field: 'amount', headerName: 'Số lượng', width: 200 },
+                    { field: 'price', headerName: 'Giá', width: 100 },
+                    {
+                        field: 'id',
+                        headerName: 'Thao tác',
+                        width: 100,
+                        renderCell: (params) => (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Button onClick={() => handleMinus(params.rowIndex)}>-</Button>
+                                <div style={{ padding: '3px' }}>{params.row.amount}</div>
+                                <Button onClick={() => handlePlus(params.rowIndex)}>+</Button>
+                            </div>
+                        ),
+                    },
+                ]}
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
