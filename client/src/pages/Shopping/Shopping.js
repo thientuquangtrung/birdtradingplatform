@@ -12,17 +12,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import ProductCard from '../../components/ProductCard';
 import Pagination from '@mui/material/Pagination';
 
 function Shopping() {
-
     const location = useLocation();
     const [listProduct, setListProduct] = useState(location.state.list);
-    useEffect(function(){
-        setListProduct(location.state.list)
-    }, [location.state.list]);
+    useEffect(
+        function () {
+            setListProduct(location.state.list);
+        },
+        [location.state.list],
+    );
 
     console.log(listProduct);
 
@@ -37,7 +39,7 @@ function Shopping() {
                             <IconButton edge="start" color="inherit" aria-label="menu">
                                 <MenuIcon />
                             </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" sx={{padding: 0.5}}>
+                            <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
                                 Danh mục
                             </Typography>
                         </Toolbar>
@@ -70,7 +72,6 @@ function Shopping() {
                             spacing={2}
                             alignItems="center"
                             padding={1}
-                            
                         >
                             <Box>
                                 <Stack direction="row" alignItems="center" spacing={4}>
@@ -87,10 +88,7 @@ function Shopping() {
                                         id="combo-box-demo"
                                         options={price}
                                         sx={{ width: 300 }}
-                                        
-                                        renderInput={(params) => (
-                                            <TextField {...params} label="Giá" />
-                                        )}
+                                        renderInput={(params) => <TextField {...params} label="Giá" />}
                                     />
                                 </Stack>
                             </Box>
@@ -111,12 +109,17 @@ function Shopping() {
                         </Stack>
                     </Box>
                 </Paper>
-                <Grid sx={{paddingTop: 3}} container spacing={1.5}>
-                {listProduct.map(function (product) {
-                            return <ProductCard key={product.id} data={product} />;
-                        })}
+                <Grid sx={{ paddingTop: 3 }} container spacing={1.5}>
+                    {listProduct.map(function (product) {
+                        return <ProductCard key={product.id} data={product} />;
+                    })}
                 </Grid>
-                <Pagination count={10} color="primary" shape='rounded' style={{ display: 'flex', justifyContent: 'center'}}/>
+                <Pagination
+                    count={10}
+                    color="primary"
+                    shape="rounded"
+                    style={{ display: 'flex', justifyContent: 'center' }}
+                />
             </Grid>
         </Grid>
     );

@@ -87,6 +87,7 @@ const Cart = () => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
+                            <TableCell></TableCell>
                             <TableCell>Sản phẩm</TableCell>
                             <TableCell align="center">Số lượng</TableCell>
                             <TableCell align="center">Số tiền</TableCell>
