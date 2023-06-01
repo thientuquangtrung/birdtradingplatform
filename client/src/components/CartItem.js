@@ -1,6 +1,6 @@
 import { MenuItem, Typography } from '@mui/material';
 
-function CartItem() {
+function CartItem({ data }) {
     return (
         <MenuItem
             sx={{
@@ -10,7 +10,7 @@ function CartItem() {
                 height: '60px',
             }}
         >
-            <img style={{ width: '50px', height: '40px' }} src="/assets/images/logo.png" alt="" />
+            <img style={{ width: '50px', height: '40px' }} src={data.image} alt="" />
             <Typography
                 maxWidth={300}
                 noWrap
@@ -21,10 +21,10 @@ function CartItem() {
                 variant="subtitle2"
                 component="p"
             >
-                lorem lorem lorem loremlorem lorem lorem lorem lorem lorem lorem loremlorem lorem lorem lorem
+                {data.name}
             </Typography>
             <Typography ml={2} variant="body1" component="span" color="Highlight">
-                1.200.000
+                {data.price}
             </Typography>
         </MenuItem>
     );
