@@ -46,6 +46,7 @@ function Header() {
                 navigate('/shopping', {
                     state: {
                         list: response.data,
+                        q: productName,
                     },
                 });
             })

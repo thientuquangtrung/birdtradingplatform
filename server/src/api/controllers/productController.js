@@ -63,7 +63,7 @@ const searchProducts = async (req, res, next) => {
 const filterProducts = async (req, res, next) => {
     try {
         const { sortBy, order, categoryId, q, page } = req.query;
-        const list = await productData.filterProducts(sortBy, order, categoryId, q);
+        const list = await productData.filterProducts(sortBy, order, categoryId, q, page);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
