@@ -17,32 +17,38 @@ import Cart from '../../../components/Cart';
 import AvaText from '../../../components/AvaText';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../../contexts/AuthContext';
-import {useState} from 'react';
+import { useState } from 'react';
 import React from 'react';
 import axiosClient from '../../../api/axiosClient';
-
 
 function Header() {
     const navigate = useNavigate();
     const ref = useRef();
 
     const { currentUser } = useContext(AuthContext);
-    const [productName, setProductName] = useState("");
+    const [productName, setProductName] = useState('');
+    function handlePress(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearch();
+        }
+    }
 
     function handleSearch() {
         axiosClient
             .get('product/search', {
                 params: {
-                    q: productName
+                    q: productName,
                 },
             })
             .then(function (response) {
                 // handle success
-                navigate("/shopping", {
+                navigate('/shopping', {
                     state: {
-                        list: response.data
-                    }
-                })
+                        list: response.data,
+                        q: productName,
+                    },
+                });
             })
             .catch(function (error) {
                 // handle error
@@ -68,7 +74,7 @@ function Header() {
                         {currentUser ? (
                             <AvaText user={currentUser} />
                         ) : (
-                            <Breadcrumbs     separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
+                            <Breadcrumbs separator="|" aria-label="breadcrumb" sx={{ color: 'white' }}>
                                 <Typography variant="body2" sx={{ color: 'white' }}>
                                     <Link style={{ color: 'inherit' }} to="/login">
                                         Login
@@ -82,7 +88,7 @@ function Header() {
                             </Breadcrumbs>
                         )}
                     </Stack>
-                   
+
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Box flex={1}>
                             <img style={{ maxWidth: '88px' }} src="/assets/images/logo.png" alt="logo" />
@@ -92,7 +98,7 @@ function Header() {
                                 sx={{ ml: 1, flex: 1 }}
                                 placeholder="Search..."
                                 onChange={(e) => setProductName(e.target.value)}
-                                
+                                onKeyDown={handlePress}
                             />
                             <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                                 <Search onClick={handleSearch} />
