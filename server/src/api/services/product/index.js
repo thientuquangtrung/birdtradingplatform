@@ -1,13 +1,20 @@
 const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
+const { pagination } = require('../../utils/pagination');
 const createError = require('http-errors');
 
-const getProducts = async () => {
+const getProducts = async (pageNo) => {
     try {
+        const { page, rowsOfPage } = pagination(pageNo);
+
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
-        const list = await pool.request().query(sqlQueries.productList);
+        const list = await pool
+            .request()
+            .input('page', sql.Int, page)
+            .input('rowsOfPage', sql.Int, rowsOfPage)
+            .query(sqlQueries.productList);
 
         return list.recordset;
     } catch (err) {
@@ -27,11 +34,18 @@ const getProductById = async (id) => {
     }
 };
 
-const getProductByCategory = async (id) => {
+const getProductByCategory = async (id, pageNo) => {
     try {
+        const { page, rowsOfPage } = pagination(pageNo);
+
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
-        const list = await pool.request().input('id', sql.Int, id).query(sqlQueries.getProductByCategory);
+        const list = await pool
+            .request()
+            .input('id', sql.Int, id)
+            .input('page', sql.Int, page)
+            .input('rowsOfPage', sql.Int, rowsOfPage)
+            .query(sqlQueries.getProductByCategory);
 
         return list.recordset;
     } catch (error) {
@@ -39,11 +53,18 @@ const getProductByCategory = async (id) => {
     }
 };
 
-const searchProducts = async (q) => {
+const searchProducts = async (q, pageNo) => {
     try {
+        const { page, rowsOfPage } = pagination(pageNo);
+
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
-        const list = await pool.request().input('q', sql.NVarChar, q).query(sqlQueries.searchProducts);
+        const list = await pool
+            .request()
+            .input('q', sql.NVarChar, q)
+            .input('page', sql.Int, page)
+            .input('rowsOfPage', sql.Int, rowsOfPage)
+            .query(sqlQueries.searchProducts);
 
         return list.recordset;
     } catch (error) {
@@ -51,13 +72,21 @@ const searchProducts = async (q) => {
     }
 };
 
-const filterProducts = async (sortBy, order, categoryId) => {
+const filterProducts = async (sortBy, order, categoryId, pageNo) => {
     try {
         if (categoryId) {
             categoryId = '[categoryId] = ' + categoryId;
         } else {
             categoryId = ' 1=1 ';
         }
+
+        if (q) {
+            q = `and [name] like '%${q}%'`;
+        } else {
+            q = 'and 1=1 ';
+        }
+
+        const { page, rowsOfPage } = pagination(pageNo);
 
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
@@ -66,6 +95,9 @@ const filterProducts = async (sortBy, order, categoryId) => {
             .input('sortBy', sql.VarChar, sortBy)
             .input('order', sql.VarChar, order)
             .input('categoryId', sql.VarChar, categoryId)
+            .input('q', sql.VarChar, q)
+            .input('page', sql.Int, page)
+            .input('rowsOfPage', sql.Int, rowsOfPage)
             .query(sqlQueries.filterProducts);
 
         return list.recordset;
