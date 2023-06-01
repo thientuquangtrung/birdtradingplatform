@@ -3,7 +3,9 @@ const productData = require('../services/product');
 
 const getProducts = async (req, res, next) => {
     try {
-        const list = await productData.getProducts();
+        const page = req.query.page;
+
+        const list = await productData.getProducts(page);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
@@ -29,7 +31,9 @@ const getProductById = async (req, res, next) => {
 
 const getProductByCategory = async (req, res, next) => {
     try {
-        const list = await productData.getProductByCategory(req.params.id);
+        const id = req.params.id;
+        const { page } = req.query;
+        const list = await productData.getProductByCategory(id, page);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
@@ -43,8 +47,8 @@ const getProductByCategory = async (req, res, next) => {
 
 const searchProducts = async (req, res, next) => {
     try {
-        const { q } = req.query;
-        const list = await productData.searchProducts(q);
+        const { q, page } = req.query;
+        const list = await productData.searchProducts(q, page);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
@@ -58,8 +62,8 @@ const searchProducts = async (req, res, next) => {
 
 const filterProducts = async (req, res, next) => {
     try {
-        const { sortBy, order, categoryId } = req.query;
-        const list = await productData.filterProducts(sortBy, order, categoryId);
+        const { sortBy, order, categoryId, q, page } = req.query;
+        const list = await productData.filterProducts(sortBy, order, categoryId, q);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;

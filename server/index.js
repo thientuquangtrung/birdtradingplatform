@@ -7,8 +7,7 @@ const config = require('./src/api/config');
 const productRoutes = require('./src/api/routes/productRoutes');
 const authRoutes = require('./src/api/routes/authRoutes');
 const categoryRoutes = require('./src/api/routes/categoryRoutes');
-const { REDIS_GET, REDIS_SET } = require('./src/api/services/redis/redisServices');
-const { redisClient } = require('./src/api/config');
+const cartRoutes = require('./src/api/routes/cartRoutes');
 
 const app = express();
 
@@ -21,6 +20,7 @@ app.use('/product', express.static('public/images/product'));
 app.use('/api', productRoutes.routes);
 app.use('/api', authRoutes.routes);
 app.use('/api', categoryRoutes.routes);
+app.use('/api', cartRoutes.routes);
 
 app.use((req, res, next) => {
     next(createError(404, 'Not Found'));
