@@ -40,7 +40,7 @@ function Shopping() {
                 },
             })
             .then((response) => {
-                setListProduct(response.data);
+                setListProduct(response.data.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -68,7 +68,7 @@ function Shopping() {
                 axiosClient
                     .get(`/product/category/${location.state.categoryId}`)
                     .then((response) => {
-                        setListProduct(response.data);
+                        setListProduct(response.data.data);
                     })
                     .catch((error) => {
                         console.log(error);
