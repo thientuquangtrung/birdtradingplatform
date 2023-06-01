@@ -72,7 +72,7 @@ const searchProducts = async (q, pageNo) => {
     }
 };
 
-const filterProducts = async (sortBy, order, categoryId, pageNo) => {
+const filterProducts = async (sortBy, order, categoryId, q, pageNo) => {
     try {
         if (categoryId) {
             categoryId = '[categoryId] = ' + categoryId;
@@ -83,10 +83,11 @@ const filterProducts = async (sortBy, order, categoryId, pageNo) => {
         if (q) {
             q = `and [name] like '%${q}%'`;
         } else {
-            q = 'and 1=1 ';
+            q = ' and 1=1 ';
         }
 
         const { page, rowsOfPage } = pagination(pageNo);
+        const offset = ((page - 1) * rowsOfPage).toString();
 
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
@@ -96,8 +97,8 @@ const filterProducts = async (sortBy, order, categoryId, pageNo) => {
             .input('order', sql.VarChar, order)
             .input('categoryId', sql.VarChar, categoryId)
             .input('q', sql.VarChar, q)
-            .input('page', sql.Int, page)
-            .input('rowsOfPage', sql.Int, rowsOfPage)
+            .input('offset', sql.VarChar, offset)
+            .input('rowsOfPage', sql.VarChar, process.env.ROW_OF_PAGE)
             .query(sqlQueries.filterProducts);
 
         return list.recordset;

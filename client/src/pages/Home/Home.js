@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
 
-
 function Home() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,7 +16,7 @@ function Home() {
         axiosClient
             .get('/product')
             .then((response) => {
-                setProducts(response.data);
+                setProducts(response.data.data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -50,8 +49,6 @@ function Home() {
                 >
                     <Button variant="outlined">Xem Thêm</Button>
                 </Box>
-
-                
             </Container>
         </div>
     );

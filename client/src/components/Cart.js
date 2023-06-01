@@ -1,7 +1,28 @@
-import { Box, Button, MenuList, Paper, Stack, Typography } from "@mui/material";
-import CartItem from "./CartItem";
+import { Box, Button, MenuList, Paper, Stack, Typography } from '@mui/material';
+import CartItem from './CartItem';
+import { useContext, useEffect, useState } from 'react';
+import axiosClient from '../api/axiosClient';
+import AuthContext from '../contexts/AuthContext';
 
 function Cart() {
+    const [cartList, setCartList] = useState([]);
+    const { currentUser } = useContext(AuthContext);
+
+    useEffect(() => {
+        axiosClient
+            .get('cart', {
+                params: {
+                    userId: currentUser?.id,
+                },
+            })
+            .then((response) => {
+                setCartList(response.data.slice(0, 5));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     return (
         <Paper>
             <Stack p>
@@ -9,15 +30,19 @@ function Cart() {
                     <Typography variant="subtitle1">Sản phẩm mới thêm</Typography>
                 </Box>
                 <MenuList mb={1}>
-                    <CartItem />
-                    <CartItem />
-                    <CartItem />
-                    <CartItem />
-                    <CartItem />
-                    <CartItem />
+                    
+                    {
+                        cartList.length>0 && cartList.map((item) => {
+                            return (
+                                <CartItem key={item.product.id} data={item.product}/>
+                            )
+                        } ) 
+                    }
                 </MenuList>
                 <Stack>
-                    <Button variant="contained" color="primary">Xem giỏ hàng</Button>
+                    <Button variant="contained" color="primary">
+                        Xem giỏ hàng
+                    </Button>
                 </Stack>
             </Stack>
         </Paper>

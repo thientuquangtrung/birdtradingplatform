@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const productData = require('../services/product');
+const { modifyPagination } = require('../utils/response_modifiers');
 
 const getProducts = async (req, res, next) => {
     try {
@@ -11,7 +12,7 @@ const getProducts = async (req, res, next) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
         });
 
-        return res.send(list);
+        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
@@ -39,7 +40,7 @@ const getProductByCategory = async (req, res, next) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
         });
 
-        return res.send(list);
+        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
@@ -54,7 +55,7 @@ const searchProducts = async (req, res, next) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
         });
 
-        return res.send(list);
+        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
@@ -63,13 +64,13 @@ const searchProducts = async (req, res, next) => {
 const filterProducts = async (req, res, next) => {
     try {
         const { sortBy, order, categoryId, q, page } = req.query;
-        const list = await productData.filterProducts(sortBy, order, categoryId, q);
+        const list = await productData.filterProducts(sortBy, order, categoryId, q, page);
 
         list.map((product) => {
             product.image = `${process.env.HOST_URL}/product/${product.image}`;
         });
 
-        return res.send(list);
+        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
