@@ -28,6 +28,11 @@ function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
+    const [totalPage, setTotalPage] = useState(1);
+    const [page, setPage] = useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
 
     function handleFilter(option, order = 'asc') {
         axiosClient
@@ -37,10 +42,13 @@ function Shopping() {
                     q: location.state?.q,
                     sortBy: option,
                     order,
+                    page,
                 },
             })
             .then((response) => {
                 setListProduct(response.data.data);
+                setTotalPage(response.data.meta.pagination.totalPages);
+                setPage(response.data.meta.pagination.currentPage);
             })
             .catch((error) => {
                 console.log(error);
@@ -66,9 +74,15 @@ function Shopping() {
 
             if (location.state?.categoryId) {
                 axiosClient
-                    .get(`/product/category/${location.state.categoryId}`)
+                    .get(`/product/category/${location.state.categoryId}`, {
+                        params: {
+                            page,
+                        },
+                    })
                     .then((response) => {
                         setListProduct(response.data.data);
+                        setTotalPage(response.data.meta.pagination.totalPages);
+                        setPage(response.data.meta.pagination.currentPage);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -87,7 +101,6 @@ function Shopping() {
                             <IconButton edge="start" color="inherit" aria-label="menu">
                                 <MenuIcon />
                             </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
                             <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
                                 Danh mục
                             </Typography>
@@ -161,9 +174,11 @@ function Shopping() {
                     })}
                 </Grid>
                 <Pagination
-                    count={10}
+                    count={totalPage}
                     color="primary"
                     shape="rounded"
+                    page={page}
+                    onChange={handleChange}
                     style={{ display: 'flex', justifyContent: 'center' }}
                 />
             </Grid>
