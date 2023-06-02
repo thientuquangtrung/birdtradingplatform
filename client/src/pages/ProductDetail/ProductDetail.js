@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
@@ -14,14 +14,14 @@ import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 
 function ProductDetail() {
-    const { id } = useParams();
+    const location = useLocation();
     const { currentUser } = useContext(AuthContext);
     const [product, setProduct] = useState('');
     const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
         axiosClient
-            .get(`product/${id}`)
+            .get(`product/${location.state?.id}`)
             .then(function (response) {
                 // handle success
                 setProduct(response.data);
@@ -30,7 +30,7 @@ function ProductDetail() {
                 // handle error
                 handleError(error);
             });
-    }, []);
+    }, [location.state]);
 
     function handleAddToCart() {
         axiosClient

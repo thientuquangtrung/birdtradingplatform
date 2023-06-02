@@ -46,7 +46,6 @@ const getProductByCategory = async (id, pageNo) => {
             .input('page', sql.Int, page)
             .input('rowsOfPage', sql.Int, rowsOfPage)
             .query(sqlQueries.getProductByCategory);
-
         return list.recordset;
     } catch (error) {
         throw createError(error);

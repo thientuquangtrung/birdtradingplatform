@@ -24,7 +24,7 @@ const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout, subdomain: 'common' },
     { path: '/shopping', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
     { path: '/shopping/:categoryName', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
-    { path: '/product/detail/:id', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
+    { path: '/product/detail/:name', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
     { path: '/signup', component: SellerSignup, layout: AuthLayout, subdomain: 'seller' },
     { path: '/signup', component: Signup, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },

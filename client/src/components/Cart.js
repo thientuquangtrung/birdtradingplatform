@@ -3,6 +3,7 @@ import CartItem from './CartItem';
 import { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 function Cart() {
     const [cartList, setCartList] = useState([]);
@@ -30,14 +31,14 @@ function Cart() {
                     <Typography variant="subtitle1">Sản phẩm mới thêm</Typography>
                 </Box>
                 <MenuList mb={1}>
-                    
-                    {
-                        cartList.length>0 && cartList.map((item) => {
+                    {cartList.length > 0 &&
+                        cartList.map((item) => {
                             return (
-                                <CartItem key={item.product.id} data={item.product}/>
-                            )
-                        } ) 
-                    }
+                                <Link to={`/product/detail/${item.product.name}`} state={{id: item.product.id}}>
+                                    <CartItem key={item.product.id} data={item.product} />
+                                </Link>
+                            );
+                        })}
                 </MenuList>
                 <Stack>
                     <Button variant="contained" color="primary">
