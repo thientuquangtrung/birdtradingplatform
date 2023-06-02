@@ -16,7 +16,7 @@ import SellerSignup from '../pages/Signup/SellerSignup';
 import UpdateCustomer from '../pages/UpdateCustomer/UpdateCustomer';
 import Shopping from '../pages/Shopping/Shopping';
 import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
-import Cart from '../pages/Cart/Cart';
+import CartDetail from '../pages/CartDetail/CartDetail';
 import Checkout from '../pages/Checkout/Checkout';
 
 // Public routes
@@ -50,7 +50,7 @@ const privateRoutes = [
         role: ['SELLER'],
         subdomain: 'seller',
     },
-    { path: '/cart', component: Cart, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
+    { path: '/cart', component: CartDetail, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
     { path: '/cart/checkout', component: Checkout, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
 ];
 
