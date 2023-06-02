@@ -34,12 +34,14 @@ function Home() {
                             <CircularProgress />
                         </Box>
                     ) : (
-                        <Grid container spacing={1.5} sx={{ display: 'flex', flexDirection: 'row' }} xs={12}>
-                            {products.length > 0 &&
-                                products.map(function (product) {
-                                    return <ProductCard key={product.id} data={product} />;
-                                })}
-                        </Grid>
+                        products.length > 0 &&
+                        products.map(function (product) {
+                            return (
+                                <Grid item xs={3}>
+                                    <ProductCard key={product.id} data={product} />
+                                </Grid>
+                            );
+                        })
                     )}
                 </Grid>
                 <Box
