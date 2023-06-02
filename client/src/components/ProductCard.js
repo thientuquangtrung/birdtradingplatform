@@ -14,7 +14,7 @@ const ProductCard = ({ data }) => {
     };
 
     return (
-        <Grid item xs={2.5}>
+        <Grid item xs={3}>
             <Paper
                 elevation={3}
                 sx={{

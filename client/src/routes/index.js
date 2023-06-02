@@ -17,6 +17,7 @@ import UpdateCustomer from '../pages/UpdateCustomer/UpdateCustomer';
 import Shopping from '../pages/Shopping/Shopping';
 import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
 import Cart from '../pages/Cart/Cart';
+import Checkout from '../pages/Checkout/Checkout';
 
 // Public routes
 const publicRoutes = [
@@ -50,6 +51,7 @@ const privateRoutes = [
         subdomain: 'seller',
     },
     { path: '/cart', component: Cart, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
+    { path: '/cart/checkout', component: Checkout, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
 ];
 
 export { publicRoutes, privateRoutes };
