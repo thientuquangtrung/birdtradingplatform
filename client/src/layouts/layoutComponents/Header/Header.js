@@ -35,25 +35,11 @@ function Header() {
     }
 
     function handleSearch() {
-        axiosClient
-            .get('product/search', {
-                params: {
-                    q: productName,
-                },
-            })
-            .then(function (response) {
-                // handle success
-                navigate('/shopping', {
-                    state: {
-                        list: response.data.data,
-                        q: productName,
-                    },
-                });
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            });
+        navigate('/shopping', {
+            state: {
+                q: productName,
+            },
+        });
     }
 
     return (
@@ -97,6 +83,7 @@ function Header() {
                             <InputBase
                                 sx={{ ml: 1, flex: 1 }}
                                 placeholder="Search..."
+                                value={productName}
                                 onChange={(e) => setProductName(e.target.value)}
                                 onKeyDown={handlePress}
                             />

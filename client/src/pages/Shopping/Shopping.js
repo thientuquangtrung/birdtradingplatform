@@ -28,11 +28,82 @@ function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
-    const [totalPage, setTotalPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
+
     const handleChange = (event, value) => {
         setPage(value);
     };
+
+    useEffect(function () {
+        axiosClient
+            .get('/category')
+            .then((response) => {
+                setCategoryList(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+    useEffect(
+        function () {
+            if (location.state?.q) {
+                axiosClient
+                    .get('product/search', {
+                        params: {
+                            q: location.state.q,
+                            page,
+                        },
+                    })
+                    .then(function (response) {
+                        // handle success
+                        setListProduct(response.data.data);
+                        setTotalPage(response.data.meta.pagination.totalPages);
+                        setPage(response.data.meta.pagination.currentPage);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    });
+                return;
+            }
+
+            if (location.state?.categoryId) {
+                axiosClient
+                    .get(`/product/category/${location.state.categoryId}`, {
+                        params: {
+                            page,
+                        },
+                    })
+                    .then((response) => {
+                        setListProduct(response.data.data);
+                        setTotalPage(response.data.meta.pagination.totalPages);
+                        setPage(response.data.meta.pagination.currentPage);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                return;
+            }
+
+            axiosClient
+                .get('/product', {
+                    params: {
+                        page,
+                    },
+                })
+                .then((response) => {
+                    setListProduct(response.data.data);
+                    setTotalPage(response.data.meta.pagination.totalPages);
+                    setPage(response.data.meta.pagination.currentPage);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        [location.state, page],
+    );
 
     function handleFilter(option, order = 'asc') {
         axiosClient
@@ -54,43 +125,6 @@ function Shopping() {
                 console.log(error);
             });
     }
-
-    useEffect(function () {
-        axiosClient
-            .get('/category')
-            .then((response) => {
-                setCategoryList(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
-
-    useEffect(
-        function () {
-            if (location.state?.list) {
-                setListProduct(location.state.list);
-            }
-
-            if (location.state?.categoryId) {
-                axiosClient
-                    .get(`/product/category/${location.state.categoryId}`, {
-                        params: {
-                            page,
-                        },
-                    })
-                    .then((response) => {
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
-        },
-        [location.state],
-    );
 
     return (
         <Grid container spacing={1.5}>
@@ -178,14 +212,16 @@ function Shopping() {
                         );
                     })}
                 </Grid>
-                <Pagination
-                    count={totalPage}
-                    color="primary"
-                    shape="rounded"
-                    page={page}
-                    onChange={handleChange}
-                    style={{ display: 'flex', justifyContent: 'center' }}
-                />
+                {totalPage > 0 && (
+                    <Pagination
+                        count={totalPage}
+                        color="primary"
+                        shape="rounded"
+                        page={page}
+                        onChange={handleChange}
+                        style={{ display: 'flex', justifyContent: 'center' }}
+                    />
+                )}
             </Grid>
         </Grid>
     );
