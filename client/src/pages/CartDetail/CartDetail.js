@@ -12,10 +12,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { enqueueSnackbar } from 'notistack';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useCallback, useState, useMemo } from 'react';
 import AuthContext from '../../contexts/AuthContext';
+import CartContext from '../../contexts/CartContext';
 
-const Actions = ({ data, setCartList }) => {
+const Actions = ({ data }) => {
+    const { setCartLength, setCartList } = useContext(CartContext);
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -36,7 +38,8 @@ const Actions = ({ data, setCartList }) => {
             })
             .then(function (response) {
                 // handle success
-                setCartList((prev) => prev.filter((row) => row.id !== data.row.id));
+                setCartList(response.data.data.items);
+                setCartLength(response.data.data.length);
                 enqueueSnackbar('Đã xóa sản phẩm khỏi giỏ hàng', { variant: 'success' });
                 setOpen(false);
             })
@@ -92,7 +95,7 @@ const Quantity = ({ rowData }) => {
                     product: updatedCartItems[0],
                     quantity: updatedCartItems[0].quantity,
                 })
-                .then((response) => console.log(response))
+                .then((response) => {})
                 .catch((error) => console.log(error));
 
             return updatedCartItems;
@@ -109,7 +112,7 @@ const Quantity = ({ rowData }) => {
                     product: updatedCartItems[0],
                     quantity: updatedCartItems[0].quantity,
                 })
-                .then((response) => console.log(response))
+                .then((response) => {})
                 .catch((error) => console.log(error));
 
             return updatedCartItems;
@@ -117,82 +120,77 @@ const Quantity = ({ rowData }) => {
     };
 
     return (
-        <React.Fragment>
+        <>
             <Button onClick={handleMinus}>-</Button>
             <div style={{ padding: '3px' }}>{cartItems[0].quantity}</div>
             <Button onClick={handlePlus}>+</Button>
-        </React.Fragment>
+        </>
     );
 };
 
-export default function DataTable() {
-    const [cartList, setCartList] = useState([]);
-    const { currentUser } = useContext(AuthContext);
+export default function CartDetail() {
+    const { cartList } = useContext(CartContext);
 
-    const columns = [
-        {
-            field: 'image',
-            headerName: 'Hình ảnh',
-            width: 120,
-            renderCell: (rowData) => (
-                <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-            ),
-            headerAlign: 'center',
-            align: 'center',
-        },
-        { field: 'name', headerName: 'Tên sản phẩm', width: 200 },
-
-        {
-            field: 'quantity',
-            headerName: 'Số lượng',
-            width: 300,
-            renderCell: (params) => <Quantity rowData={params.row} />,
-            headerAlign: 'center',
-            align: 'center',
-        },
-        {
-            field: 'price',
-            headerName: 'Giá',
-            width: 200,
-            headerAlign: 'center',
-            align: 'center',
-        },
-
-        {
-            field: 'id',
-            headerName: 'Thao tác',
-            width: 100,
-            headerAlign: 'center',
-            align: 'center',
-            renderCell: (rowAction) => <Actions data={rowAction} setCartList={setCartList} />,
-        },
-    ];
-
-    useEffect(() => {
-        axiosClient
-            .get('cart', {
-                params: {
-                    userId: currentUser?.id,
-                },
-            })
-            .then((response) => {
-                if (response.data.length > 0) {
-                    const list = response.data.map((item) => ({
-                        ...item.product,
-                        quantity: parseInt(item.quantity),
-                    }));
-
-                    setCartList(list);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
+    const modifiedCartList = useCallback(() => {
+        let rows = [];
+        if (cartList.length > 0) {
+            rows = cartList.map((item) => {
+                return {
+                    ...item.product,
+                    quantity: parseInt(item.quantity),
+                };
             });
-    }, []);
+        }
+
+        return rows;
+    }, [cartList]);
+
+    const columns = useMemo(
+        () => [
+            {
+                field: 'image',
+                headerName: 'Hình ảnh',
+                width: 120,
+                renderCell: (rowData) => (
+                    <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                ),
+                headerAlign: 'center',
+                align: 'center',
+            },
+            { field: 'name', headerName: 'Tên sản phẩm', width: 200 },
+
+            {
+                field: 'quantity',
+                headerName: 'Số lượng',
+                width: 300,
+                renderCell: (params) => <Quantity rowData={params.row} />,
+                headerAlign: 'center',
+                align: 'center',
+            },
+            {
+                field: 'price',
+                headerName: 'Giá',
+                width: 200,
+                headerAlign: 'center',
+                align: 'center',
+            },
+            {
+                field: 'id',
+                headerName: 'Thao tác',
+                width: 100,
+                headerAlign: 'center',
+                align: 'center',
+                renderCell: (rowAction) => <Actions data={rowAction} />,
+            },
+        ],
+        [],
+    );
+
     return (
         <div style={{ height: 400, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <DataGrid
-                rows={cartList}
+                disableRowSelectionOnClick
+                rows={modifiedCartList()}
                 columns={columns}
                 initialState={{
                     pagination: {

@@ -16,7 +16,8 @@ const setProduct = async (product = {}) => {
 };
 
 const getProduct = async (productId) => {
-    return await redisClient.json.get(`product:${productId}`);
+    const product = await redisClient.json.get(`product:${productId}`);
+    return JSON.parse(product);
 };
 
 module.exports = {

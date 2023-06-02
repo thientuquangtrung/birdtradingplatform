@@ -6,11 +6,10 @@ function CartItem({ data }) {
             sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                minWidth: '350px',
                 height: '60px',
             }}
         >
-            <img style={{ width: '50px', height: '40px' }} src={data.image} alt="" />
+            <img style={{ width: '50px', height: '40px', objectFit: 'cover' }} src={data.image} alt="" />
             <Typography
                 maxWidth={300}
                 noWrap

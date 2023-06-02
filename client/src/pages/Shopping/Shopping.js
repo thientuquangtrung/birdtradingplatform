@@ -1,17 +1,17 @@
-import { Box, Button, Grid, MenuItem, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, ListItemButton, MenuItem, Paper, Stack, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ProductCard from '../../components/ProductCard';
 import Pagination from '@mui/material/Pagination';
 import axiosClient from '../../api/axiosClient';
+import CheckIcon from '@mui/icons-material/Check';
 
 const priceOption = [
     {
@@ -28,6 +28,8 @@ function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
+    const [sortBy, setSortBy] = useState('');
+    const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
 
@@ -48,6 +50,9 @@ function Shopping() {
 
     useEffect(
         function () {
+            setSortBy('');
+            setOrder('');
+
             if (location.state?.q) {
                 axiosClient
                     .get('product/search', {
@@ -105,13 +110,13 @@ function Shopping() {
         [location.state, page],
     );
 
-    function handleFilter(option, order = 'asc') {
+    useEffect(() => {
         axiosClient
             .get('/product/filter', {
                 params: {
                     categoryId: location.state?.categoryId,
                     q: location.state?.q,
-                    sortBy: option,
+                    sortBy,
                     order,
                     page,
                 },
@@ -124,12 +129,17 @@ function Shopping() {
             .catch((error) => {
                 console.log(error);
             });
+    }, [sortBy, order]);
+
+    function handleFilter(option, order = 'asc') {
+        setSortBy(option);
+        setOrder(order);
     }
 
     return (
         <Grid container spacing={1.5}>
             <Grid item xs={2} marginTop={0.4}>
-                <Box sx={{ flexGrow: 1}}>
+                <Box sx={{ flexGrow: 1 }}>
                     <AppBar position="static">
                         <Toolbar variant="dense">
                             <IconButton edge="start" color="inherit" aria-label="menu">
@@ -152,9 +162,13 @@ function Shopping() {
                                         categoryId: category.id,
                                     }}
                                 >
-                                    <ListItem button divider>
+                                    <ListItemButton
+                                        sx={{ pt: 1, pb: 1 }}
+                                        selected={location.state?.categoryId === category.id}
+                                        divider
+                                    >
                                         <ListItemText primary={category.name} />
-                                    </ListItem>
+                                    </ListItemButton>
                                 </Link>
                             );
                         })}
@@ -174,18 +188,27 @@ function Shopping() {
                             <Box sx={{ p: 1 }}>
                                 <Stack direction="row" alignItems="center" spacing={4}>
                                     <Typography marginRight={1} variant="body1">
-                                        Sắp xếp theo
+                                        Sắp xếp theo:
                                     </Typography>
 
-                                    <Button variant="outlined" onClick={() => handleFilter('newest')}>
+                                    <Button
+                                        startIcon={sortBy === 'newest' ? <CheckIcon /> : ''}
+                                        variant={sortBy === 'newest' ? 'contained' : 'outlined'}
+                                        onClick={() => handleFilter('newest')}
+                                    >
                                         Mới Nhất
                                     </Button>
 
-                                    <Button variant="outlined" onClick={() => handleFilter('sales')}>
+                                    <Button
+                                        startIcon={sortBy === 'sales' ? <CheckIcon /> : ''}
+                                        variant={sortBy === 'sales' ? 'contained' : 'outlined'}
+                                        onClick={() => handleFilter('sales')}
+                                    >
                                         Bán Chạy
                                     </Button>
 
                                     <TextField
+                                        value={sortBy === 'price' ? order : ''}
                                         size="small"
                                         select
                                         label="Giá"

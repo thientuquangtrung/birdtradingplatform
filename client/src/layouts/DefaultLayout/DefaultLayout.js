@@ -1,14 +1,15 @@
-import { Container } from "@mui/material";
-import Footer from "../layoutComponents/Footer/Footer";
-import Header from "../layoutComponents/Header/Header";
+import { Container } from '@mui/material';
+import { CartContextProvider } from '../../contexts/CartContext';
+import Footer from '../layoutComponents/Footer/Footer';
+import Header from '../layoutComponents/Header/Header';
 
 function DefaultLayout({ children }) {
     return (
-        <div>
+        <CartContextProvider>
             <Header />
-            <Container sx={{paddingTop: 5, paddingBottom: 5}}>{children}</Container>
+            <Container sx={{ paddingTop: 5, paddingBottom: 5 }}>{children}</Container>
             <Footer />
-        </div>
+        </CartContextProvider>
     );
 }
 
