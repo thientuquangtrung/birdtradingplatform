@@ -95,7 +95,7 @@ function Shopping() {
     return (
         <Grid container spacing={1.5}>
             <Grid item xs={2} marginTop={0.4}>
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ flexGrow: 1}}>
                     <AppBar position="static">
                         <Toolbar variant="dense">
                             <IconButton edge="start" color="inherit" aria-label="menu">
