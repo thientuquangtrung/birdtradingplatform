@@ -28,11 +28,6 @@ function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
-    const [totalPage, setTotalPage] = useState(1);
-    const [page, setPage] = useState(1);
-    const handleChange = (event, value) => {
-        setPage(value);
-    };
 
     function handleFilter(option, order = 'asc') {
         axiosClient
@@ -42,13 +37,10 @@ function Shopping() {
                     q: location.state?.q,
                     sortBy: option,
                     order,
-                    page,
                 },
             })
             .then((response) => {
-                setListProduct(response.data.data);
-                setTotalPage(response.data.meta.pagination.totalPages);
-                setPage(response.data.meta.pagination.currentPage);
+                setListProduct(response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -74,15 +66,9 @@ function Shopping() {
 
             if (location.state?.categoryId) {
                 axiosClient
-                    .get(`/product/category/${location.state.categoryId}`, {
-                        params: {
-                            page,
-                        },
-                    })
+                    .get(`/product/category/${location.state.categoryId}`)
                     .then((response) => {
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
+                        setListProduct(response.data);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -93,8 +79,8 @@ function Shopping() {
     );
 
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={2} marginTop={1.8}>
+        <Grid container spacing={1.5}>
+            <Grid item xs={2} marginTop={0.4}>
                 <Box sx={{ flexGrow: 1 }}>
                     <AppBar position="static">
                         <Toolbar variant="dense">
@@ -135,26 +121,27 @@ function Shopping() {
                             justifyContent="space-between"
                             spacing={2}
                             alignItems="center"
-                            padding={1}
+                            paddingLeft={1}
                         >
-                            <Box>
+                            <Box sx={{ p: 1 }}>
                                 <Stack direction="row" alignItems="center" spacing={4}>
                                     <Typography marginRight={1} variant="body1">
                                         Sắp xếp theo
                                     </Typography>
 
-                                    <Button variant="contained" onClick={() => handleFilter('newest')}>
+                                    <Button variant="outlined" onClick={() => handleFilter('newest')}>
                                         Mới Nhất
                                     </Button>
 
-                                    <Button variant="contained" onClick={() => handleFilter('sales')}>
+                                    <Button variant="outlined" onClick={() => handleFilter('sales')}>
                                         Bán Chạy
                                     </Button>
 
                                     <TextField
+                                        size="small"
                                         select
                                         label="Giá"
-                                        sx={{ width: 300 }}
+                                        sx={{ minWidth: 200 }}
                                         onChange={(e) => handleFilter('price', e.target.value)}
                                     >
                                         {priceOption.map((option) => (
@@ -170,15 +157,17 @@ function Shopping() {
                 </Paper>
                 <Grid sx={{ paddingTop: 3 }} container spacing={1.5}>
                     {listProduct.map(function (product) {
-                        return <ProductCard key={product.id} data={product} />;
+                        return (
+                            <Grid item xs={2.4} key={product.id}>
+                                <ProductCard data={product} />
+                            </Grid>
+                        );
                     })}
                 </Grid>
                 <Pagination
-                    count={totalPage}
+                    count={10}
                     color="primary"
                     shape="rounded"
-                    page={page}
-                    onChange={handleChange}
                     style={{ display: 'flex', justifyContent: 'center' }}
                 />
             </Grid>
