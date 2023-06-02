@@ -70,22 +70,24 @@ const ProductCard = ({ data }) => {
                     </Typography>
                 </Box>
 
-                    <CardActions
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginTop: '10px',
+                <CardActions
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '10px',
+                    }}
+                >
+                    <Link
+                        to={`/product/detail/${data.name}`}
+                        state={{
+                            id: data.id,
                         }}
                     >
-                        <Link to={`/product/detail/${data.name}`} state={{
-                            id: data.id,
-                        }}>
-                            <Button size="small">Chi tiết</Button>
-                        </Link>
-                    </CardActions>
-                </Box>
-            </Paper>
-        </Grid>
+                        <Button size="small">Chi tiết</Button>
+                    </Link>
+                </CardActions>
+            </Box>
+        </Paper>
     );
 };
 
