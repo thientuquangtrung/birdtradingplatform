@@ -95,9 +95,9 @@ const columns = [
         headerAlign: 'center',
         align: 'center',
     },
-    { field: 'name', headerName: 'Tên sản phẩm', width: 180 },
-    { field: 'price', headerName: 'Giá', width: 200, headerAlign: 'center', align: 'center' },
-    { field: 'description', headerName: 'Mô tả', width: 200 },
+    { field: 'name', headerName: 'Tên sản phẩm', width: 140 },
+    { field: 'price', headerName: 'Giá', width: 150, headerAlign: 'center', align: 'center' },
+    { field: 'description', headerName: 'Mô tả', width: 180 },
     {
         field: 'enabled',
         headerName: 'Trạng thái',
