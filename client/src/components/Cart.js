@@ -34,16 +34,18 @@ function Cart() {
                     {cartList.length > 0 &&
                         cartList.map((item) => {
                             return (
-                                <Link to={`/product/detail/${item.product.name}`} state={{id: item.product.id}}>
+                                <Link to={`/product/detail/${item.product.name}`} state={{ id: item.product.id }}>
                                     <CartItem key={item.product.id} data={item.product} />
                                 </Link>
                             );
                         })}
                 </MenuList>
                 <Stack>
-                    <Button variant="contained" color="primary">
-                        Xem giỏ hàng
-                    </Button>
+                    <Link to="/cart">
+                        <Button variant="contained" color="primary">
+                            Xem giỏ hàng
+                        </Button>
+                    </Link>
                 </Stack>
             </Stack>
         </Paper>

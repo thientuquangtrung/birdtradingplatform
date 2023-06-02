@@ -9,12 +9,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
-import axiosClient from '../../components/Cart';
+import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../contexts/AuthContext';
 
-const Actions = ({ data }) => {
+const Actions = ({ data, setCartList }) => {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -24,13 +25,19 @@ const Actions = ({ data }) => {
     const handleClose = () => {
         setOpen(false);
     };
-
+    const { currentUser } = useContext(AuthContext);
     const handleDelete = () => {
         axiosClient
-            .delete(`seller/product/${data.value}`)
+            .delete(`cart/item`, {
+                data: {
+                    userId: currentUser.id,
+                    product: data.row,
+                },
+            })
             .then(function (response) {
                 // handle success
-                enqueueSnackbar('Đã xóa sản phẩm thành công', { variant: 'success' });
+                setCartList((prev) => prev.filter((row) => row.id !== data.row.id));
+                enqueueSnackbar('Đã xóa sản phẩm khỏi giỏ hàng', { variant: 'success' });
                 setOpen(false);
             })
             .catch(function (error) {
@@ -71,6 +78,7 @@ const Actions = ({ data }) => {
 
 const Quantity = ({ rowData }) => {
     const [cartItems, setCartItems] = useState([rowData]);
+    const { currentUser } = useContext(AuthContext);
 
     const handleMinus = () => {
         setCartItems((prevCartItems) => {
@@ -78,6 +86,15 @@ const Quantity = ({ rowData }) => {
             if (updatedCartItems[0].quantity > 1) {
                 updatedCartItems[0].quantity -= 1;
             }
+            axiosClient
+                .put('cart', {
+                    userId: currentUser.id,
+                    product: updatedCartItems[0],
+                    quantity: updatedCartItems[0].quantity,
+                })
+                .then((response) => console.log(response))
+                .catch((error) => console.log(error));
+
             return updatedCartItems;
         });
     };
@@ -86,6 +103,15 @@ const Quantity = ({ rowData }) => {
         setCartItems((prevCartItems) => {
             const updatedCartItems = [...prevCartItems];
             updatedCartItems[0].quantity += 1;
+            axiosClient
+                .put('cart', {
+                    userId: currentUser.id,
+                    product: updatedCartItems[0],
+                    quantity: updatedCartItems[0].quantity,
+                })
+                .then((response) => console.log(response))
+                .catch((error) => console.log(error));
+
             return updatedCartItems;
         });
     };
@@ -99,73 +125,74 @@ const Quantity = ({ rowData }) => {
     );
 };
 
-const columns = [
-    {
-        field: 'image',
-        headerName: 'Hình ảnh',
-        width: 120,
-        renderCell: (rowData) => (
-            <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-        ),
-        headerAlign: 'center',
-        align: 'center',
-    },
-    { field: 'name', headerName: 'Tên sản phẩm', width: 200 },
-
-    {
-        field: 'quantity',
-        headerName: 'Số lượng',
-        width: 300,
-        renderCell: (params) => <Quantity rowData={params.row} />,
-        headerAlign: 'center',
-        align: 'center',
-    },
-    {
-        field: 'price',
-        headerName: 'Giá',
-        width: 200,
-        headerAlign: 'center',
-        align: 'center',
-    },
-
-    {
-        field: 'id',
-        headerName: 'Thao tác',
-        width: 100,
-        headerAlign: 'center',
-        align: 'center',
-        renderCell: (rowAction) => <Actions data={rowAction} />,
-    },
-];
-
-const rows = [
-    {
-        id: 1,
-        image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-        name: 'Chim 1',
-        quantity: 1,
-        price: 35000,
-    },
-    {
-        id: 2,
-        image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-        name: 'Chim 2',
-        quantity: 3,
-        price: 65000,
-    },
-    {
-        id: 3,
-        image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-        name: 'Chim 3',
-        quantity: 4,
-        price: 105000,
-    },
-];
 export default function DataTable() {
+    const [cartList, setCartList] = useState([]);
+    const { currentUser } = useContext(AuthContext);
+
+    const columns = [
+        {
+            field: 'image',
+            headerName: 'Hình ảnh',
+            width: 120,
+            renderCell: (rowData) => (
+                <img src={rowData.value} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+            ),
+            headerAlign: 'center',
+            align: 'center',
+        },
+        { field: 'name', headerName: 'Tên sản phẩm', width: 200 },
+
+        {
+            field: 'quantity',
+            headerName: 'Số lượng',
+            width: 300,
+            renderCell: (params) => <Quantity rowData={params.row} />,
+            headerAlign: 'center',
+            align: 'center',
+        },
+        {
+            field: 'price',
+            headerName: 'Giá',
+            width: 200,
+            headerAlign: 'center',
+            align: 'center',
+        },
+
+        {
+            field: 'id',
+            headerName: 'Thao tác',
+            width: 100,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (rowAction) => <Actions data={rowAction} setCartList={setCartList} />,
+        },
+    ];
+
+    useEffect(() => {
+        axiosClient
+            .get('cart', {
+                params: {
+                    userId: currentUser?.id,
+                },
+            })
+            .then((response) => {
+                if (response.data.length > 0) {
+                    const list = response.data.map((item) => ({
+                        ...item.product,
+                        quantity: parseInt(item.quantity),
+                    }));
+
+                    setCartList(list);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
     return (
         <div style={{ height: 400, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <DataGrid
-                rows={rows}
+                rows={cartList}
                 columns={columns}
                 initialState={{
                     pagination: {

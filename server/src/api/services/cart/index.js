@@ -24,14 +24,16 @@ const addToCart = async ({ userId, product = {}, quantity }) => {
 
 const updateCart = async ({ userId, product = {}, quantity }) => {
     try {
-        const foundProduct = await getProduct(product.id);
-        if (!foundProduct) {
-            throw createError.NotFound('Product not found!');
-        }
+        // const foundProduct = await getProduct(product.id);
+        // if (!foundProduct) {
+        //     throw createError.NotFound('Product not found!');
+        // }
 
-        if (foundProduct.shopId !== product.shopId) {
-            throw createError.NotFound('Product not found!');
-        }
+        // if (foundProduct.shopId !== product.shopId) {
+        //     console.log(foundProduct);
+        //     console.log(product.shopId);
+        //     throw createError.NotFound('Product not found!');
+        // }
 
         if (quantity === 0) {
             return await deleteCartItem({ userId, product });

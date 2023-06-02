@@ -16,7 +16,9 @@ const updateCart = async (req, res, next) => {
     try {
         const response = await cartData.updateCart(req.body);
 
-        return res.send(response);
+        return res.send({
+            status: 200,
+        });
     } catch (error) {
         next(error);
     }
@@ -34,9 +36,12 @@ const deleteCart = async (req, res, next) => {
 
 const deleteCartItem = async (req, res, next) => {
     try {
+        console.log(req.body);
         const response = await cartData.deleteCartItem(req.body);
 
-        return res.send(response);
+        return res.send({
+            status: 200,
+        });
     } catch (error) {
         next(error);
     }
