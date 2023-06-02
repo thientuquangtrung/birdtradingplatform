@@ -17,6 +17,7 @@ const ProductCard = ({ data }) => {
         <Paper
             elevation={3}
             sx={{
+                marginBottom:3,
                 transform: isHovered ? 'translateY(-5px)' : 'none',
                 transition: 'transform 0.3s ease',
                 boxShadow: isHovered ? '0 2px 8px rgba(0, 0, 0, 0.3)' : 'none',
