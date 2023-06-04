@@ -5,8 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
@@ -15,6 +14,7 @@ import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
 
 function ProductDetail() {
+    const navigate = useNavigate();
     const { currentUser } = useContext(AuthContext);
     const { setCartList, setCartLength } = useContext(CartContext);
     const location = useLocation();
@@ -35,6 +35,12 @@ function ProductDetail() {
     }, [location.state]);
 
     function handleAddToCart() {
+        // check if user already logged in
+
+        if (!currentUser) {
+            return navigate(`/login?redirectTo=${location.pathname}`);
+        }
+
         axiosClient
             .post('cart', {
                 userId: currentUser?.id,

@@ -22,9 +22,13 @@ const addToCart = async (req, res, next) => {
 const updateCart = async (req, res, next) => {
     try {
         const response = await cartData.updateCart(req.body);
-
+        const cartList = await cartData.getUserCart(req.body);
         return res.send({
             status: 200,
+            message: 'Update cart item successfully',
+            data: {
+                items: cartList.reverse(),
+            },
         });
     } catch (error) {
         next(error);

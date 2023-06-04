@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const productData = require('../services/product');
 const { modifyPagination } = require('../utils/response_modifiers');
+const fs = require('fs-extra');
 
 const getProducts = async (req, res, next) => {
     try {
@@ -127,17 +128,27 @@ const createProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
     try {
-        const data = {
-            ...req.body,
-            shopId: req.payload.id,
-            image: req.file.filename,
-        };
+        const foundProduct = await productData.getProductById(req.body.id);
+        if (!foundProduct) return next(createError.NotFound('Product not found'));
 
-        const updated = await productData.updateProduct(data);
+        if (req.body.profile || req.body.image) {
+            delete req.body?.profile;
+            delete req.body?.image;
+        }
+        const updatedProduct = Object.assign(foundProduct, req.body);
+
+        if (req.file) {
+            if (foundProduct.image) {
+                await fs.remove(`${process.cwd()}/public/images/product/${foundProduct.image}`);
+            }
+
+            updatedProduct.image = req.file.filename;
+        }
+        const updated = await productData.updateProduct(updatedProduct);
 
         return res.send({
             ...updated,
-            image: `${process.env.HOST_URL}/product/${req.file.filename}`,
+            image: `${process.env.HOST_URL}/product/${updated.image}`,
         });
     } catch (error) {
         next(createError(error.message));
