@@ -127,10 +127,10 @@ function Checkout() {
                         <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'} flexDirection="column">
                             <div style={{ margin: '15px 0 10px 0' }}>
                                 <Typography style={{ fontSize: '22px', color: 'red' }}>
-                                    Tổng tiền hàng: {totalPrice.toLocaleString()}₫
+                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
-                            <Button sx={{ display: 'flex', justifyContent: 'center' }} variant="contained">
+                            <Button sx={{ display: 'flex', justifyContent: 'center' }} size="large" variant="contained">
                                 Đặt hàng
                             </Button>
                         </Stack>
