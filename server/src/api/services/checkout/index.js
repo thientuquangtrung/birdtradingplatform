@@ -5,6 +5,7 @@ const { getProductById } = require('../product');
 const { readAccountById } = require('../auth');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
+const { redisClient } = require('../../config');
 
 /* 
     {
@@ -76,44 +77,92 @@ const checkoutReview = async ({ userId, shopOrderIds }) => {
     }
 };
 
-const insertOperation = async (request, data1) => {
-    request.input('data1', sql.NVarChar(40), data1);
+const insertOrderHeader = async (request, query, userId) => {
+    request.input('customerId', sql.UniqueIdentifier, userId);
 
-    const result = await request.execute('dbo.insertOperation');
+    const result = await request.query(query);
 
-    return result.recordsets;
+    return result.recordset[0];
 };
 
-const updateOperation = async (request, data2) => {
-    request.input('data2', sql.NVarChar(40), data2);
+const insertOrderDetail = async (request, query, shopOrderIdsNew, orderHeaderId) => {
+    try {
+        for (let index = 0; index < shopOrderIdsNew.length; index++) {
+            const element = shopOrderIdsNew[index];
+            const items = element.items;
+            for (let j = 0; j < items.length; j++) {
+                const product = items[j];
 
-    const result = await request.execute('dbo.updateOperation');
+                request
+                    .replaceInput('productId', sql.UniqueIdentifier, product.id)
+                    .replaceInput('quantity', sql.Int, product.quantity)
+                    .replaceInput('price', sql.Float, product.price);
+                await request.query(query);
+            }
+        }
+        return 'OK';
+    } catch (error) {
+        throw error;
+    }
+};
 
-    return result.recordsets;
+const insertShopIds = async (request, query, shopOrderIdsNew, orderHeaderId) => {
+    try {
+        for (let index = 0; index < shopOrderIdsNew.length; index++) {
+            const element = shopOrderIdsNew[index];
+            const shopId = element.shop.id;
+            request.replaceInput('shopId', sql.UniqueIdentifier, shopId);
+            await request.query(query);
+        }
+        return 'OK';
+    } catch (error) {
+        throw error;
+    }
 };
 
 const placeOrder = async ({ shopOrderIds, userId }) => {
     try {
         const { shopOrderIdsNew, checkoutOrder } = await checkoutReview({ shopOrderIds, userId });
 
-        let pool = await sql.connect(config.sql);
+        let pool = new sql.ConnectionPool(config.sql);
+        await pool.connect();
         const sqlQueries = await loadSqlQueries('checkout');
 
-        const transaction = new sql.Transaction(pool);
+        let transaction = new sql.Transaction(pool);
         try {
             await transaction.begin();
-
             const request = new sql.Request(transaction);
 
-            const results = await Promise.all([insertOperation(request, data1), updateOperation(request, data2)]);
+            const orderHeaderId = (await insertOrderHeader(request, sqlQueries.insertOrderHeader, userId)).id;
+
+            request.input('orderHeaderId', sql.UniqueIdentifier, orderHeaderId);
+            await insertShopIds(request, sqlQueries.insertShopId, shopOrderIdsNew, orderHeaderId);
+            await insertOrderDetail(request, sqlQueries.insertOrderDetail, shopOrderIdsNew, orderHeaderId);
+
+            for (let index = 0; index < shopOrderIdsNew.length; index++) {
+                const orderByShop = shopOrderIdsNew[index];
+
+                for (let j = 0; j < orderByShop.items.length; j++) {
+                    const product = orderByShop.items[j];
+
+                    redisClient.hDel(`cart:${userId}`, `product:${product.id}`);
+                }
+            }
 
             await transaction.commit();
-            return results;
+
+            return {
+                orderHeaderId,
+                userId,
+                shopOrderIdsNew,
+                checkoutOrder,
+            };
         } catch (err) {
             await transaction.rollback();
             throw err;
         } finally {
-            await dbConn.close();
+            // await pool;
+            await pool.close();
         }
     } catch (error) {
         throw error;

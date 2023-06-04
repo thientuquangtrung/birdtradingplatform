@@ -9,21 +9,39 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import StoreIcon from '@mui/icons-material/Store';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
+import { enqueueSnackbar } from 'notistack';
 
 function Checkout() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { currentUser } = useContext(AuthContext);
     const paperStyle = { padding: 20, width: '100%', margin: '20px auto' };
 
     const [shipToAddress, setShipToAddress] = useState(currentUser.shipToAddress);
     const [phone, setPhone] = useState(currentUser.phone);
     const [shopOrders, setShopOrders] = useState([]);
+    const [shopOrderIds, setShopOrderIds] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
     const isChange = () => {
         return !(currentUser.phone !== phone || currentUser.shipToAddress !== shipToAddress);
+    };
+
+    const handlePlaceOrder = () => {
+        axiosClient
+            .post('place_order', {
+                userId: currentUser.id,
+                shopOrderIds: shopOrderIds,
+            })
+            .then((response) => {
+                enqueueSnackbar('Placed order successfully!', { variant: 'success' });
+                navigate('/orders');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     useEffect(() => {
@@ -32,6 +50,7 @@ function Checkout() {
         axiosClient
             .post('checkout', location.state.payload)
             .then((response) => {
+                setShopOrderIds(response.data.data.shopOrderIds);
                 setShopOrders(response.data.data.shopOrderIdsNew);
                 setTotalPrice(response.data.data.checkoutOrder.totalPrice);
             })
@@ -130,7 +149,12 @@ function Checkout() {
                                     Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
-                            <Button sx={{ display: 'flex', justifyContent: 'center' }} size="large" variant="contained">
+                            <Button
+                                onClick={handlePlaceOrder}
+                                sx={{ display: 'flex', justifyContent: 'center' }}
+                                size="large"
+                                variant="contained"
+                            >
                                 Đặt hàng
                             </Button>
                         </Stack>

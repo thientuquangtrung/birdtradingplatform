@@ -1,0 +1,1 @@
+insert ShopOrdersIds ([orderHeaderId], [shopId]) values (@orderHeaderId, @shopId)
