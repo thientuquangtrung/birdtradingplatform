@@ -25,7 +25,7 @@ export default function UpdateCustomer() {
             currentUser.name !== name ||
             currentUser.shipToAddress !== shipToAddress ||
             currentUser.phone !== phone ||
-            profileRef.current?.files[0]
+            profile !== currentUser.image
         );
     };
     function isEmpty(str) {

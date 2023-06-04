@@ -25,28 +25,36 @@ function UpdateProduct() {
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
     const [img, setImg] = useState('');
+    const [product, setProduct] = useState(null);
 
     useEffect(() => {
         axiosClient
             .get(`product/${id}`)
             .then((response) => {
-                const product = response.data;
-                setCategoryId(product.categoryId);
-                setName(product.name);
-                setPrice(product.price);
-                setDescription(product.description);
-                setImg(product.image);
+                const productData = response.data;
+                setProduct(productData);
+                setCategoryId(productData.categoryId);
+                setName(productData.name);
+                setPrice(productData.price);
+                setDescription(productData.description);
+                setImg(productData.image);
             })
             .catch(function (error) {
                 // handle error
                 handleError(error);
             });
-    }, []);
+    }, [id]);
 
     const navigate = useNavigate();
 
-    const isFullfilled = () => {
-        return !(name && price && description && categoryId && img);
+    const isChange = () => {
+        return !(
+            (categoryId !== '' && categoryId !== product.categoryId) ||
+            (name !== '' && name !== product.name) ||
+            (price !== 0 && price !== product.price) ||
+            (description !== '' && description !== product.description) ||
+            (img !== '' && img !== product.image)
+        );
     };
 
     function handleSubmit() {
@@ -122,7 +130,7 @@ function UpdateProduct() {
                         style={{ width: '100%', fontSize: 16, padding: 3, fontFamily: 'Roboto' }}
                     />
 
-                    <Button disabled={isFullfilled()} variant="contained" color="success" onClick={handleSubmit}>
+                    <Button disabled={isChange()} variant="contained" color="success" onClick={handleSubmit}>
                         Lưu & Hiển thị
                     </Button>
                 </Stack>

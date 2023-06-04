@@ -133,7 +133,7 @@ function Checkout() {
                         <Typography style={{ fontSize: '20px', fontWeight: 450 }}>Phương thức thanh toán:</Typography>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div style={{ marginRight: '60px' }}>
+                        <div>
                             <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
                                 Thanh toán khi nhận hàng
                             </Typography>
@@ -144,14 +144,14 @@ function Checkout() {
                 <div>
                     <Box align="center">
                         <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'} flexDirection="column">
-                            <div style={{ margin: '15px 0 10px 0' }}>
+                            <div style={{ margin: '10px 0 10px 0' }}>
                                 <Typography style={{ fontSize: '22px', color: 'red' }}>
                                     Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
                             <Button
                                 onClick={handlePlaceOrder}
-                                sx={{ display: 'flex', justifyContent: 'center' }}
+                                sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}
                                 size="large"
                                 variant="contained"
                             >
@@ -159,7 +159,7 @@ function Checkout() {
                             </Button>
                         </Stack>
                     </Box>
-                    <Box align="center" style={{ margin: '15px 0 0 0' }}></Box>
+                    <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>
                 </div>
             </Paper>
         </div>
