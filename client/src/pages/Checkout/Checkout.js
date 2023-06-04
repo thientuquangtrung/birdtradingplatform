@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AuthContext from '../../contexts/AuthContext';
@@ -27,7 +27,7 @@ function Checkout() {
     };
 
     useEffect(() => {
-        if (!location.state.payload) return;
+        if (!location.state || !location.state.payload) return;
 
         axiosClient
             .post('checkout', location.state.payload)
@@ -111,7 +111,7 @@ function Checkout() {
                     }}
                 >
                     <div>
-                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>Phương thức thanh toán</Typography>
+                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>Phương thức thanh toán:</Typography>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ marginRight: '60px' }}>
@@ -122,18 +122,21 @@ function Checkout() {
                     </div>
                 </div>
 
-                <Box align="right">
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', color: 'red' }}>
-                        <div style={{ margin: '15px 60px 10px 0' }}>
-                            <Typography style={{ fontSize: '22px' }}>Tổng tiền hàng: {totalPrice} </Typography>
-                        </div>
-                    </div>
-                </Box>
-                <Box align="right" style={{ margin: '15px 120px 0 0' }}>
-                    <Button sx={{ display: 'flex', justifyContent: 'flex-end' }} variant="contained">
-                        Đặt hàng
-                    </Button>
-                </Box>
+                <div>
+                    <Box align="center">
+                        <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'} flexDirection="column">
+                            <div style={{ margin: '15px 0 10px 0' }}>
+                                <Typography style={{ fontSize: '22px', color: 'red' }}>
+                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
+                                </Typography>
+                            </div>
+                            <Button sx={{ display: 'flex', justifyContent: 'center' }} size="large" variant="contained">
+                                Đặt hàng
+                            </Button>
+                        </Stack>
+                    </Box>
+                    <Box align="center" style={{ margin: '15px 0 0 0' }}></Box>
+                </div>
             </Paper>
         </div>
     );

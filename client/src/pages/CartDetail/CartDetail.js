@@ -256,7 +256,7 @@ export default function CartDetail() {
                 <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'}>
                     <Typography>Tổng thanh toán (2 sản phẩm):</Typography>
                     <Typography ml={2} variant="h5" component="span" color={'orangered'}>
-                        {totalPrice}
+                        {totalPrice.toLocaleString('vi-VN')}₫
                     </Typography>
                 </Stack>
                 <Divider sx={{ margin: '10px 0' }} />
