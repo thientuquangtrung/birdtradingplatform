@@ -86,7 +86,6 @@ const ProductCard = ({ data }) => {
                     </CardActions>
                 </Box>
             </Paper>
-        </Grid>
     );
 };
 
