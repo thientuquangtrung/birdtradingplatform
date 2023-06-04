@@ -6,16 +6,18 @@ import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import CartContext from '../../contexts/CartContext';
 
 function ProductDetail() {
-    const location = useLocation();
     const { currentUser } = useContext(AuthContext);
+    const { setCartList, setCartLength } = useContext(CartContext);
+    const location = useLocation();
     const [product, setProduct] = useState('');
     const [quantity, setQuantity] = useState(1);
 
@@ -35,12 +37,14 @@ function ProductDetail() {
     function handleAddToCart() {
         axiosClient
             .post('cart', {
-                userId: currentUser.id,
+                userId: currentUser?.id,
                 product,
                 quantity,
             })
             .then(function (response) {
                 // handle success
+                setCartLength(response.data.data.length);
+                setCartList(response.data.data.items);
                 enqueueSnackbar('Sản phẩm được thêm vào giỏ hàng thành công!', { variant: 'success' });
             })
             .catch(function (error) {
