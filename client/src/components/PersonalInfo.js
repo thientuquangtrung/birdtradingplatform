@@ -2,7 +2,7 @@ import { Logout, Person, Receipt } from '@mui/icons-material';
 import { Divider, ListItemIcon, MenuItem, MenuList, Paper } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
 
 function PersonalInfo() {
@@ -20,18 +20,22 @@ function PersonalInfo() {
     return (
         <Paper elevation={3}>
             <MenuList>
-                <MenuItem>
-                    <ListItemIcon>
-                        <Person fontSize="small" />
-                    </ListItemIcon>
-                    Tài khoản của tôi
-                </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <Receipt fontSize="small" />
-                    </ListItemIcon>
-                    Đơn mua
-                </MenuItem>
+                <Link to="/profile">
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Person fontSize="small" />
+                        </ListItemIcon>
+                        Tài khoản của tôi
+                    </MenuItem>
+                </Link>
+                <Link to={'/orders'}>
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Receipt fontSize="small" />
+                        </ListItemIcon>
+                        Đơn mua
+                    </MenuItem>
+                </Link>
                 <Divider />
                 <MenuItem onClick={handleLogout}>
                     <ListItemIcon>

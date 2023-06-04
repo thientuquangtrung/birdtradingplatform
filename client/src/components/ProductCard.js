@@ -71,13 +71,14 @@ const ProductCard = ({ data }) => {
                     </Typography>
                 </Box>
 
-                    <CardActions
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginTop: '10px',
-                        }}
-                    >
+                <CardActions
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '10px',
+                    }}
+                >
+                    
                         <Link to={`/product/detail/${data.name}`} state={{
                             id: data.id,
                         }}>

@@ -81,10 +81,19 @@ const getUserCart = async ({ userId }) => {
     }
 };
 
+const getCartLength = async ({ userId }) => {
+    try {
+        return await redisClient.hLen(`cart:${userId}`);
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     addToCart,
     updateCart,
     deleteCart,
     getUserCart,
     deleteCartItem,
+    getCartLength,
 };

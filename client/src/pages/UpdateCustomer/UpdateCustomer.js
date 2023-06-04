@@ -1,12 +1,12 @@
 import React, { useState, useRef, useContext } from 'react';
-import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
+import { Paper, Typography, Button, TextField, Stack, Box } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
 
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import handleError from '../../utils/handleError';
-import CustomerSidebar from '../../components/CustomerSidebar';
+import SubCustomerLayout from '../../layouts/SubCustomerLayout/SubCustomerLayout';
 
 export default function UpdateCustomer() {
     const { currentUser } = useContext(AuthContext);
@@ -16,7 +16,7 @@ export default function UpdateCustomer() {
     const [name, setName] = useState(currentUser.name);
     const [shipToAddress, setShipToAddress] = useState(currentUser.shipToAddress);
     const [phone, setPhone] = useState(currentUser.phone);
-
+    const [profile, setProfile] = useState(currentUser.image);
     const [validationMsg, setValidationMsg] = useState('');
     const profileRef = useRef();
     const [message, setMessage] = useState('');
@@ -51,13 +51,10 @@ export default function UpdateCustomer() {
     };
 
     function handleSubmit() {
-        const profile = profileRef.current.files[0];
-
         const formData = new FormData();
         formData.append('name', name);
         formData.append('shipToAddress', shipToAddress);
         formData.append('phone', phone);
-
         formData.append('profile', profile);
         const isValid = validateAll();
         const isValidElement = validateElement();
@@ -74,8 +71,7 @@ export default function UpdateCustomer() {
     }
 
     return (
-        <Stack direction={'row'} gap={2}>
-            <CustomerSidebar></CustomerSidebar>
+        <SubCustomerLayout>
             <Paper
                 sx={{
                     display: 'flex',
@@ -92,7 +88,7 @@ export default function UpdateCustomer() {
                     </Typography>
                 </Box>
                 <Stack direction="column" gap={3} width="50%">
-                    <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
+                    <UploadImage rounded title="Select a logo" setUploadFile={setProfile} uploadFile={profile} />
                     <TextField
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -142,6 +138,6 @@ export default function UpdateCustomer() {
                     </Button>
                 </Box>
             </Paper>
-        </Stack>
+        </SubCustomerLayout>
     );
 }
