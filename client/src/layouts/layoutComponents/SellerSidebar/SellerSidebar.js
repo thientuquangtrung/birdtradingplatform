@@ -13,7 +13,7 @@ function SellerSidebar() {
                     <ListItemText primary="Quản lí đơn hàng" />
                 </ListItemButton>
             </Link>
-            <Link to='/product/list/all'>
+            <Link to="/product/list/all">
                 <ListItemButton>
                     <ListItemIcon>
                         <ShoppingBasket />
@@ -21,7 +21,7 @@ function SellerSidebar() {
                     <ListItemText primary="Quản lí sản phẩm" />
                 </ListItemButton>
             </Link>
-            <Link to="/shop/profile">
+            <Link to="/profile">
                 <ListItemButton>
                     <ListItemIcon>
                         <TrendingUp />
@@ -29,7 +29,7 @@ function SellerSidebar() {
                     <ListItemText primary="Dữ liệu" />
                 </ListItemButton>
             </Link>
-            <Link to="/shop/profile">
+            <Link to="/profile">
                 <ListItemButton>
                     <ListItemIcon>
                         <Store />

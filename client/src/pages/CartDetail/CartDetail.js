@@ -12,9 +12,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { enqueueSnackbar } from 'notistack';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
-import { useContext, useCallback, useState, useMemo } from 'react';
+import { useContext, useCallback, useState, useMemo, useEffect } from 'react';
 import AuthContext from '../../contexts/AuthContext';
 import CartContext from '../../contexts/CartContext';
+import { Divider, Paper, Typography } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Actions = ({ data }) => {
     const { setCartLength, setCartList } = useContext(CartContext);
@@ -129,7 +131,48 @@ const Quantity = ({ rowData }) => {
 };
 
 export default function CartDetail() {
+    const { currentUser } = useContext(AuthContext);
     const { cartList } = useContext(CartContext);
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (rowSelectionModel.length === 0) {
+            setTotalPrice(0);
+            return;
+        }
+
+        const selected = cartList.filter((item) => rowSelectionModel.includes(item.product.id));
+        const total = selected.reduce((acc, item) => (acc += Number(item.product.price) * Number(item.quantity)), 0);
+        setTotalPrice(total);
+    }, [rowSelectionModel, cartList]);
+
+    const handleCheckout = () => {
+        const selected = cartList.filter((item) => rowSelectionModel.includes(item.product.id));
+        const selectedByShopId = selected.reduce(function (r, a) {
+            r[a.product.shopId] = r[a.product.shopId] || [];
+            r[a.product.shopId].push({ ...a.product, quantity: Number(a.quantity) });
+            return r;
+        }, {});
+
+        const shopOrderIds = [];
+        for (const [key, value] of Object.entries(selectedByShopId)) {
+            shopOrderIds.push({
+                shopId: key,
+                items: value,
+            });
+        }
+
+        navigate('/cart/checkout', {
+            state: {
+                payload: {
+                    userId: currentUser.id,
+                    shopOrderIds,
+                },
+            },
+        });
+    };
 
     const modifiedCartList = useCallback(() => {
         let rows = [];
@@ -137,7 +180,7 @@ export default function CartDetail() {
             rows = cartList.map((item) => {
                 return {
                     ...item.product,
-                    quantity: parseInt(item.quantity),
+                    quantity: Number(item.quantity),
                 };
             });
         }
@@ -187,19 +230,47 @@ export default function CartDetail() {
     );
 
     return (
-        <div style={{ height: 400, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <DataGrid
-                disableRowSelectionOnClick
-                rows={modifiedCartList()}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 5 },
-                    },
-                }}
-                pageSizeOptions={[5, 10]}
-                checkboxSelection
-            />
-        </div>
+        <>
+            <div
+                style={{ height: 400, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            >
+                <DataGrid
+                    onRowSelectionModelChange={(newRowSelectionModel) => {
+                        setRowSelectionModel(newRowSelectionModel);
+                    }}
+                    rowSelectionModel={rowSelectionModel}
+                    keepNonExistentRowsSelected
+                    disableRowSelectionOnClick
+                    rows={modifiedCartList()}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 5 },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10]}
+                    checkboxSelection
+                />
+            </div>
+            <Paper elevation={3} sx={{ padding: '20px', margin: '20px 0' }}>
+                <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'}>
+                    <Typography>Tổng thanh toán (2 sản phẩm):</Typography>
+                    <Typography ml={2} variant="h5" component="span" color={'orangered'}>
+                        {totalPrice}
+                    </Typography>
+                </Stack>
+                <Divider sx={{ margin: '10px 0' }} />
+                <Stack direction={'row'} justifyContent="space-between" alignItems="center">
+                    <Link to={'/shopping'}>
+                        <Button variant="outlined" color="secondary">
+                            Tiếp tục mua hàng
+                        </Button>
+                    </Link>
+                    <Button variant="contained" disabled={rowSelectionModel.length <= 0} onClick={handleCheckout}>
+                        Tiến hành đặt hàng
+                    </Button>
+                </Stack>
+            </Paper>
+        </>
     );
 }

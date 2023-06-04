@@ -26,7 +26,7 @@ const getProductById = async (id) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
-        const oneProduct = await pool.request().input('id', sql.Int, id).query(sqlQueries.productById);
+        const oneProduct = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.productById);
 
         return oneProduct.recordset[0];
     } catch (error) {
@@ -164,7 +164,7 @@ const updateProduct = async ({ id, name, shopId, description, price, image, cate
         const sqlQueries = await loadSqlQueries('product');
         const updated = await pool
             .request()
-            .input('id', sql.Int, id)
+            .input('id', sql.UniqueIdentifier, id)
             .input('name', sql.NVarChar, name)
             .input('shopId', sql.UniqueIdentifier, shopId)
             .input('description', sql.NVarChar, description)
@@ -185,7 +185,7 @@ const deleteProduct = async (id, shopId) => {
         const sqlQueries = await loadSqlQueries('product');
         const deleted = await pool
             .request()
-            .input('id', sql.Int, id)
+            .input('id', sql.UniqueIdentifier, id)
             .input('shopId', sql.UniqueIdentifier, shopId)
             .query(sqlQueries.deleteProduct);
 

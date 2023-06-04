@@ -1,5 +1,5 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AuthContext from '../../contexts/AuthContext';
 import Table from '@mui/material/Table';
@@ -9,24 +9,34 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import StoreIcon from '@mui/icons-material/Store';
+import { useLocation } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
 
 function Checkout() {
+    const location = useLocation();
     const { currentUser } = useContext(AuthContext);
     const paperStyle = { padding: 20, width: '100%', margin: '20px auto' };
+
     const [shipToAddress, setShipToAddress] = useState(currentUser.shipToAddress);
     const [phone, setPhone] = useState(currentUser.phone);
+    const [shopOrders, setShopOrders] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+
     const isChange = () => {
         return !(currentUser.phone !== phone || currentUser.shipToAddress !== shipToAddress);
     };
-    function createData(image, name, price, quantity, total) {
-        return { image, name, price, quantity, total };
-    }
 
-    const rows = [
-        createData('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', 'Chim 1', 159000, 2, 24, 4.0),
-        createData('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg', 'Chim 2', 237000, 3, 37, 4.3),
-    ];
-    const totalPrice = rows.reduce((accumulator, row) => accumulator + row.price, 0);
+    useEffect(() => {
+        if (!location.state.payload) return;
+
+        axiosClient
+            .post('checkout', location.state.payload)
+            .then((response) => {
+                setShopOrders(response.data.data.shopOrderIdsNew);
+                setTotalPrice(response.data.data.checkoutOrder.totalPrice);
+            })
+            .catch((error) => console.log(error));
+    }, [location.state]);
     return (
         <div>
             <Paper elevation={2} style={paperStyle}>
@@ -53,40 +63,51 @@ function Checkout() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableCell sx={{ borderBottom: 'none', paddingLeft: '40px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <StoreIcon></StoreIcon>
-
-                                <Button variant="text" style={{ backgroundColor: 'white', color: 'black' }}>
-                                    Shop name
-                                </Button>
-                            </div>
-                        </TableCell>
-                    </TableBody>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component="th" scope="row">
-                                    <img src={row.image} width="60px" height="60px"></img>
-                                </TableCell>
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell align="center">{row.price}</TableCell>
-                                <TableCell align="center">{row.quantity}</TableCell>
-                                <TableCell align="center">{row.total}</TableCell>
-                            </TableRow>
-                        ))}
+                        {shopOrders.length > 0 &&
+                            shopOrders.map((shopOrder) => {
+                                return (
+                                    <>
+                                        <TableRow>
+                                            <TableCell sx={{ borderBottom: 'none', paddingLeft: '40px' }} colSpan={5}>
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <StoreIcon></StoreIcon>
+                                                    <Button
+                                                        variant="text"
+                                                        style={{ backgroundColor: 'white', color: 'black' }}
+                                                    >
+                                                        {shopOrder.shop.name}
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                        {shopOrder.items.map((item) => (
+                                            <TableRow
+                                                key={item.name}
+                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row">
+                                                    <img src={item.image} width="60px" height="60px" alt=""></img>
+                                                </TableCell>
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell align="center">{item.price}</TableCell>
+                                                <TableCell align="center">{item.quantity}</TableCell>
+                                                <TableCell align="center">{item.subTotal}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </>
+                                );
+                            })}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <Paper elevation={1} style={paperStyle}>
+            <Paper elevation={3} style={{ ...paperStyle, position: 'sticky', bottom: '0' }}>
                 <div
                     style={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         borderBottom: 'solid  1px Gainsboro',
-                        margin: '10px 0',
-                        paddingBottom: '30px',
+                        paddingBottom: '10px',
                     }}
                 >
                     <div>
