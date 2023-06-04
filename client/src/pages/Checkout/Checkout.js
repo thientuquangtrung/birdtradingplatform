@@ -12,11 +12,13 @@ import StoreIcon from '@mui/icons-material/Store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
+import CartContext from '../../contexts/CartContext';
 
 function Checkout() {
     const location = useLocation();
     const navigate = useNavigate();
     const { currentUser } = useContext(AuthContext);
+    const { setCartList, setCartLength } = useContext(CartContext);
     const paperStyle = { padding: 20, width: '100%', margin: '20px auto' };
 
     const [shipToAddress, setShipToAddress] = useState(currentUser.shipToAddress);
@@ -36,6 +38,8 @@ function Checkout() {
                 shopOrderIds: shopOrderIds,
             })
             .then((response) => {
+                setCartList(response.data.data.cartList);
+                setCartLength(response.data.data.cartList.length);
                 enqueueSnackbar('Placed order successfully!', { variant: 'success' });
                 navigate('/orders');
             })

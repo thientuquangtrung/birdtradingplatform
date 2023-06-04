@@ -58,6 +58,10 @@ const updateSeller = async (req, res, next) => {
             return next(createError.InternalServerError('Cannot get id'));
         }
 
+        if (req.body.profile || req.body.image) {
+            delete req.body?.profile;
+            delete req.body?.image;
+        }
         const seller = await authData.readAccountById(id, 'seller');
         const updatedSeller = Object.assign(seller, req.body);
 
@@ -159,6 +163,11 @@ const updateCustomer = async (req, res, next) => {
         const id = req.payload.id;
         if (!id) {
             return next(createError.InternalServerError('Cannot get id'));
+        }
+
+        if (req.body.profile || req.body.image) {
+            delete req.body?.profile;
+            delete req.body?.image;
         }
 
         const customer = await authData.readAccountById(id, 'customer');

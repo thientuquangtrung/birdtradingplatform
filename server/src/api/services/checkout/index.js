@@ -156,6 +156,7 @@ const placeOrder = async ({ shopOrderIds, userId }) => {
                 userId,
                 shopOrderIdsNew,
                 checkoutOrder,
+                cartList: await getUserCart({ userId }),
             };
         } catch (err) {
             await transaction.rollback();
