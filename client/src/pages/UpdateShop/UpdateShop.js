@@ -26,7 +26,7 @@ export default function UpdateShop() {
             currentUser.pickUpAddress !== pickUpAddress ||
             currentUser.description !== description ||
             currentUser.phone !== phone ||
-            profile
+            profile !== currentUser.image
         );
     };
     function isEmpty(str) {
