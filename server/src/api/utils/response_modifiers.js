@@ -31,7 +31,7 @@ const modifyPagination = (list = [], page) => {
 
         if (list.length > 0) {
             total = list[0].total;
-            totalPages = Math.ceil(parseInt(total) / parseInt(process.env.ROW_OF_PAGE));
+            totalPages = Math.ceil(Number(total) / Number(process.env.ROW_OF_PAGE));
 
             list.forEach((item) => {
                 delete item.total;
@@ -43,7 +43,7 @@ const modifyPagination = (list = [], page) => {
             meta: {
                 pagination: {
                     total,
-                    currentPage: parseInt(page),
+                    currentPage: Number(page),
                     totalPages,
                 },
             },

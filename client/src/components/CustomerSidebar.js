@@ -1,13 +1,13 @@
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Receipt, ShoppingBasket, Store, TrendingUp, Lock } from '@mui/icons-material';
+import { Lock } from '@mui/icons-material';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 
 function CustomerSidebar() {
     return (
-        <List sx={{ paddingTop: 5 }}>
-            <Link>
+        <List sx={{ paddingTop: 5, width: '250px' }}>
+            <Link to={'/profile'}>
                 <ListItemButton>
                     <ListItemIcon>
                         <PersonPinIcon></PersonPinIcon>
@@ -23,7 +23,7 @@ function CustomerSidebar() {
                     <ListItemText primary="Đổi mật khẩu" />
                 </ListItemButton>
             </Link>
-            <Link to="/shop/profile">
+            <Link to="/orders">
                 <ListItemButton>
                     <ListItemIcon>
                         <ShoppingBagIcon></ShoppingBagIcon>

@@ -8,6 +8,7 @@ const productRoutes = require('./src/api/routes/productRoutes');
 const authRoutes = require('./src/api/routes/authRoutes');
 const categoryRoutes = require('./src/api/routes/categoryRoutes');
 const cartRoutes = require('./src/api/routes/cartRoutes');
+const checkoutRoutes = require('./src/api/routes/checkoutRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api', productRoutes.routes);
 app.use('/api', authRoutes.routes);
 app.use('/api', categoryRoutes.routes);
 app.use('/api', cartRoutes.routes);
+app.use('/api', checkoutRoutes.routes);
 
 app.use((req, res, next) => {
     next(createError(404, 'Not Found'));
