@@ -78,15 +78,17 @@ const ProductCard = ({ data }) => {
                         marginTop: '10px',
                     }}
                 >
-                    
-                        <Link to={`/product/detail/${data.name}`} state={{
+                    <Link
+                        to={`/product/detail/${data.name}`}
+                        state={{
                             id: data.id,
-                        }}>
-                            <Button size="small">Chi tiết</Button>
-                        </Link>
-                    </CardActions>
-                </Box>
-            </Paper>
+                        }}
+                    >
+                        <Button size="small">Chi tiết</Button>
+                    </Link>
+                </CardActions>
+            </Box>
+        </Paper>
     );
 };
 

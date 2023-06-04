@@ -242,7 +242,7 @@ function Shopping() {
                         shape="rounded"
                         page={page}
                         onChange={handleChange}
-                        style={{ display: 'flex', justifyContent: 'center' }}
+                        style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
                     />
                 )}
             </Grid>
