@@ -1,0 +1,1 @@
+insert OrderHeader ([customerId]) output inserted.id values (@customerId)
