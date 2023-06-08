@@ -84,6 +84,7 @@ const Actions = ({ data }) => {
 const Quantity = ({ rowData }) => {
     const [cartItems, setCartItems] = useState([rowData]);
     const { currentUser } = useContext(AuthContext);
+    const { setCartList } = useContext(CartContext);
 
     const handleMinus = () => {
         setCartItems((prevCartItems) => {
@@ -98,7 +99,9 @@ const Quantity = ({ rowData }) => {
                     product: updatedCartItems[0],
                     quantity: updatedCartItems[0].quantity,
                 })
-                .then((response) => {})
+                .then((response) => {
+                    setCartList(response.data.data.items);
+                })
                 .catch((error) => console.log(error));
 
             return updatedCartItems;
@@ -115,7 +118,9 @@ const Quantity = ({ rowData }) => {
                     product: updatedCartItems[0],
                     quantity: updatedCartItems[0].quantity,
                 })
-                .then((response) => {})
+                .then((response) => {
+                    setCartList(response.data.data.items);
+                })
                 .catch((error) => console.log(error));
 
             return updatedCartItems;
@@ -255,7 +260,7 @@ export default function CartDetail() {
             </div>
             <Paper elevation={3} sx={{ padding: '20px', margin: '20px 0' }}>
                 <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'}>
-                    <Typography>Tổng thanh toán (2 sản phẩm):</Typography>
+                    <Typography>Tổng thanh toán ({rowSelectionModel.length} sản phẩm):</Typography>
                     <Typography ml={2} variant="h5" component="span" color={'orangered'}>
                         {totalPrice.toLocaleString('vi-VN')}₫
                     </Typography>
