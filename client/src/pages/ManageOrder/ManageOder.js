@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Stack } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 import { Button, IconButton, InputBase, MenuItem, Paper, TextField } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 import { useSnackbar } from 'notistack';
@@ -9,14 +9,52 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
+import EditIcon from '@mui/icons-material/Edit';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
+import AuthContext from '../../contexts/AuthContext';
+const Actions = ({ data }) => {
+    const [open, setOpen] = useState(false);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const { currentUser } = useContext(AuthContext);
+
+    return (
+        <Stack direction="row" spacing={0.5} justifyContent="center">
+            <React.Fragment>
+                <IconButton color="primary" aria-label="delete" onClick={handleClickOpen}>
+                    <VisibilityIcon></VisibilityIcon>
+                </IconButton>
+                <IconButton color="primary" aria-label="delete" onClick={handleClickOpen}>
+                    <EditIcon></EditIcon>
+                </IconButton>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{'Bạn muốn thay đổi trạng thái đơn hàng?'}</DialogTitle>
+
+                    <DialogActions>
+                        <Button onClick={handleClose}>Không</Button>
+                        <Button>Có</Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
+        </Stack>
+    );
+};
 const ManageOrder = () => {
     const [value, setValue] = useState('1');
     const [selectedType, setSelectedType] = useState('Mã đơn hàng');
@@ -59,22 +97,32 @@ const ManageOrder = () => {
         },
     ];
 
-    const [tableData, setTableData] = useState([]); // State for table data
-
-    // Calculate the item count
-    const calculateItemCount = () => {
-        let count = 0;
-        tableData.forEach((item) => {
-            count += item.quantity;
-        });
-        return count;
-    };
-
-    // Update the item count whenever the tableData changes
-    React.useEffect(() => {
-        setItemCount(calculateItemCount());
-    }, [tableData]);
-
+    const tableData = [
+        {
+            imageUrl: 'image-url-1',
+            productName: 'Product 1',
+            quantity: 2,
+            status: 'Pending',
+        },
+        {
+            imageUrl: 'image-url-2',
+            productName: 'Product 2',
+            quantity: 1,
+            status: 'Delivered',
+        },
+        {
+            imageUrl: 'image-url-3',
+            productName: 'Product 3',
+            quantity: 3,
+            status: 'Cancelled',
+        },
+        {
+            imageUrl: 'image-url-1',
+            productName: 'Product 4',
+            quantity: 100,
+            status: 'Pending',
+        },
+    ];
     return (
         <Stack>
             <TabContext value={value}>
@@ -88,20 +136,22 @@ const ManageOrder = () => {
                 </Paper>
                 <TabPanel value="1">
                     <Stack direction="row" alignItems="center">
-                        <TextField
-                            id="outlined-select-currency"
-                            select
-                            label={selectedType}
-                            value={selectedType}
-                            onChange={handleTypeChange}
-                            sx={{ width: '200px' }}
-                        >
-                            {type.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                        <Stack>
+                            <TextField
+                                id="outlined-select-currency"
+                                select
+                                label={selectedType}
+                                value={selectedType}
+                                onChange={handleTypeChange}
+                                sx={{ width: '200px' }}
+                            >
+                                {type.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Stack>
                         <Stack height={50} bgcolor="white" direction="row" flex={5} borderRadius marginRight="20px">
                             <InputBase
                                 sx={{ ml: 1, flex: 1 }}
@@ -117,7 +167,9 @@ const ManageOrder = () => {
                             Tìm kiếm
                         </Button>
                     </Stack>
-                    <Stack>Count: {itemCount}</Stack>
+                    <Stack>
+                        <div style={{ fontWeight: '550', marginTop: '20px' }}>{tableData.length} Đơn hàng</div>
+                    </Stack>
                     <Stack>
                         <TableContainer component={Paper} style={paperStyle}>
                             <Table
@@ -144,9 +196,11 @@ const ManageOrder = () => {
                                                     <img src={item.imageUrl} width="60px" height="60px" alt="" />
                                                 </TableCell>
                                                 <TableCell>{item.productName}</TableCell>
-                                                <TableCell align="center">{item.price}</TableCell>
                                                 <TableCell align="center">{item.quantity}</TableCell>
-                                                <TableCell align="center">{item.total}</TableCell>
+                                                <TableCell align="center">{item.status}</TableCell>
+                                                <TableCell>
+                                                    <Actions data={item} />
+                                                </TableCell>
                                             </TableRow>
                                         ))
                                     ) : (
@@ -161,9 +215,135 @@ const ManageOrder = () => {
                         </TableContainer>
                     </Stack>
                 </TabPanel>
-                <TabPanel value="2">Item Two</TabPanel>
-                <TabPanel value="3">Item Three</TabPanel>
-                <TabPanel value="4">Item Four</TabPanel>
+                <TabPanel value="2">
+                    <div style={{ fontWeight: '550', marginTop: '20px' }}>
+                        {tableData.filter((item) => item.status === 'Pending').length} Đơn hàng{' '}
+                    </div>
+
+                    <TableContainer component={Paper} sx={{ margin: '20px auto' }}>
+                        <Table sx={{ minWidth: 650 }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Hình ảnh</TableCell>
+                                    <TableCell>Sản phẩm</TableCell>
+                                    <TableCell align="center">Tổng đơn hàng</TableCell>
+                                    <TableCell align="center">Trạng thái</TableCell>
+                                    <TableCell align="center">Thao tác</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tableData
+                                    .filter((item) => item.status === 'Pending')
+                                    .map((item) => (
+                                        <TableRow key={item.name}>
+                                            <TableCell component="th" scope="row">
+                                                <img src={item.imageUrl} width="60px" height="60px" alt="" />
+                                            </TableCell>
+                                            <TableCell>{item.productName}</TableCell>
+                                            <TableCell align="center">{item.quantity}</TableCell>
+                                            <TableCell align="center">{item.status}</TableCell>
+                                            <TableCell>
+                                                <Stack direction="row" spacing={0.5} justifyContent="center">
+                                                    <IconButton color="primary" aria-label="view">
+                                                        <VisibilityIcon />
+                                                    </IconButton>
+                                                    <IconButton color="primary" aria-label="edit">
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+                <TabPanel value="3">
+                    <div style={{ fontWeight: '550', marginTop: '20px' }}>
+                        {tableData.filter((item) => item.status === 'Delivered').length} Đơn hàng{' '}
+                    </div>
+
+                    <TableContainer component={Paper} sx={{ margin: '20px auto' }}>
+                        <Table sx={{ minWidth: 650 }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Hình ảnh</TableCell>
+                                    <TableCell>Sản phẩm</TableCell>
+                                    <TableCell align="center">Tổng đơn hàng</TableCell>
+                                    <TableCell align="center">Trạng thái</TableCell>
+                                    <TableCell align="center">Thao tác</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tableData
+                                    .filter((item) => item.status === 'Delivered')
+                                    .map((item) => (
+                                        <TableRow key={item.name}>
+                                            <TableCell component="th" scope="row">
+                                                <img src={item.imageUrl} width="60px" height="60px" alt="" />
+                                            </TableCell>
+                                            <TableCell>{item.productName}</TableCell>
+                                            <TableCell align="center">{item.quantity}</TableCell>
+                                            <TableCell align="center">{item.status}</TableCell>
+                                            <TableCell>
+                                                <Stack direction="row" spacing={0.5} justifyContent="center">
+                                                    <IconButton color="primary" aria-label="view">
+                                                        <VisibilityIcon />
+                                                    </IconButton>
+                                                    <IconButton color="primary" aria-label="edit">
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+                <TabPanel value="4">
+                    <div style={{ fontWeight: '550', marginTop: '20px' }}>
+                        {tableData.filter((item) => item.status === 'Cancelled').length} Đơn hàng{' '}
+                    </div>
+
+                    <TableContainer component={Paper} sx={{ margin: '20px auto' }}>
+                        <Table sx={{ minWidth: 650 }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Hình ảnh</TableCell>
+                                    <TableCell>Sản phẩm</TableCell>
+                                    <TableCell align="center">Tổng đơn hàng</TableCell>
+                                    <TableCell align="center">Trạng thái</TableCell>
+                                    <TableCell align="center">Thao tác</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tableData
+                                    .filter((item) => item.status === 'Cancelled')
+                                    .map((item) => (
+                                        <TableRow key={item.name}>
+                                            <TableCell component="th" scope="row">
+                                                <img src={item.imageUrl} width="60px" height="60px" alt="" />
+                                            </TableCell>
+                                            <TableCell>{item.productName}</TableCell>
+                                            <TableCell align="center">{item.quantity}</TableCell>
+                                            <TableCell align="center">{item.status}</TableCell>
+                                            <TableCell>
+                                                <Stack direction="row" spacing={0.5} justifyContent="center">
+                                                    <IconButton color="primary" aria-label="view">
+                                                        <VisibilityIcon />
+                                                    </IconButton>
+                                                    <IconButton color="primary" aria-label="edit">
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Stack>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
             </TabContext>
         </Stack>
     );
