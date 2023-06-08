@@ -91,6 +91,7 @@ const Quantity = ({ rowData }) => {
             if (updatedCartItems[0].quantity > 1) {
                 updatedCartItems[0].quantity -= 1;
             }
+
             axiosClient
                 .put('cart', {
                     userId: currentUser.id,

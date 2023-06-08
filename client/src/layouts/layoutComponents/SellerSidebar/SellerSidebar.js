@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function SellerSidebar() {
     return (
         <List sx={{ paddingTop: 5 }}>
-            <Link>
+            <Link to="/order/manage ">
                 <ListItemButton>
                     <ListItemIcon>
                         <Receipt />
