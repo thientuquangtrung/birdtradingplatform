@@ -21,6 +21,10 @@ import Checkout from '../pages/Checkout/Checkout';
 import CustomerOrders from '../pages/CustomerOrders/CustomerOrders';
 import RevenueManagement from '../pages/RevenueManagement/RevenueManagement'
 import ShopPage from '../pages/ShopPage/ShopPage';
+import AdminLayout from '../layouts/AdminLayout/AdminLayout';
+import SellerManagement from '../pages/SellerManagement/SellerManagement';
+import CategoryManagement from '../pages/CategoryManagement/CategoryManagement';
+
 
 // Public routes
 const publicRoutes = [
@@ -33,6 +37,7 @@ const publicRoutes = [
     { path: '/signup', component: Signup, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: Login, layout: AuthLayout, subdomain: 'common' },
+    { path: '/login', component: Login, subdomain: 'admin' },
 ];
 
 const privateRoutes = [
@@ -64,6 +69,20 @@ const privateRoutes = [
     { path: '/dashboard', component: RevenueManagement, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/cart', component: CartDetail, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
     { path: '/cart/checkout', component: Checkout, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
+    {
+        path: '/seller_management',
+        component: SellerManagement,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/cate_management',
+        component: CategoryManagement,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
 ];
 
 export { publicRoutes, privateRoutes };
