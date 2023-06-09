@@ -19,9 +19,12 @@ import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
 import CartDetail from '../pages/CartDetail/CartDetail';
 import Checkout from '../pages/Checkout/Checkout';
 import CustomerOrders from '../pages/CustomerOrders/CustomerOrders';
+import RevenueManagement from '../pages/RevenueManagement/RevenueManagement'
+import ShopPage from '../pages/ShopPage/ShopPage';
 import AdminLayout from '../layouts/AdminLayout/AdminLayout';
 import SellerManagement from '../pages/SellerManagement/SellerManagement';
 import CategoryManagement from '../pages/CategoryManagement/CategoryManagement';
+
 
 // Public routes
 const publicRoutes = [
@@ -29,6 +32,7 @@ const publicRoutes = [
     { path: '/shopping', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
     { path: '/shopping/:categoryName', component: Shopping, layout: DefaultLayout, subdomain: 'common' },
     { path: '/product/detail/:name', component: ProductDetail, layout: DefaultLayout, subdomain: 'common' },
+    { path: '/shop/:shopname', component: ShopPage, layout: DefaultLayout, subdomain: 'common' },
     { path: '/signup', component: SellerSignup, layout: AuthLayout, subdomain: 'seller' },
     { path: '/signup', component: Signup, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
@@ -62,6 +66,7 @@ const privateRoutes = [
         role: ['SELLER'],
         subdomain: 'seller',
     },
+    { path: '/dashboard', component: RevenueManagement, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/cart', component: CartDetail, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
     { path: '/cart/checkout', component: Checkout, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
     {

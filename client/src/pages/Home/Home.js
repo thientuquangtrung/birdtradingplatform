@@ -53,7 +53,7 @@ function Home() {
                     }}
                 >
                     <Link to={'/shopping'}>
-                        <Button variant="outlined" sx={{ marginTop: 3 }}>
+                        <Button variant="outlined" sx={{ marginTop: 1 }}>
                             Xem Thêm
                         </Button>
                     </Link>
