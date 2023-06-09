@@ -1,17 +1,12 @@
 import { Box, Button, Grid, ListItemButton, MenuItem, Paper, Stack, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import ListItemText from '@mui/material/ListItemText';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ProductCard from '../../components/ProductCard';
 import Pagination from '@mui/material/Pagination';
 import axiosClient from '../../api/axiosClient';
 import CheckIcon from '@mui/icons-material/Check';
+import ShopProduct from '../../components/ShopProduct';
 
 const priceOption = [
     {
@@ -27,7 +22,6 @@ const priceOption = [
 function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
-    const [categoryList, setCategoryList] = useState([]);
     const [sortBy, setSortBy] = useState('');
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
@@ -36,17 +30,6 @@ function Shopping() {
     const handleChange = (event, value) => {
         setPage(value);
     };
-
-    useEffect(function () {
-        axiosClient
-            .get('/category')
-            .then((response) => {
-                setCategoryList(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
 
     useEffect(
         function () {
@@ -138,42 +121,7 @@ function Shopping() {
 
     return (
         <Grid container spacing={1.5}>
-            <Grid item xs={2} marginTop={0.4}>
-                <Box sx={{ flexGrow: 1 }}>
-                    <AppBar position="static">
-                        <Toolbar variant="dense">
-                            <IconButton edge="start" color="inherit" aria-label="menu">
-                                <MenuIcon />
-                            </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
-                                Danh mục
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </Box>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} component="nav">
-                    {categoryList.length > 0 &&
-                        categoryList.map((category) => {
-                            return (
-                                <Link
-                                    to={`/shopping/${category.name}`}
-                                    key={category.id}
-                                    state={{
-                                        categoryId: category.id,
-                                    }}
-                                >
-                                    <ListItemButton
-                                        sx={{ pt: 1, pb: 1 }}
-                                        selected={location.state?.categoryId === category.id}
-                                        divider
-                                    >
-                                        <ListItemText primary={category.name} />
-                                    </ListItemButton>
-                                </Link>
-                            );
-                        })}
-                </List>
-            </Grid>
+            <ShopProduct />
             <Grid item xs={10}>
                 <Paper>
                     {/* <Divider variant="middle" /> */}
