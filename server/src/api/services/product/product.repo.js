@@ -1,6 +1,6 @@
 const createHttpError = require('http-errors');
 const { redisClient } = require('../../config');
-const { getProductById } = require('../product');
+const { getProductById } = require('./index');
 
 const setProduct = async (product = {}) => {
     const foundProduct = await getProductById(product.id);

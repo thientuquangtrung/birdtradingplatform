@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 const { redisClient } = require('../../config');
-const { setProduct, getProduct } = require('./cart.repo');
+const { setProduct, getProduct } = require('../product/product.repo');
 
 const addToCart = async ({ userId, product = {}, quantity }) => {
     try {

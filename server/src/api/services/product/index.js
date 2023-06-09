@@ -73,14 +73,14 @@ const searchProducts = async (q, pageNo) => {
 
 const filterProducts = async (sortBy, order, categoryId, q, pageNo) => {
     try {
-        if (categoryId) {
-            categoryId = '[categoryId] = ' + categoryId;
+        if (categoryId !== '0' && categoryId) {
+            categoryId = ' [categoryId] = ' + categoryId;
         } else {
             categoryId = ' 1=1 ';
         }
 
         if (q) {
-            q = `and [name] like '%${q}%'`;
+            q = ` and [name] like '%${q}%' `;
         } else {
             q = ' and 1=1 ';
         }
@@ -88,6 +88,7 @@ const filterProducts = async (sortBy, order, categoryId, q, pageNo) => {
         const { page, rowsOfPage } = pagination(pageNo);
         const offset = ((page - 1) * rowsOfPage).toString();
 
+        console.table({ sortBy, order, offset, categoryId, q, rowsOfPage });
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
         const list = await pool

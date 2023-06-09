@@ -12,10 +12,10 @@ import {
 } from '@mui/material';
 import { Search, ShoppingCart } from '@mui/icons-material';
 import Tippy from '@tippyjs/react/headless';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import Cart from '../../../components/Cart';
 import AvaText from '../../../components/AvaText';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from '../../../contexts/AuthContext';
 import { useState } from 'react';
 import React from 'react';
@@ -24,6 +24,7 @@ import { enqueueSnackbar } from 'notistack';
 
 function Header() {
     const navigate = useNavigate();
+    const location = useLocation();
     const ref = useRef();
 
     const { currentUser } = useContext(AuthContext);
@@ -48,13 +49,17 @@ function Header() {
         });
     }
 
+    useEffect(() => {
+        if (location.pathname !== '/shopping') setProductName('');
+    }, [location.pathname]);
+
     const handleTyping = (e) => {
         if (e.target.value.startsWith(' ')) return;
         setProductName(e.target.value);
     };
 
     return (
-        <AppBar position="sticky" sx={{fontSize: 'xx-small'}}>
+        <AppBar position="sticky" sx={{ fontSize: 'xx-small' }}>
             <Toolbar>
                 <Container sx={{ padding: 1 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>

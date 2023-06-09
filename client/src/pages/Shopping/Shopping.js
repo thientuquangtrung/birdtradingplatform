@@ -1,4 +1,4 @@
-import { Box, Button, Grid, ListItemButton, MenuItem, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, Paper, Stack, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -22,83 +22,24 @@ const priceOption = [
 function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
+    const [q, setQ] = useState('');
+    const [categoryId, setCategoryId] = useState(0);
     const [sortBy, setSortBy] = useState('');
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
 
-    const handleChange = (event, value) => {
-        setPage(value);
-    };
-
-    useEffect(
-        function () {
-            setSortBy('');
-            setOrder('');
-
-            if (location.state?.q) {
-                axiosClient
-                    .get('product/search', {
-                        params: {
-                            q: location.state.q,
-                            page,
-                        },
-                    })
-                    .then(function (response) {
-                        // handle success
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    });
-                return;
-            }
-
-            if (location.state?.categoryId) {
-                axiosClient
-                    .get(`/product/category/${location.state.categoryId}`, {
-                        params: {
-                            page,
-                        },
-                    })
-                    .then((response) => {
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-                return;
-            }
-
-            axiosClient
-                .get('/product', {
-                    params: {
-                        page,
-                    },
-                })
-                .then((response) => {
-                    setListProduct(response.data.data);
-                    setTotalPage(response.data.meta.pagination.totalPages);
-                    setPage(response.data.meta.pagination.currentPage);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        [location.state, page],
-    );
+    useEffect(() => {
+        if (location.state?.q) setQ(location.state.q);
+        if (location.state?.categoryId) setCategoryId(location.state.categoryId);
+    }, [location.state]);
 
     useEffect(() => {
         axiosClient
             .get('/product/filter', {
                 params: {
-                    categoryId: location.state?.categoryId,
-                    q: location.state?.q,
+                    categoryId,
+                    q,
                     sortBy,
                     order,
                     page,
@@ -112,7 +53,19 @@ function Shopping() {
             .catch((error) => {
                 console.log(error);
             });
-    }, [sortBy, order]);
+    }, [sortBy, order, categoryId, q, page]);
+
+    const clearAllFilters = () => {
+        setCategoryId(0);
+        setPage(1);
+        setQ('');
+        setSortBy('');
+        setOrder('');
+    };
+
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
 
     function handleFilter(option, order = 'asc') {
         setSortBy(option);

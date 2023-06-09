@@ -67,9 +67,11 @@ const filterProducts = async (req, res, next) => {
         const { sortBy, order, categoryId, q, page } = req.query;
         const list = await productData.filterProducts(sortBy, order, categoryId, q, page);
 
-        list.map((product) => {
-            product.image = `${process.env.HOST_URL}/product/${product.image}`;
-        });
+        if (list) {
+            list.map((product) => {
+                product.image = `${process.env.HOST_URL}/product/${product.image}`;
+            });
+        }
 
         return res.send(modifyPagination(list, page));
     } catch (error) {
