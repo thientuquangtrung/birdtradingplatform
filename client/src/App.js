@@ -4,17 +4,27 @@ import { privateRoutes, publicRoutes } from './routes';
 import CheckAuth from './components/CheckAuth';
 
 function App() {
+    const host = window.location.host;
+    const arr = host.split('.').slice(0, host.includes('localhost') ? -1 : -2);
+
+    const subdomain = arr.length > 0 ? arr[0] : 'common';
+
+    const subDomainRoutes = [
+        ...privateRoutes.filter((route) => route.subdomain === subdomain),
+        ...publicRoutes.filter((route) => route.subdomain === subdomain),
+    ];
+
     return (
         <div className="App">
             <Router>
                 <Routes>
-                    {publicRoutes.map((route, index) => {
+                    {subDomainRoutes.map((route, index) => {
                         const Page = route.component;
                         let Layout = null;
 
                         if (route.layout) {
                             Layout = route.layout;
-                        } else if (route.layout === null) {
+                        } else {
                             Layout = Fragment;
                         }
 
@@ -23,33 +33,17 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
-                                }
-                            />
-                        );
-                    })}
-                    {privateRoutes.map((route, index) => {
-                        const Page = route.component;
-                        let Layout = null;
-
-                        if (route.layout) {
-                            Layout = route.layout;
-                        } else if (route.layout === null) {
-                            Layout = Fragment;
-                        }
-
-                        return (
-                            <Route
-                                key={index}
-                                path={route.path}
-                                element={
-                                    <CheckAuth role={route.role}>
+                                    route.role ? (
+                                        <CheckAuth role={route.role}>
+                                            <Layout>
+                                                <Page />
+                                            </Layout>
+                                        </CheckAuth>
+                                    ) : (
                                         <Layout>
                                             <Page />
                                         </Layout>
-                                    </CheckAuth>
+                                    )
                                 }
                             />
                         );

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Paper, Typography, Button, TextField, Stack, Box, TextareaAutosize } from '@mui/material';
 import UploadImage from '../../components/UploadImage';
 import axiosClient from '../../api/axiosClient';
@@ -16,8 +16,9 @@ export default function UpdateShop() {
     const [pickUpAddress, setPickUpAddress] = useState(currentUser.pickUpAddress);
     const [phone, setPhone] = useState(currentUser.phone);
     const [description, setDescription] = useState(currentUser.description);
+    const [profile, setProfile] = useState(currentUser.image);
+
     const [validationMsg, setValidationMsg] = useState('');
-    const profileRef = useRef();
     const [message, setMessage] = useState('');
     const isChange = () => {
         return !(
@@ -25,7 +26,7 @@ export default function UpdateShop() {
             currentUser.pickUpAddress !== pickUpAddress ||
             currentUser.description !== description ||
             currentUser.phone !== phone ||
-            profileRef.current?.files[0]
+            profile !== currentUser.image
         );
     };
     function isEmpty(str) {
@@ -51,8 +52,6 @@ export default function UpdateShop() {
     };
 
     function handleSubmit() {
-        const profile = profileRef.current.files[0];
-
         const formData = new FormData();
         formData.append('name', name);
         formData.append('pickUpAddress', pickUpAddress);
@@ -89,7 +88,7 @@ export default function UpdateShop() {
                 </Typography>
             </Box>
             <Stack direction="column" gap={3} width="50%">
-                <UploadImage rounded title="Select a logo" ref={profileRef} img={currentUser.image} />
+                <UploadImage rounded title="Select a logo" uploadFile={profile} setUploadFile={setProfile} />
                 <TextField
                     value={name}
                     onChange={(e) => setName(e.target.value)}

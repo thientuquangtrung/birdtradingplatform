@@ -1,0 +1,1 @@
+insert OrderDetail([orderHeaderId], [productId], [price], [quantity]) values (@orderHeaderId, @productId, @price, @quantity)

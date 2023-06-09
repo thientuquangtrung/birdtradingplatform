@@ -7,7 +7,7 @@ import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 
-const Signup = () => {
+const Signup = ({ role = 'customer' }) => {
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
     const avatarStyle = { backgroundColor: 'lightblue' };
     const marginStyle = { margin: '10px 0' };
@@ -17,7 +17,7 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [pickUpAddress, setPickUpAddress] = useState('');
+    const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Signup = () => {
             isEmpty(name) ||
             isEmpty(email) ||
             isEmpty(phone) ||
-            isEmpty(pickUpAddress) ||
+            isEmpty(address) ||
             isEmpty(password) ||
             isEmpty(confirmPassword)
         ) {
@@ -81,7 +81,7 @@ const Signup = () => {
         setPhone(event.target.value);
     }
     function handleChangeAddress(event) {
-        setPickUpAddress(event.target.value);
+        setAddress(event.target.value);
     }
     function handleChangePassword(event) {
         setPassword(event.target.value);
@@ -91,19 +91,27 @@ const Signup = () => {
     }
 
     const handleSubmit = () => {
+        const payload = {
+            email: email,
+            name: name,
+            password: password,
+            phone: phone,
+        };
+
+        if (role === 'customer') {
+            payload.shipToAddress = address;
+        } else if (role === 'seller') {
+            payload.pickUpAddress = address;
+        }
+
         const isValidAll = validateAll();
         const isValidElement = validateElement();
         if (isValidAll && isValidElement) {
             axiosClient
-                .post('auth/seller/register', {
-                    email: email,
-                    name: name,
-                    password: password,
-                    pickUpAddress: pickUpAddress,
-                    phone: phone,
-                })
+                .post(`auth/${role ? role : 'customer'}/register`, payload)
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     navigate('/');
                     enqueueSnackbar('Welcome to BTP! Get your first order now.', { variant: 'info' });
@@ -167,7 +175,7 @@ const Signup = () => {
                 <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.phone}</Typography>
                 <TextField
                     required
-                    value={pickUpAddress}
+                    value={address}
                     onChange={handleChangeAddress}
                     style={marginStyle}
                     fullWidth

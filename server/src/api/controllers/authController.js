@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const authData = require('../services/auth');
 const { hashing, compareHashing } = require('../utils/hash_utils');
 const { modifyUserInfo } = require('../utils/response_modifiers');
+const { signAccessToken } = require('../utils/jwt_utils');
 
 const getCurrentUser = async (req, res, next) => {
     try {
@@ -15,6 +16,19 @@ const getCurrentUser = async (req, res, next) => {
         return res.send({
             ...currentUser,
             image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const getNewAccessToken = async (req, res, next) => {
+    try {
+        const id = req.payload.id;
+        const accessToken = await signAccessToken(id);
+
+        return res.send({
+            accessToken,
         });
     } catch (error) {
         next(createError(error.message));
@@ -44,7 +58,11 @@ const updateSeller = async (req, res, next) => {
             return next(createError.InternalServerError('Cannot get id'));
         }
 
-        const seller = await authData.readSellerById(id);
+        if (req.body.profile || req.body.image) {
+            delete req.body?.profile;
+            delete req.body?.image;
+        }
+        const seller = await authData.readAccountById(id, 'seller');
         const updatedSeller = Object.assign(seller, req.body);
 
         if (req.file) {
@@ -72,7 +90,7 @@ const sellerLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const seller = await authData.readOneSeller(email);
+        const seller = await authData.readOneAccount(email, 'seller');
 
         if (!seller) {
             return next(createError.NotFound('Email address is not exist'));
@@ -96,9 +114,93 @@ const sellerLogin = async (req, res, next) => {
     }
 };
 
+const customerLogin = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        const customer = await authData.readOneAccount(email, 'customer');
+
+        if (!customer) {
+            return next(createError.NotFound('Email address is not exist'));
+        }
+
+        const isPasswordValid = await compareHashing(password, customer.password);
+
+        if (!isPasswordValid) {
+            return next(createError.Unauthorized('Incorrect password'));
+        }
+
+        if (customer.image) {
+            customer.image = `${process.env.HOST_URL}/profile/${customer.image}`;
+        }
+
+        const response = await modifyUserInfo(customer);
+
+        return res.send(response);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const createCustomerAccount = async (req, res, next) => {
+    try {
+        const data = req.body;
+
+        data.password = await hashing(data.password);
+
+        const created = await authData.createCustomerAccount(data);
+
+        const response = await modifyUserInfo(created);
+
+        return res.send(response);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
+const updateCustomer = async (req, res, next) => {
+    try {
+        const id = req.payload.id;
+        if (!id) {
+            return next(createError.InternalServerError('Cannot get id'));
+        }
+
+        if (req.body.profile || req.body.image) {
+            delete req.body?.profile;
+            delete req.body?.image;
+        }
+
+        const customer = await authData.readAccountById(id, 'customer');
+        const updatedCustomer = Object.assign(customer, req.body);
+
+        if (req.file) {
+            if (customer.image) {
+                await fs.remove(`${process.cwd()}/public/images/profile/${customer.image}`);
+            }
+
+            updatedCustomer.image = req.file.filename;
+        }
+        const response = await authData.updateCustomer(updatedCustomer);
+
+        return res.send({
+            data: {
+                ...response,
+                image: `${process.env.HOST_URL}/profile/${response.image}`,
+            },
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 module.exports = {
     createSellerAccount,
-    sellerLogin,
+    customerLogin,
     updateSeller,
     getCurrentUser,
+    getNewAccessToken,
+    customerLogin,
+    sellerLogin,
+    createCustomerAccount,
+    updateCustomer,
 };

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../WorkSpace"
+		},
+		{
+			"path": "../BirdTrading"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "WorkSpace"
+	}
+}

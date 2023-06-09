@@ -13,7 +13,14 @@ import axiosClient from '../../api/axiosClient';
 function ListProduct() {
     const [categoryId, setCategoryId] = useState('');
     const [listProduct, setListProduct] = useState([]);
+    const [productName, setProductName] = useState([]);
 
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearchProduct();
+        }
+    };
     useEffect(() => {
         axiosClient
             .get('seller/product')
@@ -26,6 +33,24 @@ function ListProduct() {
                 console.log(error);
             });
     }, []);
+
+    function handleSearchProduct() {
+        axiosClient
+            .get('seller/product/search', {
+                params: {
+                    categoryId: categoryId,
+                    q: productName,
+                },
+            })
+            .then(function (response) {
+                // handle success
+                setListProduct(response.data);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    }
 
     return (
         <Box margin={3}>
@@ -43,9 +68,12 @@ function ListProduct() {
                         label="Tên sản phẩm"
                         type="search"
                         sx={{ width: '100%' }}
+                        onChange={(e) => setProductName(e.target.value)}
+                        value={productName}
+                        onKeyDown={handlePress}
                     ></TextField>
                     <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
-                    <Button variant="contained" href="#contained-buttons">
+                    <Button variant="contained" href="#contained-buttons" onClick={handleSearchProduct}>
                         Tìm
                     </Button>
                 </Stack>

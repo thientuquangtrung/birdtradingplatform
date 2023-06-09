@@ -5,14 +5,27 @@ const { uploadImg } = require('../middlewares/uploadFile');
 
 const router = express.Router();
 
-const { verifyAccessToken } = require('../utils/jwt_utils');
+const { verifyAccessToken, verifyRefreshToken } = require('../utils/jwt_utils');
 
-const { createSellerAccount, sellerLogin, updateSeller, getCurrentUser } = authController;
+const {
+    createSellerAccount,
+    sellerLogin,
+    updateSeller,
+    getCurrentUser,
+    getNewAccessToken,
+    customerLogin,
+    createCustomerAccount,
+    updateCustomer
+} = authController;
 
+router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
 router.get('/auth/me', verifyAccessToken, getCurrentUser);
 router.post('/auth/seller/register', checkMail, createSellerAccount);
 router.post('/auth/seller/login', sellerLogin);
 router.patch('/auth/seller/me', verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
+router.post('/auth/customer/login', customerLogin);
+router.post('/auth/customer/register', checkMail, createCustomerAccount);
+router.patch('/auth/customer/me', verifyAccessToken, uploadImg('profile').single('profile'), updateCustomer);
 
 module.exports = {
     routes: router,

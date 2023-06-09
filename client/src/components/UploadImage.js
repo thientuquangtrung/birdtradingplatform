@@ -1,17 +1,17 @@
 import { Button, Typography } from '@mui/material';
 import { FileUpload } from '@mui/icons-material';
-import { useState } from 'react';
 import { Stack } from '@mui/system';
-import { forwardRef } from 'react';
+import { useState } from 'react';
 
-function UploadImage({ inputName, rounded, reverse, title, img }, ref) {
-    const [uploadFile, setUploadFile] = useState(img);
+function UploadImage({ inputName, rounded, reverse, title, uploadFile, setUploadFile }) {
+    const [link, setLink] = useState('');
 
     const handleSelectFile = (e) => {
         const file = e.target.files[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            setUploadFile(url);
+            setUploadFile(file);
+            setLink(url);
         }
     };
 
@@ -28,16 +28,19 @@ function UploadImage({ inputName, rounded, reverse, title, img }, ref) {
                 }}
             >
                 {!uploadFile && <Typography variant="caption">JPEG/JPG/PNG</Typography>}
-                {uploadFile && (
+                {uploadFile && !link && (
                     <img src={uploadFile} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                )}
+                {uploadFile && link && (
+                    <img src={link} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 )}
             </Stack>
             <Button variant="outlined" component="label" color="primary" startIcon={<FileUpload />}>
                 {title ? title : 'Upload a file'}
-                <input ref={ref} type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
+                <input type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
             </Button>
         </Stack>
     );
 }
 
-export default forwardRef(UploadImage);
+export default UploadImage;

@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import handleError from '../../utils/handleError';
 
@@ -16,7 +17,7 @@ function Home() {
         axiosClient
             .get('/product')
             .then((response) => {
-                setProducts(response.data);
+                setProducts(response.data.data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -36,7 +37,11 @@ function Home() {
                     ) : (
                         products.length > 0 &&
                         products.map(function (product) {
-                            return <ProductCard key={product.id} data={product} />;
+                            return (
+                                <Grid item xs={3}>
+                                    <ProductCard key={product.id} data={product} />
+                                </Grid>
+                            );
                         })
                     )}
                 </Grid>
@@ -47,7 +52,11 @@ function Home() {
                         marginTop: '16px',
                     }}
                 >
-                    <Button variant="outlined">Xem Thêm</Button>
+                    <Link to={'/shopping'}>
+                        <Button variant="outlined" sx={{ marginTop: 3 }}>
+                            Xem Thêm
+                        </Button>
+                    </Link>
                 </Box>
             </Container>
         </div>

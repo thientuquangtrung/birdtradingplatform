@@ -3,13 +3,13 @@ import Grid from '@mui/material/Grid';
 import { Avatar, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonIcon from '@mui/icons-material/Person';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { useSnackbar } from 'notistack';
 import AuthContext from '../../contexts/AuthContext';
 
-const Login = () => {
+const Login = ({ role }) => {
     // Destructure the handleChange prop
 
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
@@ -18,7 +18,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
+    const [searchParams] = useSearchParams();
     const { setCurrentUser } = useContext(AuthContext);
     const [validationMsg, setValidationMsg] = useState('');
     const { enqueueSnackbar } = useSnackbar();
@@ -54,15 +54,21 @@ const Login = () => {
         const isValid = validateAll();
         if (isValid) {
             axiosClient
-                .post('auth/seller/login', {
+                .post(`auth/${role ? role : 'customer'}/login`, {
                     email: email,
                     password: password,
                 })
                 .then(function (response) {
                     localStorage.setItem('access_token', response.data.meta.accessToken);
+                    localStorage.setItem('refresh_token', response.data.meta.refreshToken);
                     setCurrentUser(response.data.data);
                     enqueueSnackbar('Welcome back!', { variant: 'info' });
-                    navigate('/');
+
+                    if (searchParams.get('redirectTo')) {
+                        return navigate(-1);
+                    } else {
+                        navigate('/');
+                    }
                 })
                 .catch(function (error) {
                     setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');
@@ -79,7 +85,7 @@ const Login = () => {
                         <Avatar style={avatarStyle}>
                             <LockOpenIcon />
                         </Avatar>
-                        <h1>Đăng nhập</h1>
+                        <h2>Đăng nhập</h2>
                     </Grid>
                     <PersonIcon></PersonIcon>{' '}
                     <TextField
