@@ -1,16 +1,19 @@
 {
-	"folders": [
-		{
-			"path": "../../../WorkSpace"
-		},
-		{
-			"path": "../BirdTrading"
-		},
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "WorkSpace"
-	}
+    "folders": [
+        {
+            "path": "../../../WorkSpace"
+        },
+        {
+            "path": "../BirdTrading"
+        },
+        {
+            "path": "."
+        },
+        {
+            "path": "../../../WorkSpace/ReactStudy/studyreact"
+        }
+    ],
+    "settings": {
+        "liveServer.settings.multiRootWorkspaceName": "WorkSpace"
+    }
 }

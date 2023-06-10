@@ -19,6 +19,7 @@ import UpdateProduct from '../pages/UpdateProduct/UpdateProduct';
 import CartDetail from '../pages/CartDetail/CartDetail';
 import Checkout from '../pages/Checkout/Checkout';
 import CustomerOrders from '../pages/CustomerOrders/CustomerOrders';
+import ManageOrder from '../pages/ManageOrder/ManageOder';
 import RevenueManagement from '../pages/RevenueManagement/RevenueManagement';
 import ShopPage from '../pages/ShopPage/ShopPage';
 import AdminLayout from '../layouts/AdminLayout/AdminLayout';
@@ -67,6 +68,7 @@ const privateRoutes = [
         role: ['SELLER'],
         subdomain: 'seller',
     },
+    { path: '/order/manage', component: ManageOrder, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/dashboard', component: RevenueManagement, layout: SellerLayout, role: ['SELLER'], subdomain: 'seller' },
     { path: '/cart', component: CartDetail, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
     { path: '/cart/checkout', component: Checkout, layout: DefaultLayout, role: ['CUSTOMER'], subdomain: 'common' },
