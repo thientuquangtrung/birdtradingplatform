@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
 import UploadImage from '../../components/UploadImage';
+import CustomerOrderTab from '../../components/CustomerOderTab';
 
 function CustomerOrders() {
     const [open, setOpen] = useState(false);
@@ -48,18 +49,6 @@ function CustomerOrders() {
         setSelectedImage(URL.createObjectURL(file));
     };
 
-    const ImageContainer = styled('div')`
-        width: 80px;
-        height: 80px;
-        overflow: hidden;
-    `;
-
-    const StyledImage = styled('img')`
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    `;
-
     return (
         <SubCustomerLayout>
             <Paper sx={{ flex: '1', typography: 'body1' }}>
@@ -73,115 +62,14 @@ function CustomerOrders() {
                             <Tab label="Đã hủy" value="5" />
                         </TabList>
                     </Box>
-                    <TabPanel value="1">Item One</TabPanel>
+                    <TabPanel value="1">
+                        <CustomerOrderTab></CustomerOrderTab>
+                    </TabPanel>
                     <TabPanel value="2">Item Two</TabPanel>
                     <TabPanel value="3">Item Three</TabPanel>
                     <TabPanel value="4">Item Four</TabPanel>
                     <TabPanel value="5">Item Five</TabPanel>
                 </TabContext>
-
-                <div>
-                    <Button onClick={handleOpen}>Đánh Giá</Button>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography sx={{ paddingLeft: 1, paddingBottom: 2 }} id="modal-modal-title" variant="h4">
-                                Đánh Giá Sản Phẩm
-                            </Typography>
-                            <Box
-                                sx={{
-                                    m: 1,
-                                    width: 510,
-                                }}
-                            >
-                                <Paper variant="outlined" sx={{ backgroundColor: '#f5f5f5' }}>
-                                    <Stack direction="column" sx={{ paddingBottom: 3 }}>
-                                        <Paper
-                                            variant="outlined"
-                                            sx={{
-                                                backgroundColor: 'white',
-                                                m: 3,
-                                                width: 460,
-                                                height: 250,
-                                                fontSize: 'small',
-                                            }}
-                                        >
-                                            <TextareaAutosize
-                                                // value={description}
-                                                // onChange={(e) => setDescription(e.target.value)}
-                                                minRows={3}
-                                                placeholder="Nhập đánh giá sản phẩm"
-                                                style={{
-                                                    padding: 10,
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    fontSize: 15,
-                                                    fontFamily: 'Roboto',
-                                                }}
-                                            />
-                                        </Paper>
-                                        {/* <Stack
-                                            flexGrow={1}
-                                            direction="row"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            spacing={2}
-                                        >
-                                            <input
-                                                accept="image/*"
-                                                type="file"
-                                                style={{ display: 'none' }}
-                                                onChange={handleImageSelect}
-                                                id="image-input"
-                                                required
-                                            />
-                                            <label
-                                                htmlFor="image-input"
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                <Button component="span" variant="outlined" size="small">
-                                                    Thêm Hình Ảnh
-                                                </Button>
-                                            </label>
-                                            <ImageContainer
-                                                style={{ display: 'flex', alignItems: 'center', marginRight: 15 }}
-                                            >
-                                                {selectedImage && <StyledImage src={selectedImage} alt="Selected" />}
-                                            </ImageContainer>
-                                        </Stack> */}
-                                        <UploadImage
-                                            title="Select a logo"
-                                            uploadFile={upLoadFile}
-                                            setUploadFile={setUpLoadFile}
-                                        />
-                                    </Stack>
-                                </Paper>
-                            </Box>
-                            <Stack
-                                justifyContent="flex-end"
-                                spacing={1}
-                                direction="row"
-                                sx={{ marginRight: 1.8, paddingTop: 1 }}
-                            >
-                                <Button size="small" variant="text" onClick={handleClose}>
-                                    Trở Lại
-                                </Button>
-
-                                <Button size="small" variant="contained" onClick={handleClose}>
-                                    Hoàn Thành
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Modal>
-                </div>
             </Paper>
         </SubCustomerLayout>
     );

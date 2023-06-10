@@ -262,7 +262,7 @@ function OrderTab({ status }) {
                             <Typography id="modal-modal-title" variant="h4" component="h3">
                                 Chi tiết đơn hàng
                             </Typography>
-                            <Chip label="Mã đơn hàng: 1999" color="success" />
+                            <Chip label={`Mã đơn hàng ${modalState.orderID}`} color="secondary" />
                         </Stack>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             Tên khách hàng: <span>{modalState.name}</span>

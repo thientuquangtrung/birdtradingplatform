@@ -119,14 +119,6 @@ const ManageOrder = () => {
                 </TabPanel>
             </TabContext>
             <Grid>
-                {/* <Pagination
-                    count={totalPage}
-                    color="primary"
-                    shape="rounded"
-                    page={page}
-                    onChange={handleChangePage}
-                    style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
-                /> */}
                 <Pagination
                     count={totalPage}
                     color="primary"
