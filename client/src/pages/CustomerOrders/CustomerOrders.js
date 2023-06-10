@@ -30,18 +30,6 @@ function CustomerOrders() {
         setValue(newValue);
     };
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 600,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
-
     const [selectedImage, setSelectedImage] = useState(null);
 
     const handleImageSelect = (event) => {
@@ -70,76 +58,6 @@ function CustomerOrders() {
                     <TabPanel value="4">Item Four</TabPanel>
                     <TabPanel value="5">Item Five</TabPanel>
                 </TabContext>
-
-                <div>
-                    <Button onClick={handleOpen}>Đánh Giá</Button>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography sx={{ paddingLeft: 1, paddingBottom: 2 }} id="modal-modal-title" variant="h4">
-                                Đánh Giá Sản Phẩm
-                            </Typography>
-                            <Box
-                                sx={{
-                                    m: 1,
-                                    width: 510,
-                                }}
-                            >
-                                <Paper variant="outlined" sx={{ backgroundColor: '#f5f5f5' }}>
-                                    <Stack direction="column" sx={{ paddingBottom: 3 }}>
-                                        <Paper
-                                            variant="outlined"
-                                            sx={{
-                                                backgroundColor: 'white',
-                                                m: 3,
-                                                width: 460,
-                                                height: 250,
-                                                fontSize: 'small',
-                                            }}
-                                        >
-                                            <TextareaAutosize
-                                                // value={description}
-                                                // onChange={(e) => setDescription(e.target.value)}
-                                                minRows={3}
-                                                placeholder="Nhập đánh giá sản phẩm"
-                                                style={{
-                                                    padding: 10,
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    fontSize: 15,
-                                                    fontFamily: 'Roboto',
-                                                }}
-                                            />
-                                        </Paper>
-                                        <UploadImage
-                                            title="Chọn ảnh"
-                                            uploadFile={upLoadFile}
-                                            setUploadFile={setUpLoadFile}
-                                        />
-                                    </Stack>
-                                </Paper>
-                            </Box>
-                            <Stack
-                                justifyContent="flex-end"
-                                spacing={1}
-                                direction="row"
-                                sx={{ marginRight: 1.8, paddingTop: 1 }}
-                            >
-                                <Button size="small" variant="text" onClick={handleClose}>
-                                    Trở Lại
-                                </Button>
-
-                                <Button size="small" variant="contained" onClick={handleClose}>
-                                    Hoàn Thành
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Modal>
-                </div>
             </Paper>
         </SubCustomerLayout>
     );
