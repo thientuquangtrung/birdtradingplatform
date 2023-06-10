@@ -29,6 +29,7 @@ import SellerManagementAdmin from '../pages/SellerManagementAdmin/SellerManageme
 import CategoryManagement from '../pages/CategoryManagement/CategoryManagement';
 import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 import AdminLogin from '../pages/Login/AdminLogin';
+import SellerDetail from '../pages/SellerDetail/SellerDetail';
 
 
 // Public routes
@@ -78,6 +79,13 @@ const privateRoutes = [
     {
         path: '/seller_management',
         component: SellerManagement,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/seller_detail/:name',
+        component: SellerDetail,
         layout: AdminLayout,
         role: ['ADMIN'],
         subdomain: 'admin',
