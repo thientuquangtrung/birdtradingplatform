@@ -1,6 +1,7 @@
 import { Paper, Stack, Typography } from '@mui/material';
 import { Button, Input } from '@mui/joy';
 import { Add, Search } from '@mui/icons-material';
+import SellerTable from '../../components/SellerTable';
 import { Link } from 'react-router-dom';
 
 function SellerManagement() {
@@ -27,7 +28,9 @@ function SellerManagement() {
                     placeholder="Search for account..."
                 />
             </Paper>
-            <Paper elevation={2} sx={{ height: '500px', padding: 2 }}></Paper>
+            <Paper elevation={2} sx={{ height: '500px', padding: 2 }}>
+                <SellerTable />
+            </Paper>
         </Stack>
     );
 }
