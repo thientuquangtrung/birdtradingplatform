@@ -3,6 +3,18 @@ const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 
+const getAccounts = async ({ name }) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const currentUser = await pool.request().input('name', sql.NVarChar, name).query(sqlQueries.getAccounts);
+
+        return currentUser.recordset;
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
 // get current user
 
 const getCurrentUser = async (id) => {
@@ -147,6 +159,61 @@ const updateCustomer = async (data) => {
     }
 };
 
+const updateAccountByAdmin = async (data) => {
+    try {
+        const { name, email, phone, address, id, role } = data;
+
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const account = await pool
+            .request()
+            .input('name', sql.NVarChar, name)
+            .input('email', sql.VarChar, email)
+            .input('phone', sql.VarChar, phone)
+            .input('role', sql.VarChar, role)
+            .input('address', sql.NVarChar, address)
+            .input('id', sql.UniqueIdentifier, id)
+            .query(sqlQueries.updateSeller);
+
+        return account.recordset[0];
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
+const deleteAccount = async (id) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const account = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.deleteAccount);
+
+        return account.recordset[0];
+    } catch (error) {
+        throw error;
+    }
+};
+
+const createNewAccount = async ({ name, image, phone, password, address, role }) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const account = await pool
+            .request()
+            .input('name', sql.NVarChar, name)
+            .input('email', sql.VarChar, email)
+            .input('password', sql.Char, password)
+            .input('image', sql.VarChar, image)
+            .input('phone', sql.VarChar, phone)
+            .input('address', sql.NVarChar, address)
+            .input('role', sql.VarChar, role)
+            .query(sqlQueries.updateSeller);
+
+        return account.recordset[0];
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     checkMail,
     createSellerAccount,
@@ -156,4 +223,8 @@ module.exports = {
     getCurrentUser,
     createCustomerAccount,
     updateCustomer,
+    getAccounts,
+    updateAccountByAdmin,
+    deleteAccount,
+    createNewAccount,
 };

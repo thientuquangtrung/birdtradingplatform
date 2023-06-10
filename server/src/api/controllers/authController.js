@@ -6,6 +6,47 @@ const { hashing, compareHashing } = require('../utils/hash_utils');
 const { modifyUserInfo } = require('../utils/response_modifiers');
 const { signAccessToken } = require('../utils/jwt_utils');
 
+const getAccounts = async (req, res, next) => {
+    try {
+        const result = await authData.getAccounts(req.query);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteAccount = async (req, res, next) => {
+    try {
+        await authData.deleteAccount(req.params.id);
+
+        res.send({
+            status: 200,
+            message: 'OK',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const createNewAccount = async (req, res, next) => {
+    try {
+        const image = req.file ? req.file.filename : '';
+
+        await authData.createNewAccount({ ...req.body, image });
+        res.send({
+            status: 200,
+            message: 'OK',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const getCurrentUser = async (req, res, next) => {
     try {
         const id = req.payload.id;
@@ -221,6 +262,23 @@ const updateCustomer = async (req, res, next) => {
     }
 };
 
+const updateAccountByAdmin = async (req, res, next) => {
+    try {
+        const foundAccount = await authData.readAccountById(id, req.body.role);
+        if (!foundAccount) createError.BadRequest('Cannot find account');
+
+        const response = await authData.updateAccountByAdmin(req.body);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: response,
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 module.exports = {
     createSellerAccount,
     customerLogin,
@@ -232,4 +290,8 @@ module.exports = {
     createCustomerAccount,
     updateCustomer,
     adminLogin,
+    getAccounts,
+    updateAccountByAdmin,
+    deleteAccount,
+    createNewAccount,
 };
