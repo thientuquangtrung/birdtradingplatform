@@ -28,5 +28,5 @@ const placeOrder = async (req, res, next) => {
 
 module.exports = {
     checkoutReview,
-    placeOrder
+    placeOrder,
 };

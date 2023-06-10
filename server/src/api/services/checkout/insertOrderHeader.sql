@@ -1,1 +1,1 @@
-insert OrderHeader ([customerId]) output inserted.id values (@customerId)
+insert OrderHeader ([customerId], [shopId]) output inserted.id values (@customerId, @shopId)

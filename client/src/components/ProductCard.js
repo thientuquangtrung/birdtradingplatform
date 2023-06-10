@@ -17,10 +17,11 @@ const ProductCard = ({ data }) => {
         <Paper
             elevation={3}
             sx={{
-                marginBottom:3,
+                marginBottom: 3,
                 transform: isHovered ? 'translateY(-5px)' : 'none',
                 transition: 'transform 0.3s ease',
                 boxShadow: isHovered ? '0 2px 8px rgba(0, 0, 0, 0.3)' : 'none',
+                cursor: 'pointer',
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -48,7 +49,11 @@ const ProductCard = ({ data }) => {
                 />
             </Box>
             <Box
-                sx={{ border: '1px solid #C0C0C0' }}
+                sx={{
+                    boxShadow: '0 0.0625rem 0.125rem 0 rgba(0,0,0,.1)',
+                    borderBottomLeftRadius: '3px',
+                    borderBottomRightRadius: '3px',
+                }}
                 paddingTop={2}
                 paddingBottom={0.5}
                 paddingLeft={2}

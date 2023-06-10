@@ -21,7 +21,7 @@ function SellerSidebar() {
                     <ListItemText primary="Quản lí sản phẩm" />
                 </ListItemButton>
             </Link>
-            <Link to="/profile">
+            <Link to="/dashboard">
                 <ListItemButton>
                     <ListItemIcon>
                         <TrendingUp />

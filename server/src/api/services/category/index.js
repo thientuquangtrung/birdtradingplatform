@@ -11,7 +11,7 @@ const getCategories = async () => {
 
         return list.recordset;
     } catch (err) {
-        throw createError(error);
+        throw createError(err);
     }
 };
 

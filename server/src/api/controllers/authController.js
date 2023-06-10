@@ -142,6 +142,34 @@ const customerLogin = async (req, res, next) => {
     }
 };
 
+const adminLogin = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        const admin = await authData.readOneAccount(email, 'admin');
+        console.log(admin);
+        if (!admin) {
+            return next(createError.NotFound('Email address is not exist'));
+        }
+
+        const isPasswordValid = password === admin.password.trim();
+
+        if (!isPasswordValid) {
+            return next(createError.Unauthorized('Incorrect password'));
+        }
+
+        if (admin.image) {
+            admin.image = `${process.env.HOST_URL}/profile/${admin.image}`;
+        }
+
+        const response = await modifyUserInfo(admin);
+
+        return res.send(response);
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 const createCustomerAccount = async (req, res, next) => {
     try {
         const data = req.body;
@@ -203,4 +231,5 @@ module.exports = {
     sellerLogin,
     createCustomerAccount,
     updateCustomer,
+    adminLogin,
 };
