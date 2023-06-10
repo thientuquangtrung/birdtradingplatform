@@ -17,10 +17,15 @@ const {
     createCustomerAccount,
     updateCustomer,
     adminLogin,
+    getAccounts,
+    updateAccountByAdmin,
+    deleteAccount,
+    createNewAccount,
 } = authController;
 
 router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
 router.get('/auth/me', verifyAccessToken, getCurrentUser);
+router.get('/auth/account', verifyAccessToken, getAccounts);
 router.post('/auth/seller/register', checkMail, createSellerAccount);
 router.post('/auth/seller/login', sellerLogin);
 router.patch('/auth/seller/me', verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
@@ -28,6 +33,9 @@ router.post('/auth/customer/login', customerLogin);
 router.post('/auth/customer/register', checkMail, createCustomerAccount);
 router.patch('/auth/customer/me', verifyAccessToken, uploadImg('profile').single('profile'), updateCustomer);
 router.post('/auth/admin/login', adminLogin);
+router.patch('/auth/account', verifyAccessToken, updateAccountByAdmin);
+router.delete('/auth/account/:id', verifyAccessToken, deleteAccount);
+router.post('/auth/account', verifyAccessToken, uploadImg('profile').single('profile'), createNewAccount);
 
 module.exports = {
     routes: router,

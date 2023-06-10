@@ -6,8 +6,7 @@ const getOrdersByCusId = async (req, res, next) => {
         const id = req.params.id;
         if (id !== req.payload.id) next(createHttpError.Unauthorized('Invalid id'));
 
-        const status = req.query.status ? req.query.status : 'PENDING';
-        const data = await orderData.getOrdersByCusId({ id, status });
+        const data = await orderData.getOrdersByCusId({ id, ...req.query });
 
         return res.send({
             status: 200,
@@ -24,8 +23,7 @@ const getOrdersByShop = async (req, res, next) => {
         const id = req.params.id;
         if (id !== req.payload.id) next(createHttpError.Unauthorized('Invalid id'));
 
-        const status = req.query.status ? req.query.status : 'PENDING';
-        const data = await orderData.getOrdersByShop({ id, status });
+        const data = await orderData.getOrdersByShop({ id, ...req.query });
 
         return res.send({
             status: 200,
