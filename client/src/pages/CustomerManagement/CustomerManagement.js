@@ -1,22 +1,15 @@
 import { Paper, Stack, Typography } from '@mui/material';
 import { Button, Input } from '@mui/joy';
 import { Add, Search } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
 
 function SellerManagement() {
     return (
         <Stack direction="column" padding={5} gap={5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography variant="h4" component="h2">
-                    Sellers
+                    Customers
                 </Typography>
-                <Button
-                    variant="soft"
-                    color="primary"
-                    startDecorator={<Add />}
-                    component={Link}
-                    to="http://admin.localhost:3000/seller_management/add_seller"
-                >
+                <Button variant="soft" color="primary" startDecorator={<Add />}>
                     Add
                 </Button>
             </Stack>

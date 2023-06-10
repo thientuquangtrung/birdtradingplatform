@@ -24,9 +24,12 @@ import RevenueManagement from '../pages/RevenueManagement/RevenueManagement';
 import ShopPage from '../pages/ShopPage/ShopPage';
 import AdminLayout from '../layouts/AdminLayout/AdminLayout';
 import SellerManagement from '../pages/SellerManagement/SellerManagement';
+import CustomerManagement from '../pages/CustomerManagement/CustomerManagement';
+import SellerManagementAdmin from '../pages/SellerManagementAdmin/SellerManagementAdmin';
 import CategoryManagement from '../pages/CategoryManagement/CategoryManagement';
 import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 import AdminLogin from '../pages/Login/AdminLogin';
+
 
 // Public routes
 const publicRoutes = [
@@ -75,6 +78,20 @@ const privateRoutes = [
     {
         path: '/seller_management',
         component: SellerManagement,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/seller_management/add_seller',
+        component: SellerManagementAdmin,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/customer_management',
+        component: CustomerManagement,
         layout: AdminLayout,
         role: ['ADMIN'],
         subdomain: 'admin',
