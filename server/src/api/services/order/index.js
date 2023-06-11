@@ -62,8 +62,26 @@ const changeOrderStatus = async ({ orderId, status }) => {
     }
 };
 
+const getRevenue = async ({ startDate, endDate, id }) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('order');
+        const list = await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('startDate', sql.VarChar, startDate)
+            .input('endDate', sql.VarChar, endDate)
+            .query(sqlQueries.getRevenue);
+
+        return list.recordset;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     changeOrderStatus,
     getOrdersByShop,
+    getRevenue,
 };

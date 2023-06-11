@@ -52,8 +52,23 @@ const cancelOrder = async (req, res, next) => {
     }
 };
 
+const getRevenue = async (req, res, next) => {
+    try {
+        const data = await orderData.getRevenue(req.query);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     cancelOrder,
     getOrdersByShop,
+    getRevenue
 };
