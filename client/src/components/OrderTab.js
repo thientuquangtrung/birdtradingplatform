@@ -25,41 +25,34 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axiosClient from '../api/axiosClient';
+import AuthContext from '../contexts/AuthContext';
 
 function OrderTab({ status }) {
-    const [tableData, setTableData] = useState([
-        {
-            name: 'Nghia dep trai',
-            phone: '123',
-            address: 'Vincom Grand Park',
-            orderID: '123',
-            customer: 'Tèo',
-            quantity: 2,
-            status: 'PENDING',
-        },
-        {
-            orderID: '124',
-            customer: 'Trung',
-            quantity: 1,
-            status: 'SUCCESSFUL',
-        },
-        {
-            orderID: '126',
-            customer: 'Nghĩa',
-            quantity: 3,
-            status: 'DELIVERING',
-        },
-        {
-            orderID: '190',
-            customer: 'Nam',
-            quantity: 100,
-            status: 'CANCELLED',
-        },
-    ]);
-    const paperStyle = { width: '100%', margin: '20px auto' };
+    const [tableData, setTableData] = useState([]);
     const [open, setOpen] = useState(false);
     const [modalState, setModalState] = useState({});
+    const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
+    const { currentUser } = useContext(AuthContext);
+    useEffect(() => {
+        axiosClient
+            .get(`seller/order/${currentUser.id}`, {
+                params: {
+                    page: 1,
+                    perPage: 5,
+                },
+            })
+            .then(function (response) {
+                setTableData(response.data.data);
+                console.log(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, []);
+
+    const paperStyle = { width: '100%', margin: '20px auto' };
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
             if (item.orderID === modalState.orderID) {
@@ -80,7 +73,7 @@ function OrderTab({ status }) {
         setTableData(updatedTableData);
         handleClose();
     };
-    const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
+
     const handleCancelConfirmationClose = (confirmed) => {
         setCancelConfirmationOpen(false);
         if (confirmed) {
@@ -225,12 +218,10 @@ function OrderTab({ status }) {
                         <TableBody>
                             {tableData.length > 0 ? (
                                 tableData.map((item) => (
-                                    <TableRow key={item.orderID}>
-                                        <TableCell component="th" scope="row">
-                                            {item.orderID}
-                                        </TableCell>
-                                        <TableCell>{item.customer}</TableCell>
-                                        <TableCell align="center">{item.quantity}</TableCell>
+                                    <TableRow key={item.orderId}>
+                                        <TableCell scope="row">{item.orderId}</TableCell>
+                                        <TableCell>{item.customer.name}</TableCell>
+                                        <TableCell align="center">{item.products.length}</TableCell>
                                         <TableCell align="center">{renderStatus(item.status)}</TableCell>
                                         <TableCell align="center">
                                             <Button onClick={() => handleOpen(item)}>
@@ -262,16 +253,16 @@ function OrderTab({ status }) {
                             <Typography id="modal-modal-title" variant="h4" component="h3">
                                 Chi tiết đơn hàng
                             </Typography>
-                            <Chip label={`Mã đơn hàng ${modalState.orderID}`} color="secondary" />
+                            <Chip label={`Mã đơn hàng ${modalState.orderId}`} color="secondary" />
                         </Stack>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Tên khách hàng: <span>{modalState.name}</span>
+                            Tên khách hàng: <span>{modalState.customer?.name}</span>
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Số điện thoại: <span>{modalState.phone}</span>
+                            Số điện thoại: <span>{modalState.customer?.phone}</span>
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Địa chỉ: <span>{modalState.address}</span>
+                            Địa chỉ: <span>{modalState.customer?.shipToAddress}</span>
                         </Typography>
                     </Stack>
 
@@ -304,40 +295,25 @@ function OrderTab({ status }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell component="th" scope="row">
-                                        <Stack direction="row" alignItems="center">
-                                            <img
-                                                src=""
-                                                alt=""
-                                                width="60px"
-                                                height="60px"
-                                                style={{ marginRight: '5px' }}
-                                            ></img>
-                                            Quần què
-                                        </Stack>
-                                    </TableCell>
-                                    <TableCell align="center"> 2 xị</TableCell>
-                                    <TableCell align="center"> 50</TableCell>
-                                    <TableCell align="center"> 10 chai</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell component="th" scope="row">
-                                        <Stack direction="row" alignItems="center">
-                                            <img
-                                                src=""
-                                                alt=""
-                                                width="60px"
-                                                height="60px"
-                                                style={{ marginRight: '5px' }}
-                                            ></img>
-                                            Quần què
-                                        </Stack>
-                                    </TableCell>
-                                    <TableCell align="center"> 2 xị</TableCell>
-                                    <TableCell align="center"> 50</TableCell>
-                                    <TableCell align="center"> 10 chai</TableCell>
-                                </TableRow>
+                                {modalState?.products?.map((product) => (
+                                    <TableRow>
+                                        <TableCell component="th" scope="row">
+                                            <Stack direction="row" alignItems="center">
+                                                <img
+                                                    src={product.image}
+                                                    alt=""
+                                                    width="60px"
+                                                    height="60px"
+                                                    style={{ marginRight: '5px' }}
+                                                ></img>
+                                                {product.name}
+                                            </Stack>
+                                        </TableCell>
+                                        <TableCell align="center">{product.price} </TableCell>
+                                        <TableCell align="center">{product.quantity} </TableCell>
+                                        <TableCell align="center">{product.price * Number(product.quantity)}</TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </Stack>
