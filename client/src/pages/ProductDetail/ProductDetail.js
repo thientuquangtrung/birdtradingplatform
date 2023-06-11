@@ -83,7 +83,7 @@ function ProductDetail() {
                             {product.name}
                         </Typography>
                         <Typography variant="h4" gutterBottom color="#c80606">
-                            {product.price ? product.price.toLocaleString('vi-VN') : ''}
+                            {product.price ? product.price.toLocaleString('vi-VN') : ''}₫
                         </Typography>
                         <Typography variant="subtitle2" gutterBottom sx={{ fontSize: 16 }}>
                             {product.description}

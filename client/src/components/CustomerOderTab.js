@@ -5,7 +5,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import CustomNoRowsOverlay from '../components/CustomNoRowsOverlay';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axiosClient from '../api/axiosClient';
+import AuthContext from '../contexts/AuthContext';
 import {
     Button,
     Chip,
@@ -32,18 +34,35 @@ import UploadImage from './UploadImage';
 function CustomerOrderTab({ status }) {
     const [open, setOpen] = useState(false);
     const [upLoadFile, setUpLoadFile] = useState('');
+    const [value, setValue] = useState('1');
+    const [orderId, setOrderId] = useState(null);
+    const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [tableData, setTableData] = useState([]);
+    const { currentUser } = useContext(AuthContext);
+    useEffect(() => {
+        axiosClient
+            .get(`customer/order/${currentUser.id}`, {
+                params: {
+                    page: 1,
+                    perPage: 5,
+                },
+            })
+            .then(function (response) {
+                setTableData(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, []);
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        // Thêm các xử lý khác nếu cần thiết để quay về trang ban đầu
     };
-
-    const [value, setValue] = useState('1');
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    const [orderId, setOrderId] = useState(null);
     const style = {
         position: 'absolute',
         top: '50%',
@@ -55,7 +74,6 @@ function CustomerOrderTab({ status }) {
         boxShadow: 24,
         p: 4,
     };
-    const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
     const handleCancelConfirmationOpen = (orderId) => {
         setOrderId(orderId);
         setCancelConfirmationOpen(true);
@@ -69,46 +87,11 @@ function CustomerOrderTab({ status }) {
         }
         setCancelConfirmationOpen(false);
     };
-    const [selectedImage, setSelectedImage] = useState(null);
 
     const handleImageSelect = (event) => {
         const file = event.target.files[0];
         setSelectedImage(URL.createObjectURL(file));
     };
-    const [tableData, setTableData] = useState([
-        {
-            orderID: '123',
-            shopName: 'Tèo Shop',
-            productName: 'Quần không què',
-            quantity: 2,
-            price: 1000,
-            status: 'PENDING',
-        },
-        {
-            orderID: '124',
-            shopName: 'MAI Seller',
-            productName: 'Quần không què với 1 cái quần què thì sẽ ra quần nhiều què hehehehehe',
-            price: 1000,
-            quantity: 1,
-            status: 'SUCCESSFUL',
-        },
-        {
-            orderID: '124',
-            shopName: 'Trung Seller',
-            productName: 'Quần không què với 1 cái quần què thì sẽ ra quần nhiều què hehehehehe',
-            price: 1000,
-            quantity: 1,
-            status: 'DELIVERING',
-        },
-        {
-            orderID: '124',
-            shopName: 'NGAN Seller',
-            productName: 'Quần không què với 1 cái quần què thì sẽ ra quần nhiều què hehehehehe',
-            price: 1000,
-            quantity: 1,
-            status: 'CANCELLED',
-        },
-    ]);
 
     const renderStatus = (status) => {
         if (status === 'PENDING') {
@@ -133,6 +116,11 @@ function CustomerOrderTab({ status }) {
                     NoRowsOverlay: CustomNoRowsOverlay,
                 }}
             >
+                <TableHead>
+                    <TableCell>Tên sản phẩm</TableCell>
+                    <TableCell align="center">Số lượng</TableCell>
+                    <TableCell align="right">Giá tiền</TableCell>
+                </TableHead>
                 <TableBody>
                     {tableData.length > 0 ? (
                         tableData.map((item) => (
@@ -152,7 +140,7 @@ function CustomerOrderTab({ status }) {
                                                     variant="text"
                                                     style={{ backgroundColor: 'white', color: 'black' }}
                                                 >
-                                                    {item.shopName}
+                                                    {item.shop.name}
                                                 </Button>
                                             </div>
                                         </div>
@@ -161,29 +149,40 @@ function CustomerOrderTab({ status }) {
                                         {renderStatus(item.status)}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow key={item.orderID}>
-                                    <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                                        <img width="60px" height="60px" alt="" />
-                                        {item.productName}
-                                    </TableCell>
+                                {item.products.map((product) => (
+                                    <TableRow key={product.id}>
+                                        <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                            <img src={product.image} width="60px" height="60px" alt="" />
+                                            {product.name}
+                                        </TableCell>
 
-                                    <TableCell align="right">{item.quantity}</TableCell>
-                                    <TableCell align="right">{item.price}</TableCell>
-                                </TableRow>
+                                        <TableCell align="center">x{product.quantity}</TableCell>
+                                        <TableCell align="right">{product.price.toLocaleString('vi-VN')}₫</TableCell>
+                                    </TableRow>
+                                ))}
                                 <TableRow>
                                     <TableCell sx={{ textAlign: 'end' }} colSpan={5}>
                                         {item.status === 'PENDING' ? (
                                             <>
                                                 <Button
                                                     onClick={() => handleCancelConfirmationOpen(item.orderID)}
-                                                    variant="text"
-                                                    color="error"
+                                                    variant="contained"
+                                                    style={{
+                                                        backgroundColor: '#fafafa',
+                                                        color: '#616161',
+                                                        fontWeight: '420',
+                                                        textTransform: 'none',
+                                                        boxShadow: '2px',
+                                                        border: '1px solid #9e9e9e',
+                                                    }}
                                                 >
                                                     Hủy Đơn Hàng
                                                 </Button>
                                             </>
                                         ) : item.status === 'SUCCESSFUL' ? (
-                                            <Button onClick={handleOpen}>Đánh Giá</Button>
+                                            <Button variant="contained" onClick={handleOpen}>
+                                                Đánh Giá
+                                            </Button>
                                         ) : null}
                                     </TableCell>
                                 </TableRow>

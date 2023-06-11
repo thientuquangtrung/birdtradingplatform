@@ -79,6 +79,7 @@ const checkoutReview = async ({ userId, shopOrderIds }) => {
 
 const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
     try {
+        const orderHeaderIds = [];
         const sqlQueries = await loadSqlQueries('checkout');
         request.input('customerId', sql.UniqueIdentifier, userId);
         for (let index = 0; index < shopOrderIdsNew.length; index++) {
@@ -100,8 +101,9 @@ const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
                 await request.query(sqlQueries.insertOrderDetail);
             }
 
-            return orderHeaderId;
+            orderHeaderIds.push(orderHeaderId);
         }
+        return orderHeaderIds;
     } catch (error) {
         throw error;
     }
@@ -154,7 +156,7 @@ const placeOrder = async ({ shopOrderIds, userId }) => {
             await transaction.begin();
             const request = new sql.Request(transaction);
 
-            const orderHeaderId = await insertOrderHeader(request, userId, shopOrderIdsNew);
+            const orderHeaderIds = await insertOrderHeader(request, userId, shopOrderIdsNew);
 
             for (let index = 0; index < shopOrderIdsNew.length; index++) {
                 const orderByShop = shopOrderIdsNew[index];
@@ -167,7 +169,7 @@ const placeOrder = async ({ shopOrderIds, userId }) => {
             }
 
             const response = {
-                orderHeaderId,
+                orderHeaderIds,
                 userId,
                 shopOrderIdsNew,
                 checkoutOrder,
