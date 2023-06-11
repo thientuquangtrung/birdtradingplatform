@@ -3,7 +3,7 @@ import { FileUpload } from '@mui/icons-material';
 import { Stack } from '@mui/system';
 import { useState } from 'react';
 
-function UploadImage({ inputName, rounded, reverse, title, uploadFile, setUploadFile }) {
+function UploadImage({ inputName, rounded, reverse, vertical, title, uploadFile, setUploadFile }) {
     const [link, setLink] = useState('');
 
     const handleSelectFile = (e) => {
@@ -15,8 +15,17 @@ function UploadImage({ inputName, rounded, reverse, title, uploadFile, setUpload
         }
     };
 
+    let direction = 'row';
+    if (vertical) {
+        direction = 'column';
+    }
+
+    if(reverse) {
+        direction += '-reverse';
+    }
+
     return (
-        <Stack direction={reverse ? 'row' : 'row-reverse'} alignItems="center" gap={2} justifyContent="center">
+        <Stack direction={direction} alignItems="center" gap={2} justifyContent="center">
             <Stack
                 justifyContent="center"
                 sx={{

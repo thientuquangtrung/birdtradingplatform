@@ -14,17 +14,13 @@ import { Link } from 'react-router-dom';
 const Name = ({ data }) => {
     return (
         <Stack direction="row" gap={2} alignItems="center">
-            <Avatar
-                alt="Remy Sharp"
-                src="https://s1.media.ngoisao.vn/news/2022/04/19/4da578dae741291f7050-ngoisaovn-w1126-h1612.jpg"
-                sx={{ width: 40, height: 40 }}
-            />
+            <Avatar alt="" src={data.image} sx={{ width: 40, height: 40 }} />
             <Stack direction="column" justifyContent="center">
                 <Typography variant="subtitle2" gutterBottom margin={0}>
-                    Wang ZiQi
+                    {data.name}
                 </Typography>
                 <Typography variant="caption" display="block" gutterBottom>
-                    ngantvh@gmail.com
+                    {data.email}
                 </Typography>
             </Stack>
         </Stack>
@@ -48,23 +44,28 @@ const Actions = ({ data }) => {
         </Stack>
     );
 };
-export default function SellerTable() {
+
+const Location = ({ data }) => {
+    return (
+        <Typography variant="body1" gutterBottom fontSize="14px">
+            {data.value}
+        </Typography>
+    );
+};
+
+export default function SellerTable({ data }) {
     const columns = [
         {
             field: 'name',
             headerName: 'Name',
             width: 300,
-            renderCell: (rowName) => <Name data={rowName} />,
+            renderCell: (rowData) => <Name data={rowData.row} />,
         },
         {
-            field: 'location',
+            field: 'pickUpAddress',
             headerName: 'Location',
             width: 300,
-            renderCell: (rowData) => (
-                <Typography variant="body1" gutterBottom fontSize="14px">
-                    Vinhomes Grand Park, TP HCM
-                </Typography>
-            ),
+            renderCell: (rowLocation) => <Location data={rowLocation} />,
             editable: true,
         },
         {
@@ -87,22 +88,10 @@ export default function SellerTable() {
         },
     ];
 
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
-
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
-                rows={rows}
+                rows={data}
                 columns={columns}
                 initialState={{
                     pagination: {

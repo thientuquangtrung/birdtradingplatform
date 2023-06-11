@@ -3,8 +3,29 @@ import { Button, Input } from '@mui/joy';
 import { Add, Search } from '@mui/icons-material';
 import SellerTable from '../../components/SellerTable';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axiosClient from '../../api/axiosClient';
 
 function SellerManagement() {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        axiosClient
+            .get(`auth/account`, {
+                params: {
+                    role: 'SELLER',
+                },
+            })
+            .then(function (response) {
+                // handle success
+                setData(response.data.data);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    }, []);
+
     return (
         <Stack direction="column" padding={5} gap={5}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -16,7 +37,7 @@ function SellerManagement() {
                     color="primary"
                     startDecorator={<Add />}
                     component={Link}
-                    to="http://admin.localhost:3000/seller_management/add_seller"
+                    to="/seller_management/add_seller"
                 >
                     Add
                 </Button>
@@ -29,7 +50,7 @@ function SellerManagement() {
                 />
             </Paper>
             <Paper elevation={2} sx={{ height: '500px', padding: 2 }}>
-                <SellerTable />
+                <SellerTable data={data} />
             </Paper>
         </Stack>
     );
