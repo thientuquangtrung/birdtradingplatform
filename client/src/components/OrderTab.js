@@ -40,7 +40,8 @@ function OrderTab({ status }) {
             .get(`seller/order/${currentUser.id}`, {
                 params: {
                     page: 1,
-                    perPage: 5,
+                    perPage: 6,
+                    status,
                 },
             })
             .then(function (response) {
@@ -52,21 +53,37 @@ function OrderTab({ status }) {
             });
     }, []);
 
+    const changeOrderStatus = (id, status) => {
+        axiosClient
+            .put(`order/change_status/${id}`, {
+                status,
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
     const paperStyle = { width: '100%', margin: '20px auto' };
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
-            if (item.orderID === modalState.orderID) {
-                return { ...item, status: 'DELIVERING' };
+            if (item.orderId === modalState.orderId) {
+                changeOrderStatus(modalState.orderId, 'SHIPPING');
+                return { ...item, status: 'SHIPPING' };
             }
             return item;
         });
         setTableData(updatedTableData);
         handleClose();
     };
+
     const handleSuccessful = () => {
         const updatedTableData = tableData.map((item) => {
-            if (item.orderID === modalState.orderID) {
-                return { ...item, status: 'SUCCESSFUL' };
+            if (item.orderId === modalState.orderId) {
+                changeOrderStatus(modalState.orderId, 'COMPLETED');
+                return { ...item, status: 'COMPLETED' };
             }
             return item;
         });
@@ -78,8 +95,9 @@ function OrderTab({ status }) {
         setCancelConfirmationOpen(false);
         if (confirmed) {
             const updatedTableData = tableData.map((item) => {
-                if (item.orderID === modalState.orderID) {
-                    return { ...item, status: 'CANCELLED' };
+                if (item.orderId === modalState.orderId) {
+                    changeOrderStatus(modalState.orderId, 'CANCELED');
+                    return { ...item, status: 'CANCELED' };
                 }
                 return item;
             });
@@ -98,11 +116,11 @@ function OrderTab({ status }) {
     const renderStatus = (status) => {
         if (status === 'PENDING') {
             return <Chip label="PENDING" icon={<PendingActionsIcon />} color="warning" />;
-        } else if (status === 'DELIVERING') {
+        } else if (status === 'SHIPPING') {
             return <Chip label="DELIVERING" icon={<DeliveryDiningIcon />} color="info" />;
-        } else if (status === 'SUCCESSFUL') {
+        } else if (status === 'COMPLETED') {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
-        } else if (status === 'CANCELLED') {
+        } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
         }
     };
@@ -138,7 +156,7 @@ function OrderTab({ status }) {
                 </Stack>
             );
         }
-        if (status === 'DELIVERING') {
+        if (status === 'SHIPPING') {
             return (
                 <Stack direction="row" justifyContent="space-between" marginTop="10px">
                     <Stack>
@@ -159,7 +177,7 @@ function OrderTab({ status }) {
                 </Stack>
             );
         }
-        if (status === 'SUCCESSFUL') {
+        if (status === 'COMPLETED') {
             return (
                 <Stack direction="row" justifyContent="space-between" marginTop="10px">
                     <Stack>
@@ -168,7 +186,7 @@ function OrderTab({ status }) {
                 </Stack>
             );
         }
-        if (status === 'CANCELLED') {
+        if (status === 'CANCELED') {
             return (
                 <Stack direction="row" justifyContent="space-between" marginTop="10px">
                     <Stack>
@@ -302,8 +320,8 @@ function OrderTab({ status }) {
                                                 <img
                                                     src={product.image}
                                                     alt=""
-                                                    width="60px"
-                                                    height="60px"
+                                                    width="70px"
+                                                    height="70px"
                                                     style={{ marginRight: '5px' }}
                                                 ></img>
                                                 {product.name}
@@ -329,15 +347,15 @@ function OrderTab({ status }) {
                 <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="cancel-confirmation-dialog-description">
-                        Are you sure you want to cancel this order?
+                        Bạn có chắn chắn muốn hủy đơn hàng
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                        Yes
+                        Có
                     </Button>
                     <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                        No
+                        Không
                     </Button>
                 </DialogActions>
             </Dialog>

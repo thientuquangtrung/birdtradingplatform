@@ -53,10 +53,18 @@ function CustomerOrders() {
                     <TabPanel value="1">
                         <CustomerOrderTab></CustomerOrderTab>
                     </TabPanel>
-                    <TabPanel value="2">Item Two</TabPanel>
-                    <TabPanel value="3">Item Three</TabPanel>
-                    <TabPanel value="4">Item Four</TabPanel>
-                    <TabPanel value="5">Item Five</TabPanel>
+                    <TabPanel value="2">
+                        <CustomerOrderTab status="PENDING"></CustomerOrderTab>
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <CustomerOrderTab status="SHIPPING"></CustomerOrderTab>
+                    </TabPanel>
+                    <TabPanel value="4">
+                        <CustomerOrderTab status="COMPLETED"></CustomerOrderTab>
+                    </TabPanel>
+                    <TabPanel value="5">
+                        <CustomerOrderTab status="CANCELED"></CustomerOrderTab>
+                    </TabPanel>
                 </TabContext>
             </Paper>
         </SubCustomerLayout>

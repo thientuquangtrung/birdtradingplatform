@@ -109,13 +109,13 @@ const ManageOrder = () => {
                     <OrderTab status="PENDING" />
                 </TabPanel>
                 <TabPanel value="3">
-                    <OrderTab status="DELIVERING" />
+                    <OrderTab status="SHIPPING" />
                 </TabPanel>
                 <TabPanel value="4">
-                    <OrderTab status="SUCCESSFUL" />
+                    <OrderTab status="COMPLETED" />
                 </TabPanel>
                 <TabPanel value="5">
-                    <OrderTab status="CANCELLED" />
+                    <OrderTab status="CANCELED" />
                 </TabPanel>
             </TabContext>
             <Grid>
