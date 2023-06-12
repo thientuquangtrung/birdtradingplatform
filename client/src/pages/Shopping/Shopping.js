@@ -36,7 +36,7 @@ function Shopping() {
 
     useEffect(() => {
         axiosClient
-            .get('/product/filter', {
+            .get('/product/search', {
                 params: {
                     categoryId,
                     q,
@@ -46,9 +46,10 @@ function Shopping() {
                 },
             })
             .then((response) => {
-                setListProduct(response.data.data);
-                setTotalPage(response.data.meta.pagination.totalPages);
-                setPage(response.data.meta.pagination.currentPage);
+                const list = response.data.data.flatMap((document) => document.value);
+                setListProduct(list);
+                setTotalPage(response.data.meta.totalPages);
+                setPage(response.data.meta.currentPage);
             })
             .catch((error) => {
                 console.log(error);
@@ -93,17 +94,17 @@ function Shopping() {
                                     </Typography>
 
                                     <Button
-                                        startIcon={sortBy === 'newest' ? <CheckIcon /> : ''}
-                                        variant={sortBy === 'newest' ? 'contained' : 'outlined'}
-                                        onClick={() => handleFilter('newest')}
+                                        startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
+                                        variant={sortBy === 'name' ? 'contained' : 'outlined'}
+                                        onClick={() => handleFilter('name')}
                                     >
                                         Mới Nhất
                                     </Button>
 
                                     <Button
-                                        startIcon={sortBy === 'sales' ? <CheckIcon /> : ''}
-                                        variant={sortBy === 'sales' ? 'contained' : 'outlined'}
-                                        onClick={() => handleFilter('sales')}
+                                        startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
+                                        variant={sortBy === 'sold' ? 'contained' : 'outlined'}
+                                        onClick={() => handleFilter('sold', 'desc')}
                                     >
                                         Bán Chạy
                                     </Button>

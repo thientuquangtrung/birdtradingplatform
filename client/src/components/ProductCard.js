@@ -72,7 +72,7 @@ const ProductCard = ({ data }) => {
                         {data.price}
                     </Typography>
                     <Typography variant="body2" component="p" noWrap>
-                        Đã bán: 178
+                        Đã bán: {data.sold}
                     </Typography>
                 </Box>
 

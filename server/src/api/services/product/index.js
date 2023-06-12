@@ -3,6 +3,8 @@ const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { pagination } = require('../../utils/pagination');
 const createError = require('http-errors');
+const { setProduct, getProduct, searchItems, addSuggestions } = require('./product.repo');
+const { redisClient } = require('../../config');
 
 const getProducts = async (pageNo) => {
     try {
@@ -52,20 +54,53 @@ const getProductByCategory = async (id, pageNo) => {
     }
 };
 
-const searchProducts = async (q, pageNo) => {
+const searchProducts = async ({ sortBy, order, categoryId, q, page }) => {
     try {
-        const { page, rowsOfPage } = pagination(pageNo);
+        const option = {
+            LIMIT: {
+                from: (Number(page) - 1) * Number(process.env.ROW_OF_PAGE),
+                size: Number(process.env.ROW_OF_PAGE),
+            },
+        };
 
-        let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries('product');
-        const list = await pool
-            .request()
-            .input('q', sql.NVarChar, q)
-            .input('page', sql.Int, page)
-            .input('rowsOfPage', sql.Int, rowsOfPage)
-            .query(sqlQueries.searchProducts);
+        if (sortBy) {
+            option.SORTBY = {
+                BY: sortBy,
+                DIRECTION: order.toUpperCase(),
+            };
+        }
 
-        return list.recordset;
+        let query = '*';
+        if (categoryId !== '0' || q) {
+            query = categoryId !== '0' ? `@categoryId:[${categoryId} ${categoryId}]` : ' ';
+            query += q ? `@name:(${q})` : '';
+        }
+        return await searchItems('idx:products', query, option);
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
+const suggestProducts = async (q) => {
+    try {
+        const isExist = await redisClient.ft.sugLen('birds_suggestion');
+        if (isExist === 0) await addSuggestions();
+
+        let sugList = [];
+        sugList = await redisClient.ft.sugGet('birds_suggestion', q);
+        if (sugList.length === 0) {
+            let count = 0;
+            let prefix = q.split(/(?<=^\S+)\s/)[1];
+            do {
+                if (prefix) {
+                    sugList = await redisClient.ft.sugGet('birds_suggestion', prefix);
+                    prefix = prefix.split(/(?<=^\S+)\s/)[1];
+                    count++;
+                } else break;
+            } while (sugList.length === 0 || count <= 2);
+        }
+
+        return sugList;
     } catch (error) {
         throw createError(error);
     }
@@ -143,7 +178,7 @@ const createProduct = async ({ name, shopId, description, price, image, category
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('product');
-        const createP = await pool
+        const result = await pool
             .request()
             .input('name', sql.NVarChar, name)
             .input('shopId', sql.UniqueIdentifier, shopId)
@@ -153,7 +188,11 @@ const createProduct = async ({ name, shopId, description, price, image, category
             .input('categoryId', sql.Int, categoryId)
             .query(sqlQueries.createProduct);
 
-        return createP.recordset[0];
+        const productId = result.recordset[0].id;
+        const product = await getProductById(productId);
+        product.sold = 0;
+        await setProduct(product);
+        return product;
     } catch (error) {
         throw createError(error);
     }
@@ -174,7 +213,14 @@ const updateProduct = async ({ id, name, shopId, description, price, image, cate
             .input('categoryId', sql.Int, categoryId)
             .query(sqlQueries.updateProduct);
 
-        return updated.recordset[0];
+        const foundProduct = await getProduct(updated.recordset[0].id);
+        const product = {
+            ...updated.recordset[0],
+            sold: foundProduct.sold,
+        };
+
+        await setProduct(product);
+        return product;
     } catch (error) {
         throw createError(error);
     }
@@ -190,9 +236,38 @@ const deleteProduct = async (id, shopId) => {
             .input('shopId', sql.UniqueIdentifier, shopId)
             .query(sqlQueries.deleteProduct);
 
-        return deleted.recordset[0];
+        const foundProduct = await getProduct(deleted.recordset[0].id);
+        const product = {
+            ...deleted.recordset[0],
+            sold: foundProduct.sold,
+        };
+
+        await setProduct(product);
+        return product;
     } catch (error) {
         throw createError(error);
+    }
+};
+
+const setAllProductToRedis = async () => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('product');
+        const list = (await pool.request().query(sqlQueries.getAllProducts)).recordset;
+        if (list.length > 0) {
+            for (const product of list) {
+                const foundProduct = await getProduct(product.id);
+                if (!foundProduct)
+                    await setProduct({
+                        ...product,
+                        sold: 0,
+                    });
+            }
+        }
+
+        return 'OK';
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -207,4 +282,6 @@ module.exports = {
     searchProducts,
     filterProducts,
     getProductByCategory,
+    setAllProductToRedis,
+    suggestProducts,
 };

@@ -13,17 +13,19 @@ const {
     updateProduct,
     deleteProduct,
     searchProducts,
-    getProductByCategory,
     filterProducts,
+    setAllProductToRedis,
+    suggestProducts,
 } = productController;
 
 const { verifyAccessToken } = require('../utils/jwt_utils');
 
 router.get('/product', getProducts);
 router.get('/product/search', searchProducts);
+router.get('/product/suggest', suggestProducts);
 router.get('/product/filter', filterProducts);
-router.get('/product/category/:id', getProductByCategory);
 router.get('/product/:id', getProductById);
+router.post('/init_product', setAllProductToRedis);
 
 router.get('/seller/product', verifyAccessToken, getProductsOfSeller);
 router.get('/seller/product/search', verifyAccessToken, searchSellerProducts);

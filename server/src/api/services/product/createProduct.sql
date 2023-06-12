@@ -1,2 +1,2 @@
-insert product ([name], [shopId], [description], [price], [image], [categoryId]) values(@name, @shopId, @description, @price, @image, @categoryId)
-select IDENT_CURRENT('product')
+insert product ([name], [shopId], [description], [price], [image], [categoryId]) output inserted.id values(@name, @shopId, @description, @price, @image, @categoryId)
+
