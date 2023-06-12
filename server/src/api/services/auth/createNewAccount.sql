@@ -14,7 +14,7 @@ BEGIN TRY
 
         if @role = 'CUSTOMER'
         BEGIN
-            Insert customer ([id], [shipToAddress]) values(@id, @address)
+            Insert customer ([id], [shipToAddress], [category]) values(@id, @address, 'Copper')
         END
     COMMIT TRAN
 END TRY

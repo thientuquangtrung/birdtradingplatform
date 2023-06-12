@@ -3,11 +3,16 @@ const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 
-const getAccounts = async ({ name }) => {
+const getAccounts = async ({ name, role }) => {
     try {
+        if (!name) name = '';
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const currentUser = await pool.request().input('name', sql.NVarChar, name).query(sqlQueries.getAccounts);
+        const currentUser = await pool
+            .request()
+            .input('name', sql.NVarChar, name)
+            .input('role', sql.VarChar, role)
+            .query(sqlQueries.getAccounts);
 
         return currentUser.recordset;
     } catch (error) {
@@ -193,7 +198,7 @@ const deleteAccount = async (id) => {
     }
 };
 
-const createNewAccount = async ({ name, image, phone, password, address, role }) => {
+const createNewAccount = async ({ name, email, image, phone, password, address, role }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
@@ -206,9 +211,8 @@ const createNewAccount = async ({ name, image, phone, password, address, role })
             .input('phone', sql.VarChar, phone)
             .input('address', sql.NVarChar, address)
             .input('role', sql.VarChar, role)
-            .query(sqlQueries.updateSeller);
-
-        return account.recordset[0];
+            .query(sqlQueries.createNewAccount);
+        return 'OK';
     } catch (error) {
         throw error;
     }

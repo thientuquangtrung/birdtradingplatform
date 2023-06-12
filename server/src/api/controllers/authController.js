@@ -36,12 +36,12 @@ const deleteAccount = async (req, res, next) => {
 const createNewAccount = async (req, res, next) => {
     try {
         const image = req.file ? req.file.filename : '';
-
+        req.body.password = await hashing(req.body.password);
         await authData.createNewAccount({ ...req.body, image });
         res.send({
             status: 200,
             message: 'OK',
-        });
+        }); 
     } catch (error) {
         next(error);
     }

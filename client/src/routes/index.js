@@ -31,7 +31,6 @@ import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 import AdminLogin from '../pages/Login/AdminLogin';
 import SellerDetail from '../pages/SellerDetail/SellerDetail';
 
-
 // Public routes
 const publicRoutes = [
     { path: '/', component: Home, layout: DefaultLayout, subdomain: 'common' },
