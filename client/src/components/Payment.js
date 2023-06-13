@@ -81,7 +81,6 @@ export default function Payment({ selectedOption, setSelectedOption }) {
     const [open, setOpen] = React.useState(false);
 
     const handleOptionChange = (e) => {
-        console.log(e.target.value);
         setSelectedOption(e.target.value);
     };
 
@@ -102,11 +101,10 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                     Phương thức thanh toán
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
-                    <FormControl component="fieldset">
+                    <FormControl>
                         <RadioGroup
                             aria-label="payment-options"
                             name="payment-options"
-                            // defaultValue={paymentOptions[0]}
                             value={selectedOption}
                             onChange={handleOptionChange}
                         >
@@ -114,11 +112,11 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                                 {paymentOptions.map((payment, index) => (
                                     <FormControlLabel
                                         key={index}
-                                        value={payment.value}
+                                        value={JSON.stringify(payment)}
                                         control={<Radio />}
                                         label={
                                             <Stack direction="row" alignItems="center" gap={1}>
-                                                <img width={50} height={50} src={payment.image} />
+                                                <img width={50} height={50} src={payment.image} alt="" />
                                                 <Typography>{payment.label}</Typography>
                                             </Stack>
                                         }
