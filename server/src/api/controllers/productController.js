@@ -53,6 +53,29 @@ const searchProducts = async (req, res, next) => {
     }
 };
 
+const searchProductsByShop = async (req, res, next) => {
+    try {
+        const shopId = req.params.shopId;
+        const result = await productData.searchProducts({ ...req.query, shopId });
+        if (result.documents.length > 0) {
+            result.documents.map((document) => {
+                document.value.image = `${process.env.HOST_URL}/product/${document.value.image}`;
+            });
+        }
+
+        return res.send({
+            data: result.documents,
+            meta: {
+                total: result.total,
+                currentPage: Number(req.query.page),
+                totalPages: Math.ceil(Number(result.total) / Number(process.env.ROW_OF_PAGE)),
+            },
+        });
+    } catch (error) {
+        next(createError(error.message));
+    }
+};
+
 const suggestProducts = async (req, res, next) => {
     try {
         const result = await productData.suggestProducts(req.query.q);
@@ -198,4 +221,5 @@ module.exports = {
     filterProducts,
     setAllProductToRedis,
     suggestProducts,
+    searchProductsByShop,
 };
