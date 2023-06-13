@@ -7,7 +7,7 @@ const { getOrdersByCusId, cancelOrder, getOrdersByShop, getRevenue } = require('
 
 router.get('/customer/order/:id', verifyAccessToken, getOrdersByCusId);
 router.get('/seller/order/:id', verifyAccessToken, getOrdersByShop);
-router.get('/seller/revenue', verifyAccessToken, getRevenue);
+router.get('/seller/revenue/:id', verifyAccessToken, getRevenue);
 router.delete('/order/cancel/:orderId', verifyAccessToken, cancelOrder);
 
 module.exports = {
