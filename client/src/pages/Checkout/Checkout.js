@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
+import Payment from '../../components/Payment';
 
 function Checkout() {
     const location = useLocation();
@@ -26,6 +27,8 @@ function Checkout() {
     const [shopOrders, setShopOrders] = useState([]);
     const [shopOrderIds, setShopOrderIds] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const [selectedOption, setSelectedOption] = useState({});
 
     const isChange = () => {
         return !(currentUser.phone !== phone || currentUser.shipToAddress !== shipToAddress);
@@ -149,12 +152,14 @@ function Checkout() {
                     }}
                 >
                     <div>
-                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>Phương thức thanh toán:</Typography>
+                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
+                            <Payment selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+                        </Typography>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div>
                             <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                                Thanh toán khi nhận hàng
+                                Phương thức: {selectedOption.value}
                             </Typography>
                         </div>
                     </div>
