@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import Button from '@mui/joy/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +13,8 @@ import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
 import { Grid, Avatar, ImageList, ImageListItem } from '@mui/material';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import { Link } from 'react-router-dom';
 
 function ProductDetail() {
     const navigate = useNavigate();
@@ -69,47 +71,80 @@ function ProductDetail() {
 
     return (
         <div>
-            <Paper sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                <Box sx={{ padding: 2 }}>
-                    <img
-                        style={{ width: '500px', height: '500px', objectFit: 'contain' }}
-                        src={product.image}
-                        alt="Bird"
-                    />
-                </Box>
-                <Box sx={{ padding: 4, width: '70%' }}>
-                    <Stack direction="column" gap={5}>
-                        <Typography variant="h5" gutterBottom fontWeight={'bold'}>
-                            {product.name}
-                        </Typography>
-                        <Typography variant="h4" gutterBottom color="#c80606">
-                            {product.price ? product.price.toLocaleString('vi-VN') : ''}₫
-                        </Typography>
-                        <Typography variant="subtitle2" gutterBottom sx={{ fontSize: 16 }}>
-                            {product.description}
-                        </Typography>
-
-                        <TextField
-                            value={quantity}
-                            onChange={(e) => setQuantity(e.target.value)}
-                            defaultValue="1"
-                            type="number"
-                            inputProps={{ min: '0', max: '10', step: '1' }}
-                            sx={{ width: '20%' }}
+            <Paper>
+                <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <Stack direction="column" gap={4} padding={3}>
+                        <img
+                            style={{ width: '500px', height: '600px', objectFit: 'contain' }}
+                            src={product.image}
+                            alt="Bird"
                         />
-
-                        <Box>
-                            <Button
-                                onClick={handleAddToCart}
-                                variant="contained"
-                                startIcon={<AddShoppingCartIcon />}
-                                sx={{ color: '#fff', backgroundColor: '#1976d2' }}
-                            >
-                                Thêm vào giỏ hàng
-                            </Button>
-                        </Box>
                     </Stack>
-                </Box>
+                    <Box sx={{ padding: 4, width: '70%' }}>
+                        <Stack direction="column" gap={3}>
+                           <Stack direction='column' gap={1}>
+                                <Typography variant="h5" gutterBottom fontWeight={'bold'}>
+                                    {product.name}
+                                </Typography>
+                                <Paper elevation={0} sx={{ padding: 2 , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
+                                    <Stack direction="row" gap={6} alignItems="center">
+                                        <Typography variant="body2" gutterBottom>
+                                            Được bán bởi
+                                        </Typography>
+                                        <Stack direction="row" gap={2}>
+                                            <Avatar
+                                                alt="Remy Sharp"
+                                                src="https://s1.media.ngoisao.vn/resize_580/news/2022/04/19/4da578dae741291f7050-ngoisaovn-w1126-h1612.jpg"
+                                                sx={{ width: 56, height: 56 }}
+                                            />
+                                            <Stack direction="column">
+                                                <Typography variant="subtitle2" gutterBottom fontSize={16}>
+                                                    Zenme VietNam
+                                                </Typography>
+                                                <Button
+                                                    color="neutral"
+                                                    size="sm"
+                                                    variant="outlined"
+                                                    component={Link}
+                                                    to="/shop/:shopname"
+                                                    startDecorator={<StorefrontIcon fontSize="small" />}
+                                                >
+                                                    Xem Shop
+                                                </Button>
+                                            </Stack>
+                                        </Stack>
+                                    </Stack>
+                                </Paper>
+                           </Stack>
+                            <Typography variant="h4" gutterBottom color="#c80606">
+                                {product.price ? product.price.toLocaleString('vi-VN') : ''}₫
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom sx={{ fontSize: 16 }}>
+                                {product.description}
+                            </Typography>
+
+                            <TextField
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                                defaultValue="1"
+                                type="number"
+                                inputProps={{ min: '0', max: '10', step: '1' }}
+                                sx={{ width: '20%' }}
+                            />
+
+                            <Box>
+                                <Button
+                                    onClick={handleAddToCart}
+                                    variant="contained"
+                                    startIcon={<AddShoppingCartIcon />}
+                                    sx={{ color: '#fff', backgroundColor: '#1976d2' }}
+                                >
+                                    Thêm vào giỏ hàng
+                                </Button>
+                            </Box>
+                        </Stack>
+                    </Box>
+                </Paper>
             </Paper>
 
             <Paper elevation={1} sx={{ padding: 3 }}>
