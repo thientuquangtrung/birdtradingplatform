@@ -60,8 +60,8 @@ function CustomerOrderTab({ status }) {
         axiosClient
             .delete(`order/cancel/${id}`, {
                 params: {
-                    status: 'CANCELED'
-                }
+                    status: 'CANCELED',
+                },
             })
             .then(function (response) {
                 console.log(response);

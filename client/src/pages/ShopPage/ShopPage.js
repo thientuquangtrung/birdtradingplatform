@@ -35,19 +35,33 @@ function ShopPage() {
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
+    const [shopInfo, setShopInfo] = useState(null);
 
     useEffect(() => {
-        if (location.state?.q) setQ(location.state.q);
         if (location.state?.categoryId) setCategoryId(location.state.categoryId);
     }, [location.state]);
 
+    useEffect(() => {
+        axiosClient
+            .get(`/auth/account/${location.state?.shopId}`, {
+                params: {
+                    role: 'SELLER',
+                },
+            })
+            .then(function (response) {
+                setShopInfo(response.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }, []);
     const handleChange = (event, value) => {
         setPage(value);
     };
 
     useEffect(() => {
         axiosClient
-            .get('/product/search', {
+            .get(`/product/search/${location.state.shopId}`, {
                 params: {
                     categoryId,
                     q,
@@ -74,49 +88,49 @@ function ShopPage() {
 
     return (
         <Box>
-            <Paper elevation={0} square sx={{ alignItems: 'center', backgroundColor: '#d2e1f8' }}>
-                <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
-                    <Grid item xs={1}>
-                        <Avatar
-                            sx={{ width: 70, height: 70, border: '2px solid #bec0d8' }}
-                            alt=""
-                            src="https://s1.media.ngoisao.vn/resize_580/news/2022/04/19/4da578dae741291f7050-ngoisaovn-w1126-h1612.jpg"
-                        />
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#791f1f' }} fontWeight={'bold'}>
-                            Zenme VietNam
-                        </Typography>
-                        <Stack direction="row" gap={1}>
-                            <StorefrontIcon />
-                            <Typography variant="subtitle1" gutterBottom>
-                                Sản phẩm: <span style={{ color: '#791f1f' }}>74</span>
+            {shopInfo && (
+                <Paper elevation={0} square sx={{ alignItems: 'center', backgroundColor: '#d2e1f8' }}>
+                    <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
+                        <Grid item xs={1}>
+                            <Avatar
+                                sx={{ width: 70, height: 70, border: '2px solid #bec0d8' }}
+                                alt=""
+                                src={shopInfo.image}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#791f1f' }} fontWeight={'bold'}>
+                                {shopInfo.name}
                             </Typography>
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <Stack direction="row" gap={1}>
-                            <Divider orientation="vertical" flexItem />
-                            <Typography
-                                variant="h6"
-                                alignItems="center"
-                                fontStyle="italic"
-                                fontWeight="inherit"
-                                marginLeft="30px"
-                            >
-                                Not only does my resume look impressive—filled with the names and logos of world-class
-                                institutions—but these certificates also bring me closer to my career goals by
-                                validating the skills I've learned.
-                            </Typography>
+                            <Stack direction="row" gap={1}>
+                                <StorefrontIcon />
+                                <Typography variant="subtitle1" gutterBottom>
+                                    Sản phẩm: <span style={{ color: '#791f1f' }}>74</span>
+                                </Typography>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Stack direction="row" gap={1}>
+                                <Divider orientation="vertical" flexItem />
+                                <Typography
+                                    variant="h6"
+                                    alignItems="center"
+                                    fontStyle="italic"
+                                    fontWeight="inherit"
+                                    marginLeft="30px"
+                                >
+                                    {shopInfo.description}
+                                </Typography>
 
-                            <FormatQuoteIcon fontSize="large" sx={{ width: '5%' }} />
-                        </Stack>
+                                <FormatQuoteIcon fontSize="large" sx={{ width: '5%' }} />
+                            </Stack>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
+            )}
 
             <Grid container spacing={1.5} marginTop={2}>
-                <ShopProduct />
+                <ShopProduct link={`/shop/${shopInfo?.name}`} state={location.state?.shopId} />
                 <Grid item xs={10}>
                     <Paper>
                         <Box
@@ -166,7 +180,11 @@ function ShopPage() {
                                 <IconButton type="button" aria-label="search" size="small">
                                     <SearchIcon />
                                 </IconButton>
-                                <InputBase placeholder="Tìm trong Shop này" />
+                                <InputBase
+                                    placeholder="Tìm trong Shop này"
+                                    value={q}
+                                    onChange={(e) => setQ(e.target.value)}
+                                />
                             </Paper>
                         </Box>
                     </Paper>

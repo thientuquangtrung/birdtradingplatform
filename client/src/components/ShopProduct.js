@@ -10,8 +10,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
 
-
-function ShopProduct() {
+function ShopProduct({ link = '/shopping', state = '' }) {
     const location = useLocation();
     const [categoryList, setCategoryList] = useState([]);
 
@@ -26,48 +25,44 @@ function ShopProduct() {
             });
     }, []);
 
-    
-
     return (
-        
-            <Grid item xs={2} marginTop={0.4}>
-                <Box sx={{ flexGrow: 1 }}>
-                    <AppBar position="static">
-                        <Toolbar variant="dense">
-                            <IconButton edge="start" color="inherit" aria-label="menu">
-                                <MenuIcon />
-                            </IconButton>
-                            <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
-                                Danh mục
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </Box>
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} component="nav">
-                    {categoryList.length > 0 &&
-                        categoryList.map((category) => {
-                            return (
-                                <Link
-                                    to={`/shopping/${category.name}`}
-                                    key={category.id}
-                                    state={{
-                                        categoryId: category.id,
-                                    }}
+        <Grid item xs={2} marginTop={0.4}>
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static">
+                    <Toolbar variant="dense">
+                        <IconButton edge="start" color="inherit" aria-label="menu">
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" component="div" sx={{ padding: 0.5 }}>
+                            Danh mục
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+            </Box>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} component="nav">
+                {categoryList.length > 0 &&
+                    categoryList.map((category) => {
+                        return (
+                            <Link
+                                to={`${link}/${category.name}`}
+                                key={category.id}
+                                state={{
+                                    categoryId: category.id,
+                                    shopId: state,
+                                }}
+                            >
+                                <ListItemButton
+                                    sx={{ pt: 1, pb: 1 }}
+                                    selected={location.state?.categoryId === category.id}
+                                    divider
                                 >
-                                    <ListItemButton
-                                        sx={{ pt: 1, pb: 1 }}
-                                        selected={location.state?.categoryId === category.id}
-                                        divider
-                                    >
-                                        <ListItemText primary={category.name} />
-                                    </ListItemButton>
-                                </Link>
-                            );
-                        })}
-                </List>
-
-            </Grid>
-       
+                                    <ListItemText primary={category.name} />
+                                </ListItemButton>
+                            </Link>
+                        );
+                    })}
+            </List>
+        </Grid>
     );
 }
 

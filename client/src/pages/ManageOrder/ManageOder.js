@@ -21,7 +21,7 @@ const ManageOrder = () => {
         setPage(value);
     };
     const [value, setValue] = useState('1');
-    const [selectedType, setSelectedType] = useState('Tên người mua');
+    const [selectedType, setSelectedType] = useState('Mã đơn hàng');
     const [inputValue, setInputValue] = useState('');
 
     const { enqueueSnackbar } = useSnackbar();
@@ -46,12 +46,12 @@ const ManageOrder = () => {
 
     const type = [
         {
-            value: 'Tên người mua',
-            label: 'Tên người mua',
+            value: 'Mã đơn hàng',
+            label: 'Mã đơn hàng',
         },
         {
-            value: 'Trạng thái đơn',
-            label: 'Trạng thái đơn',
+            value: 'Tên người mua',
+            label: 'Tên người mua',
         },
     ];
 

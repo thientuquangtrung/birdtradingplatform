@@ -9,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import StoreIcon from '@mui/icons-material/Store';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
@@ -94,12 +94,19 @@ function Checkout() {
                                             <TableCell sx={{ borderBottom: 'none', paddingLeft: '40px' }} colSpan={5}>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                                     <StoreIcon></StoreIcon>
-                                                    <Button
-                                                        variant="text"
-                                                        style={{ backgroundColor: 'white', color: 'black' }}
+                                                    <Link
+                                                        to={`/shop/${shopOrder.shop.name}`}
+                                                        state={{
+                                                            shopId: shopOrder.shop.id,
+                                                        }}
                                                     >
-                                                        {shopOrder.shop.name}
-                                                    </Button>
+                                                        <Button
+                                                            variant="text"
+                                                            style={{ backgroundColor: 'white', color: 'black' }}
+                                                        >
+                                                            {shopOrder.shop.name}
+                                                        </Button>
+                                                    </Link>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
