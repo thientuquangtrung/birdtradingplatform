@@ -21,7 +21,6 @@ function CustomerOrders() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        // Thêm các xử lý khác nếu cần thiết để quay về trang ban đầu
     };
 
     const [value, setValue] = useState('1');

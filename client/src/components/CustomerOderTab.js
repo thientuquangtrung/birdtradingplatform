@@ -21,7 +21,7 @@ import {
     TextareaAutosize,
     Typography,
 } from '@mui/material';
-import { Box, Stack } from '@mui/system';
+import { Box, Stack, border } from '@mui/system';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
@@ -92,6 +92,7 @@ function CustomerOrderTab({ status }) {
         setCancelConfirmationOpen(true);
     };
     const handleCancelConfirmationClose = (confirmed) => {
+        setCancelConfirmationOpen(false);
         if (confirmed) {
             const updatedTableData = tableData.map(
                 (item) => (item.orderId === orderId ? { ...item, status: 'CANCELED' } : item),
@@ -157,14 +158,26 @@ function CustomerOrderTab({ status }) {
                                     </TableCell>
                                 </TableRow>
                                 {item.products.map((product) => (
-                                    <TableRow key={product.id}>
-                                        <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <TableRow sx={{ border: 'none' }} key={product.id}>
+                                        <TableCell
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '20px',
+                                                border: 'none',
+                                                margin: '2px 0',
+                                            }}
+                                        >
                                             <img src={product.image} width="70px" height="70px" alt="" />
                                             {product.name}
                                         </TableCell>
 
-                                        <TableCell align="center">x{product.quantity}</TableCell>
-                                        <TableCell align="right">{product.price.toLocaleString('vi-VN')}₫</TableCell>
+                                        <TableCell sx={{ border: 'none', margin: '2px 0' }} align="center">
+                                            x{product.quantity}
+                                        </TableCell>
+                                        <TableCell sx={{ border: 'none', margin: '2px 0' }} align="right">
+                                            {product.price.toLocaleString('vi-VN')}₫
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                                 <TableRow>
@@ -274,7 +287,7 @@ function CustomerOrderTab({ status }) {
                 </Modal>
                 <Dialog
                     open={cancelConfirmationOpen}
-                    onClose={handleCancelConfirmationClose}
+                    onClose={() => handleCancelConfirmationClose(false)}
                     aria-labelledby="cancel-confirmation-dialog-title"
                     aria-describedby="cancel-confirmation-dialog-description"
                 >

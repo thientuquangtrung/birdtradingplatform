@@ -90,7 +90,7 @@ function Checkout() {
                             shopOrders.map((shopOrder) => {
                                 return (
                                     <>
-                                        <TableRow>
+                                        <TableRow sx={{ borderTop: '1px solid #e0e0e0' }}>
                                             <TableCell sx={{ borderBottom: 'none', paddingLeft: '40px' }} colSpan={5}>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                                     <StoreIcon></StoreIcon>
@@ -106,15 +106,23 @@ function Checkout() {
                                         {shopOrder.items.map((item) => (
                                             <TableRow
                                                 key={item.name}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                sx={{
+                                                    '&:last-child td, &:last-child th': { border: 0 },
+                                                }}
                                             >
-                                                <TableCell component="th" scope="row">
+                                                <TableCell sx={{ border: 'none' }} component="th" scope="row">
                                                     <img src={item.image} width="60px" height="60px" alt=""></img>
                                                 </TableCell>
-                                                <TableCell>{item.name}</TableCell>
-                                                <TableCell align="center">{item.price}</TableCell>
-                                                <TableCell align="center">{item.quantity}</TableCell>
-                                                <TableCell align="center">{item.subTotal}</TableCell>
+                                                <TableCell sx={{ border: 'none' }}>{item.name}</TableCell>
+                                                <TableCell sx={{ border: 'none' }} align="center">
+                                                    {item.price}
+                                                </TableCell>
+                                                <TableCell sx={{ border: 'none' }} align="center">
+                                                    {item.quantity}
+                                                </TableCell>
+                                                <TableCell sx={{ border: 'none' }} align="center">
+                                                    {item.subTotal}
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </>

@@ -28,6 +28,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
+import { enqueueSnackbar } from 'notistack';
 
 function OrderTab({ status }) {
     const [tableData, setTableData] = useState([]);
@@ -67,6 +68,17 @@ function OrderTab({ status }) {
     };
 
     const paperStyle = { width: '100%', margin: '20px auto' };
+
+    function filterTable(updatedTableData, ignoreStatus) {
+        if (status) {
+            const filteredTableData = updatedTableData.filter((item) => item.status !== ignoreStatus);
+            setTableData(filteredTableData);
+        } else {
+            setTableData(updatedTableData);
+        }
+        handleClose();
+    }
+
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
             if (item.orderId === modalState.orderId) {
@@ -75,8 +87,10 @@ function OrderTab({ status }) {
             }
             return item;
         });
-        setTableData(updatedTableData);
-        handleClose();
+        filterTable(updatedTableData, 'SHIPPING');
+        enqueueSnackbar('Đơn hàng đang giao', { variant: 'success' });
+
+        return;
     };
 
     const handleSuccessful = () => {
@@ -87,8 +101,9 @@ function OrderTab({ status }) {
             }
             return item;
         });
-        setTableData(updatedTableData);
-        handleClose();
+
+        filterTable(updatedTableData, 'COMPLETED');
+        enqueueSnackbar('Giao hàng thành công', { variant: 'success' });
     };
 
     const handleCancelConfirmationClose = (confirmed) => {
@@ -101,8 +116,8 @@ function OrderTab({ status }) {
                 }
                 return item;
             });
-            setTableData(updatedTableData);
-            handleClose();
+            filterTable(updatedTableData, 'CANCELED');
+            enqueueSnackbar('Hủy đơn hàng thành công', { variant: 'success' });
         }
     };
     const handleOpen = (item) => {
