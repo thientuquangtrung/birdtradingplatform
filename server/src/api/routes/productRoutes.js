@@ -16,12 +16,14 @@ const {
     filterProducts,
     setAllProductToRedis,
     suggestProducts,
+    searchProductsByShop,
 } = productController;
 
 const { verifyAccessToken } = require('../utils/jwt_utils');
 
 router.get('/product', getProducts);
 router.get('/product/search', searchProducts);
+router.get('/product/search/:shopId', searchProductsByShop);
 router.get('/product/suggest', suggestProducts);
 router.get('/product/filter', filterProducts);
 router.get('/product/:id', getProductById);

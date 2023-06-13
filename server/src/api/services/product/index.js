@@ -54,7 +54,7 @@ const getProductByCategory = async (id, pageNo) => {
     }
 };
 
-const searchProducts = async ({ sortBy, order, categoryId, q, page }) => {
+const searchProducts = async ({ sortBy, order, categoryId, q, page, shopId }) => {
     try {
         const option = {
             LIMIT: {
@@ -70,10 +70,19 @@ const searchProducts = async ({ sortBy, order, categoryId, q, page }) => {
             };
         }
 
-        let query = '*';
-        if (categoryId !== '0' || q) {
-            query = categoryId !== '0' ? `@categoryId:[${categoryId} ${categoryId}]` : ' ';
-            query += q ? `@name:(${q})` : '';
+        let query = '';
+        if (!shopId) {
+            query = '*';
+            if (categoryId !== '0' || q) {
+                query = categoryId !== '0' ? `@categoryId:[${categoryId} ${categoryId}]` : ' ';
+                query += q ? `@name:(${q})` : '';
+            }
+        } else {
+            query = `@shopId:(${shopId})`;
+            if (categoryId !== '0' || q) {
+                query = categoryId !== '0' ? `${query} @categoryId:[${categoryId} ${categoryId}]` : query;
+                query = q ? `${query} @name:(${q})` : query;
+            }
         }
         return await searchItems('idx:products', query, option);
     } catch (error) {
