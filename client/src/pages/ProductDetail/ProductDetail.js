@@ -12,7 +12,10 @@ import handleError from '../../utils/handleError';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
-import { Grid, Avatar, ImageList, ImageListItem } from '@mui/material';
+import ChevronRightSharpIcon from '@mui/icons-material/ChevronRightSharp';
+import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
+import { Grid, Avatar, ImageList, ImageListItem, ButtonGroup } from '@mui/material';
+import dayjs from 'dayjs';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Link } from 'react-router-dom';
 
@@ -23,13 +26,9 @@ function ProductDetail() {
     const location = useLocation();
     const [product, setProduct] = useState('');
     const [quantity, setQuantity] = useState(1);
-
-    const itemData = [
-        {
-            img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-            title: 'Breakfast',
-        },
-    ];
+    const [feedbackList, setFeedbackList] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
 
     useEffect(() => {
         axiosClient
@@ -43,6 +42,24 @@ function ProductDetail() {
                 handleError(error);
             });
     }, [location.state]);
+
+    useEffect(() => {
+        axiosClient
+            .get(`feedback/${location.state?.id}`, {
+                params: {
+                    page: currentPage,
+                },
+            })
+            .then(function (response) {
+                setFeedbackList(response.data.data);
+                setCurrentPage(response.data.meta.currentPage);
+                setTotalPage(response.data.meta.totalPages);
+            })
+            .catch(function (error) {
+                // handle error
+                handleError(error);
+            });
+    }, [currentPage]);
 
     function handleAddToCart() {
         // check if user already logged in
@@ -147,87 +164,103 @@ function ProductDetail() {
                 </Paper>
             </Paper>
 
-            <Paper elevation={1} sx={{ padding: 3 }}>
-                <Typography sx={{ paddingBottom: 2 }} variant="h6" gutterBottom>
+            <Paper elevation={1} sx={{ paddingTop: 6, paddingLeft: 6, paddingRight: 6, paddingBottom: 0 }}>
+                <Typography sx={{ paddingBottom: 2, fontWeight: 500 }} variant="h5" gutterBottom>
                     ĐÁNH GIÁ SẢN PHẨM
                 </Typography>
-                <Grid container sx={{ paddingBottom: 3, borderBottom: '1px solid #e0e0e0', justifyContent: 'center' }}>
-                    <Grid item xs={1} sx={{ paddingLeft: 2 }}>
-                        <Avatar
-                            alt="Remy Sharp"
-                            sx={{ width: 60, height: 60 }}
-                            src="https://cafebiz.cafebizcdn.vn/thumb_w/600/162123310254002176/2021/4/22/photo1619081646120-16190816462552046046483.jpg"
-                        />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <Stack>
-                            <Typography variant="h6" display="block">
-                                Taylor Swift
-                            </Typography>
-                            <Typography
-                                variant="caption"
-                                display="block"
-                                gutterBottom
-                                sx={{ color: 'grey', fontSize: '10px' }}
-                            >
-                                11/2/23 4:57
-                            </Typography>
-                            <Typography variant="body2" gutterBottom sx={{ paddingTop: 1.5, wordWrap: 'break-word' }}>
-                                zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-                            </Typography>
-                            <ImageList sx={{ width: 300, paddingTop: 1 }}>
-                                {itemData.map((item) => (
-                                    <ImageListItem key={item.img}>
-                                        <img
-                                            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                                            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={item.title}
+                {feedbackList.length > 0 &&
+                    feedbackList.map((feedback) => {
+                        return (
+                            <Grid key={feedback.orderHeaderId} container sx={{ margin: 3, justifyContent: 'center' }}>
+                                <Grid
+                                    key={feedback.orderHeaderId}
+                                    container
+                                    sx={{
+                                        paddingBottom: 3,
+                                        justifyContent: 'center',
+                                        backgroundColor: '#fafafa',
+                                        borderBottom: '1px solid #e0e0e0',
+                                        borderRadius: '10px',
+                                        padding: '20px',
+                                    }}
+                                >
+                                    <Grid item xs={1} paddingRight="10px">
+                                        <Avatar
+                                            alt="Remy Sharp"
+                                            sx={{ width: 56, height: 56 }}
+                                            src={feedback.customer.image}
                                         />
-                                    </ImageListItem>
-                                ))}
-                            </ImageList>
-                        </Stack>
-                    </Grid>
-                </Grid>
-
-                <Grid container sx={{ paddingTop: 3 }}>
-                    <Grid item xs={1} sx={{ paddingLeft: 2 }}>
-                        <Avatar
-                            alt="Remy Sharp"
-                            sx={{ width: 56, height: 56 }}
-                            src="https://cafebiz.cafebizcdn.vn/thumb_w/600/162123310254002176/2021/4/22/photo1619081646120-16190816462552046046483.jpg"
-                        />
-                    </Grid>
-                    <Grid item xs={11}>
-                        <Stack>
-                            <Typography variant="h6" display="block">
-                                Taylor Swift
-                            </Typography>
-                            <Typography
-                                variant="caption"
-                                display="block"
-                                gutterBottom
-                                sx={{ color: 'grey', fontSize: '10px' }}
-                            >
-                                11/2/23 4:57
-                            </Typography>
-                            <Typography variant="body2" gutterBottom sx={{ paddingTop: 1, wordWrap: 'break-word' }}>
-                                Sản phẩm đẹp, giá hợp lí
-                                zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-                            </Typography>
-                            <ImageList sx={{ width: 300 }}>
-                                {itemData.map((item) => (
-                                    <ImageListItem key={item.img}>
-                                        <img
-                                            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                                            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={item.title}
-                                        />
-                                    </ImageListItem>
-                                ))}
-                            </ImageList>
-                        </Stack>
-                    </Grid>
+                                    </Grid>
+                                    <Grid item xs={11} sx={{ paddingBottom: 2 }}>
+                                        <Stack>
+                                            <Typography variant="h6" display="block">
+                                                {feedback.customer.name}
+                                            </Typography>
+                                            <Typography
+                                                fontSize={'25px'}
+                                                fontStyle={'italic'}
+                                                variant="caption"
+                                                display="block"
+                                                gutterBottom
+                                                sx={{ color: 'grey', fontSize: '10px' }}
+                                            >
+                                                {dayjs(feedback.createdAt).format('DD/MM/YYYY H:mm A')}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                gutterBottom
+                                                sx={{ paddingTop: 1.5, wordWrap: 'break-word', paddingBottom: 1 }}
+                                            >
+                                                {feedback.content}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    width: '150px',
+                                                    height: '150px',
+                                                    // border: '1px solid #eeeeee',
+                                                }}
+                                            >
+                                                <img
+                                                    style={{
+                                                        objectFit: 'cover ',
+                                                        width: '149px',
+                                                        height: '149px',
+                                                        borderRadius: '3px',
+                                                    }}
+                                                    src={feedback.image}
+                                                    alt={''}
+                                                />
+                                            </Box>
+                                        </Stack>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        );
+                    })}
+                <Grid container sx={{ paddingTop: 2.5, justifyContent: 'flex-end', paddingRight: 2 }}>
+                    <ButtonGroup
+                        variant="outlined"
+                        aria-label="outlined button group"
+                        size="small"
+                        sx={{ marginBottom: '15px' }}
+                    >
+                        <Button
+                            disabled={currentPage === 1}
+                            onClick={() => {
+                                setCurrentPage((prev) => prev - 1);
+                            }}
+                        >
+                            <ChevronLeftSharpIcon />
+                        </Button>
+                        <Button
+                            disabled={currentPage === totalPage}
+                            onClick={() => {
+                                setCurrentPage((prev) => prev + 1);
+                            }}
+                        >
+                            <ChevronRightSharpIcon />
+                        </Button>
+                    </ButtonGroup>
                 </Grid>
             </Paper>
         </div>

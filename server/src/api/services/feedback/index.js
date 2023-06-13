@@ -21,19 +21,37 @@ const createFeedback = async ({ orderId, content, image }) => {
     }
 };
 
-const getFeedbackOfProduct = async ({ productId }) => {
+const getFeedbackOfProduct = async ({ productId, page, perPage }) => {
     try {
+        if (!page) page = 1;
+        if (!perPage) perPage = 5;
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('feedback');
         const list = await pool
             .request()
             .input('productId', sql.UniqueIdentifier, productId)
+            .input('page', sql.Int, Number(page))
+            .input('perPage', sql.Int, Number(perPage))
             .query(sqlQueries.getFeedBackOfProduct);
 
+        let total;
         for (const feedback of list.recordset) {
-            feedback.customer = await readAccountById(feedback.customerId, 'CUSTOMER');
+            total = feedback.total;
+            delete feedback.total;
+            feedback.image = `${process.env.HOST_URL}/feedback/${feedback.image}`;
+            const customer = await readAccountById(feedback.customerId, 'CUSTOMER');
+            customer.image = `${process.env.HOST_URL}/profile/${customer.image}`;
+            feedback.customer = customer;
         }
-        return list.recordset;
+
+        return {
+            data: list.recordset,
+            meta: {
+                total,
+                currentPage: Number(page),
+                totalPages: Math.ceil(Number(list.recordset?.length) / Number(perPage)),
+            },
+        };
     } catch (err) {
         throw createError(err);
     }
