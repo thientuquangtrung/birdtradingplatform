@@ -73,7 +73,7 @@ function RevenueManagement() {
                 </Paper>
 
                 <Paper elevation={2} sx={{ padding: 3, marginTop: '30px', height: 'auto' }}>
-                    <Stack fontSize={18}>
+                    <Stack fontSize={16}>
                         <AreaChart width={1000} height={500} data={data}>
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">

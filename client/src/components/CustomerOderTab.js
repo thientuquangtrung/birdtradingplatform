@@ -56,10 +56,12 @@ function CustomerOrderTab({ status }) {
                 console.log(error);
             });
     }, []);
-    const changeOrderStatus = (id, status) => {
+    const cancelOrder = (id) => {
         axiosClient
-            .put(`order/change_status/${id}`, {
-                status,
+            .delete(`order/cancel/${id}`, {
+                params: {
+                    status: 'CANCELED'
+                }
             })
             .then(function (response) {
                 console.log(response);
@@ -95,7 +97,7 @@ function CustomerOrderTab({ status }) {
         if (confirmed) {
             const updatedTableData = tableData.map(
                 (item) => (item.orderId === orderId ? { ...item, status: 'CANCELED' } : item),
-                changeOrderStatus(orderId, 'CANCELED'),
+                cancelOrder(orderId),
             );
             setTableData(updatedTableData);
         }

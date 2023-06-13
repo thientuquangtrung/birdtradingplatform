@@ -29,97 +29,43 @@ const priceOption = [
 function ShopPage() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
+    const [q, setQ] = useState('');
+    const [categoryId, setCategoryId] = useState(0);
     const [sortBy, setSortBy] = useState('');
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
     const [page, setPage] = useState(1);
 
+    useEffect(() => {
+        if (location.state?.q) setQ(location.state.q);
+        if (location.state?.categoryId) setCategoryId(location.state.categoryId);
+    }, [location.state]);
+
     const handleChange = (event, value) => {
         setPage(value);
     };
 
-    useEffect(
-        function () {
-            setSortBy('');
-            setOrder('');
-
-            if (location.state?.q) {
-                axiosClient
-                    .get('product/search', {
-                        params: {
-                            q: location.state.q,
-                            page,
-                        },
-                    })
-                    .then(function (response) {
-                        // handle success
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    });
-                return;
-            }
-
-            if (location.state?.categoryId) {
-                axiosClient
-                    .get(`/product/category/${location.state.categoryId}`, {
-                        params: {
-                            page,
-                        },
-                    })
-                    .then((response) => {
-                        setListProduct(response.data.data);
-                        setTotalPage(response.data.meta.pagination.totalPages);
-                        setPage(response.data.meta.pagination.currentPage);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-                return;
-            }
-
-            axiosClient
-                .get('/product', {
-                    params: {
-                        page,
-                    },
-                })
-                .then((response) => {
-                    setListProduct(response.data.data);
-                    setTotalPage(response.data.meta.pagination.totalPages);
-                    setPage(response.data.meta.pagination.currentPage);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        [location.state, page],
-    );
-
     useEffect(() => {
         axiosClient
-            .get('/product/filter', {
+            .get('/product/search', {
                 params: {
-                    categoryId: location.state?.categoryId,
-                    q: location.state?.q,
+                    categoryId,
+                    q,
                     sortBy,
                     order,
                     page,
                 },
             })
             .then((response) => {
-                setListProduct(response.data.data);
-                setTotalPage(response.data.meta.pagination.totalPages);
-                setPage(response.data.meta.pagination.currentPage);
+                const list = response.data.data.flatMap((document) => document.value);
+                setListProduct(list);
+                setTotalPage(response.data.meta.totalPages);
+                setPage(response.data.meta.currentPage);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [sortBy, order]);
+    }, [sortBy, order, categoryId, q, page]);
 
     function handleFilter(option, order = 'asc') {
         setSortBy(option);
@@ -128,7 +74,7 @@ function ShopPage() {
 
     return (
         <Box>
-            <Paper elevation={0}  square sx={{ alignItems: 'center', backgroundColor: '#d2e1f8' }}>
+            <Paper elevation={0} square sx={{ alignItems: 'center', backgroundColor: '#d2e1f8' }}>
                 <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
                     <Grid item xs={1}>
                         <Avatar
@@ -151,7 +97,13 @@ function ShopPage() {
                     <Grid item xs={9}>
                         <Stack direction="row" gap={1}>
                             <Divider orientation="vertical" flexItem />
-                            <Typography variant="h6" alignItems="center" fontStyle="italic" fontWeight="inherit" marginLeft='30px'>
+                            <Typography
+                                variant="h6"
+                                alignItems="center"
+                                fontStyle="italic"
+                                fontWeight="inherit"
+                                marginLeft="30px"
+                            >
                                 Not only does my resume look impressive—filled with the names and logos of world-class
                                 institutions—but these certificates also bring me closer to my career goals by
                                 validating the skills I've learned.
@@ -166,7 +118,7 @@ function ShopPage() {
             <Grid container spacing={1.5} marginTop={2}>
                 <ShopProduct />
                 <Grid item xs={10}>
-                    <Paper variant="outlined">
+                    <Paper>
                         <Box
                             sx={{
                                 padding: 1,
@@ -180,17 +132,17 @@ function ShopPage() {
                                 </Typography>
 
                                 <Button
-                                    startIcon={sortBy === 'newest' ? <CheckIcon /> : ''}
-                                    variant={sortBy === 'newest' ? 'contained' : 'outlined'}
-                                    onClick={() => handleFilter('newest')}
+                                    startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
+                                    variant={sortBy === 'name' ? 'contained' : 'outlined'}
+                                    onClick={() => handleFilter('name')}
                                 >
                                     Mới Nhất
                                 </Button>
 
                                 <Button
-                                    startIcon={sortBy === 'sales' ? <CheckIcon /> : ''}
-                                    variant={sortBy === 'sales' ? 'contained' : 'outlined'}
-                                    onClick={() => handleFilter('sales')}
+                                    startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
+                                    variant={sortBy === 'sold' ? 'contained' : 'outlined'}
+                                    onClick={() => handleFilter('sold', 'desc')}
                                 >
                                     Bán Chạy
                                 </Button>
@@ -210,11 +162,11 @@ function ShopPage() {
                                     ))}
                                 </TextField>
                             </Stack>
-                            <Paper variant="outlined">
-                                <InputBase placeholder="Tìm trong Shop này" sx={{ paddingLeft: 1 }} />
+                            <Paper variant="outlined" sx={{ paddingRight: 1 }}>
                                 <IconButton type="button" aria-label="search" size="small">
                                     <SearchIcon />
                                 </IconButton>
+                                <InputBase placeholder="Tìm trong Shop này" />
                             </Paper>
                         </Box>
                     </Paper>
