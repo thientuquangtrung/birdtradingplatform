@@ -20,6 +20,22 @@ const getAccounts = async ({ name, role }) => {
     }
 };
 
+const getAccountById = async ({ id, role }) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const account = await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('role', sql.VarChar, role)
+            .query(sqlQueries.readAccountById);
+
+        return account.recordset[0];
+    } catch (error) {
+        throw createError(error);
+    }
+};
+
 // get current user
 
 const getCurrentUser = async (id) => {
@@ -178,9 +194,9 @@ const updateAccountByAdmin = async (data) => {
             .input('role', sql.VarChar, role)
             .input('address', sql.NVarChar, address)
             .input('id', sql.UniqueIdentifier, id)
-            .query(sqlQueries.updateSeller);
+            .query(sqlQueries.updateAccountByAdmin);
 
-        return account.recordset[0];
+        return account.recordset;
     } catch (error) {
         throw createError(error);
     }
@@ -192,7 +208,7 @@ const deleteAccount = async (id) => {
         const sqlQueries = await loadSqlQueries('auth');
         const account = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.deleteAccount);
 
-        return account.recordset[0];
+        return account.recordset;
     } catch (error) {
         throw error;
     }
@@ -231,4 +247,5 @@ module.exports = {
     updateAccountByAdmin,
     deleteAccount,
     createNewAccount,
+    getAccountById,
 };

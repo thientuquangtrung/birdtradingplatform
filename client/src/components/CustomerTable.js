@@ -32,7 +32,7 @@ const Actions = ({ data }) => {
         <Stack direction="row" spacing={0.5}>
             <React.Fragment>
                 <Link
-                    to={`/seller_detail/${data.row.name}`}
+                    to={`/customer_detail/${data.row.name}`}
                     state={{
                         id: data.value
                     }}
@@ -54,7 +54,7 @@ const Location = ({ data }) => {
     );
 };
 
-export default function SellerTable({ data }) {
+export default function CustomerTable({ data }) {
     const columns = [
         {
             field: 'name',
@@ -63,7 +63,7 @@ export default function SellerTable({ data }) {
             renderCell: (rowData) => <Name data={rowData.row} />,
         },
         {
-            field: 'pickUpAddress',
+            field: 'shipToAddress',
             headerName: 'Location',
             width: 300,
             renderCell: (rowLocation) => <Location data={rowLocation} />,

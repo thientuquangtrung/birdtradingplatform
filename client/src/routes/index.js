@@ -30,6 +30,8 @@ import CategoryManagement from '../pages/CategoryManagement/CategoryManagement';
 import AdminDashboard from '../pages/AdminDashboard/AdminDashboard';
 import AdminLogin from '../pages/Login/AdminLogin';
 import SellerDetail from '../pages/SellerDetail/SellerDetail';
+import CustomerDetail from '../pages/CustomerDetail/CustomerDetail';
+import CustomerManagementAdmin from '../pages/CustomerManagementAdmin/CustomerManagementAdmin';
 
 // Public routes
 const publicRoutes = [
@@ -99,6 +101,20 @@ const privateRoutes = [
     {
         path: '/customer_management',
         component: CustomerManagement,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/customer_detail/:name',
+        component: CustomerDetail,
+        layout: AdminLayout,
+        role: ['ADMIN'],
+        subdomain: 'admin',
+    },
+    {
+        path: '/customer_management/add_customer',
+        component: CustomerManagementAdmin,
         layout: AdminLayout,
         role: ['ADMIN'],
         subdomain: 'admin',
