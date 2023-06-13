@@ -31,32 +31,35 @@ const getProductById = async (req, res, next) => {
     }
 };
 
-const getProductByCategory = async (req, res, next) => {
+const searchProducts = async (req, res, next) => {
     try {
-        const id = req.params.id;
-        const { page } = req.query;
-        const list = await productData.getProductByCategory(id, page);
+        const result = await productData.searchProducts(req.query);
+        if (result.documents.length > 0) {
+            result.documents.map((document) => {
+                document.value.image = `${process.env.HOST_URL}/product/${document.value.image}`;
+            });
+        }
 
-        list.map((product) => {
-            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        return res.send({
+            data: result.documents,
+            meta: {
+                total: result.total,
+                currentPage: Number(req.query.page),
+                totalPages: Math.ceil(Number(result.total) / Number(process.env.ROW_OF_PAGE)),
+            },
         });
-
-        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
 };
 
-const searchProducts = async (req, res, next) => {
+const suggestProducts = async (req, res, next) => {
     try {
-        const { q, page } = req.query;
-        const list = await productData.searchProducts(q, page);
+        const result = await productData.suggestProducts(req.query.q);
 
-        list.map((product) => {
-            product.image = `${process.env.HOST_URL}/product/${product.image}`;
+        return res.send({
+            data: result,
         });
-
-        return res.send(modifyPagination(list, page));
     } catch (error) {
         next(createError(error.message));
     }
@@ -67,9 +70,11 @@ const filterProducts = async (req, res, next) => {
         const { sortBy, order, categoryId, q, page } = req.query;
         const list = await productData.filterProducts(sortBy, order, categoryId, q, page);
 
-        list.map((product) => {
-            product.image = `${process.env.HOST_URL}/product/${product.image}`;
-        });
+        if (list.length > 0) {
+            list.map((product) => {
+                product.image = `${process.env.HOST_URL}/product/${product.image}`;
+            });
+        }
 
         return res.send(modifyPagination(list, page));
     } catch (error) {
@@ -168,6 +173,19 @@ const deleteProduct = async (req, res, next) => {
     }
 };
 
+const setAllProductToRedis = async (req, res, next) => {
+    try {
+        await productData.setAllProductToRedis();
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -177,6 +195,7 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProducts,
-    getProductByCategory,
     filterProducts,
+    setAllProductToRedis,
+    suggestProducts,
 };

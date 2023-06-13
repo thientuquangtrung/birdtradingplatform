@@ -45,7 +45,8 @@ function CustomerOrderTab({ status }) {
             .get(`customer/order/${currentUser.id}`, {
                 params: {
                     page: 1,
-                    perPage: 5,
+                    perPage: 10,
+                    status,
                 },
             })
             .then(function (response) {
@@ -55,6 +56,18 @@ function CustomerOrderTab({ status }) {
                 console.log(error);
             });
     }, []);
+    const changeOrderStatus = (id, status) => {
+        axiosClient
+            .put(`order/change_status/${id}`, {
+                status,
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -80,32 +93,26 @@ function CustomerOrderTab({ status }) {
     };
     const handleCancelConfirmationClose = (confirmed) => {
         if (confirmed) {
-            const updatedTableData = tableData.map((item) =>
-                item.orderID === orderId ? { ...item, status: 'CANCELLED' } : item,
+            const updatedTableData = tableData.map(
+                (item) => (item.orderId === orderId ? { ...item, status: 'CANCELED' } : item),
+                changeOrderStatus(orderId, 'CANCELED'),
             );
             setTableData(updatedTableData);
         }
         setCancelConfirmationOpen(false);
     };
 
-    const handleImageSelect = (event) => {
-        const file = event.target.files[0];
-        setSelectedImage(URL.createObjectURL(file));
-    };
-
     const renderStatus = (status) => {
         if (status === 'PENDING') {
             return <Chip label="PENDING" icon={<PendingActionsIcon />} color="warning" />;
-        } else if (status === 'DELIVERING') {
+        } else if (status === 'SHIPPING') {
             return <Chip label="DELIVERING" icon={<DeliveryDiningIcon />} color="info" />;
-        } else if (status === 'SUCCESSFUL') {
+        } else if (status === 'COMPLETED') {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
-        } else if (status === 'CANCELLED') {
+        } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
         }
     };
-
-    const paperStyle = { width: '100%', margin: '20px auto' };
 
     return (
         <Stack>
@@ -125,7 +132,7 @@ function CustomerOrderTab({ status }) {
                     {tableData.length > 0 ? (
                         tableData.map((item) => (
                             <>
-                                <TableRow key={item.orderID}>
+                                <TableRow key={item.orderId}>
                                     <TableCell colSpan={1} sx={{ borderBottom: 'none' }}>
                                         <div
                                             style={{
@@ -152,7 +159,7 @@ function CustomerOrderTab({ status }) {
                                 {item.products.map((product) => (
                                     <TableRow key={product.id}>
                                         <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                                            <img src={product.image} width="60px" height="60px" alt="" />
+                                            <img src={product.image} width="70px" height="70px" alt="" />
                                             {product.name}
                                         </TableCell>
 
@@ -165,7 +172,7 @@ function CustomerOrderTab({ status }) {
                                         {item.status === 'PENDING' ? (
                                             <>
                                                 <Button
-                                                    onClick={() => handleCancelConfirmationOpen(item.orderID)}
+                                                    onClick={() => handleCancelConfirmationOpen(item.orderId)}
                                                     variant="contained"
                                                     style={{
                                                         backgroundColor: '#fafafa',
@@ -179,7 +186,7 @@ function CustomerOrderTab({ status }) {
                                                     Hủy Đơn Hàng
                                                 </Button>
                                             </>
-                                        ) : item.status === 'SUCCESSFUL' ? (
+                                        ) : item.status === 'COMPLETED' ? (
                                             <Button variant="contained" onClick={handleOpen}>
                                                 Đánh Giá
                                             </Button>
@@ -274,15 +281,15 @@ function CustomerOrderTab({ status }) {
                     <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="cancel-confirmation-dialog-description">
-                            Are you sure you want to cancel this order?
+                            Bạn có chắc chắn muốn hủy đơn hàng không
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                            Yes
+                            Có
                         </Button>
                         <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                            No
+                            Không
                         </Button>
                     </DialogActions>
                 </Dialog>

@@ -70,8 +70,10 @@ const Actions = ({ data }) => {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Không</Button>
-                        <Button onClick={handleDelete} autoFocus>
+                        <Button onClick={handleClose} color="primary">
+                            Không
+                        </Button>
+                        <Button onClick={handleDelete} autoFocus color="error">
                             Có
                         </Button>
                     </DialogActions>

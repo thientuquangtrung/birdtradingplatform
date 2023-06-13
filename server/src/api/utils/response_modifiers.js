@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const { signAccessToken, signRefreshToken } = require('./jwt_utils');
 
 const { readAccountById } = require('../services/auth');
-const { getProduct } = require('../services/cart/cart.repo');
+const { getProduct } = require('../services/product/product.repo');
 
 const modifyUserInfo = async (user) => {
     try {
@@ -80,8 +80,11 @@ const modifyOrder = async (list) => {
         const products = [];
         for (let index = 0; index < value.length; index++) {
             const element = value[index];
+            const product = await getProduct(element.productId);
             products.push({
-                ...(await getProduct(element.productId)),
+                ...product,
+
+                image: `${process.env.HOST_URL}/product/${product.image}`,
                 price: element.price,
                 quantity: element.quantity,
             });
