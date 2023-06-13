@@ -9,7 +9,11 @@ const { signAccessToken } = require('../utils/jwt_utils');
 const getAccounts = async (req, res, next) => {
     try {
         const result = await authData.getAccounts(req.query);
-
+        if (result.length > 0) {
+            result.forEach((account) => {
+                account.image = `${process.env.HOST_URL}/profile/${account.image}`;
+            });
+        }
         return res.send({
             status: 200,
             message: 'OK',
@@ -17,6 +21,25 @@ const getAccounts = async (req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+};
+
+const getAccountById = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const account = await authData.getAccountById({ id, ...req.query });
+
+        const data = {
+            ...account,
+            image: account.image && `${process.env.HOST_URL}/profile/${account.image}`,
+        };
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data,
+        });
+    } catch (error) {
+        next(createError(error.message));
     }
 };
 
@@ -41,7 +64,7 @@ const createNewAccount = async (req, res, next) => {
         res.send({
             status: 200,
             message: 'OK',
-        }); 
+        });
     } catch (error) {
         next(error);
     }
@@ -264,7 +287,7 @@ const updateCustomer = async (req, res, next) => {
 
 const updateAccountByAdmin = async (req, res, next) => {
     try {
-        const foundAccount = await authData.readAccountById(id, req.body.role);
+        const foundAccount = await authData.readAccountById(req.body.id, req.body.role);
         if (!foundAccount) createError.BadRequest('Cannot find account');
 
         const response = await authData.updateAccountByAdmin(req.body);
@@ -294,4 +317,5 @@ module.exports = {
     updateAccountByAdmin,
     deleteAccount,
     createNewAccount,
+    getAccountById,
 };

@@ -1,6 +1,6 @@
 BEGIN TRY
     BEGIN TRAN
-        update account set [name] = @name, [email] = @email, [phone] = @phone, where [id] = @id
+        update account set [name] = @name, [email] = @email, [phone] = @phone, [enabled] = '1' where [id] = @id
 
         if @role = 'SELLER'
         BEGIN

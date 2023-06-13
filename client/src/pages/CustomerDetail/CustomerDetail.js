@@ -6,15 +6,17 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/joy';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import axiosClient from '../../api/axiosClient';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
 
-function SellerDetail() {
+function CustomerDetail() {
     const location = useLocation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -30,7 +32,7 @@ function SellerDetail() {
         axiosClient
             .get(`auth/account/${location.state.id}`, {
                 params: {
-                    role: 'SELLER',
+                    role: 'CUSTOMER',
                 },
             })
             .then(function (response) {
@@ -39,7 +41,7 @@ function SellerDetail() {
                 setName(fetchUser.name);
                 setEmail(fetchUser.email);
                 setPhone(fetchUser.phone);
-                setAddress(fetchUser.pickUpAddress);
+                setAddress(fetchUser.shipToAddress);
             })
             .catch(function (error) {
                 console.log(error);
@@ -70,13 +72,14 @@ function SellerDetail() {
                 enqueueSnackbar('Đã xóa thành công', {
                     variant: 'success',
                 });
-                navigate('/seller_management');
+                navigate('/customer_management');
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             });
     };
+
     function handleUpdate() {
         axiosClient
         .patch('auth/account', {
@@ -85,11 +88,11 @@ function SellerDetail() {
             name,
             phone,
             address,
-            role : 'SELLER',
+            role : 'CUSTOMER',
         })
         .then((response) => {
             enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-            navigate('/seller_management');
+            navigate('/customer_management');
         })
         .catch((error) => {
             console.log(error);
@@ -100,10 +103,10 @@ function SellerDetail() {
     return (
         <Stack gap={7} marginLeft={25} marginRight={25} marginTop={5} marginBottom={5} width="90%">
             <Stack direction="row" gap={2} sx={{ cursor: 'pointer' }}>
-                <Link to="/seller_management">
+                <Link to="/customer_management">
                     <ArrowBackIcon fontSize="large" />
                 </Link>
-                <Link to="/seller_management">
+                <Link to="/customer_management">
                     <Typography
                         variant="body1"
                         gutterBottom
@@ -112,7 +115,7 @@ function SellerDetail() {
                         onMouseLeave={handleMouseLeave}
                         sx={{ textDecoration: isHovered ? 'underline' : 'none' }}
                     >
-                        Sellers
+                        Customers
                     </Typography>
                 </Link>
             </Stack>
@@ -137,7 +140,7 @@ function SellerDetail() {
                         sx={{ padding: '30px 50px', width: '70%', boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.2)' }}
                     >
                         <Typography variant="h6" gutterBottom margin={0}>
-                            Edit Sellers
+                            Edit Customers
                         </Typography>
 
                         <Stack direction="column" gap={5} width="90%" marginTop={5}>
@@ -174,7 +177,7 @@ function SellerDetail() {
                                 required
                                 id="outlined-required"
                                 label="Địa chỉ"
-                                defaultValue={user.pickUpAddress}
+                                defaultValue={user.shipToAddress}
                                 size="small"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
@@ -184,7 +187,7 @@ function SellerDetail() {
                             <Button variant="soft" size="lg" onClick={handleUpdate}>
                                 Update
                             </Button>
-                            <Link to="/seller_management">
+                            <Link to="/customer_management">
                                 <Button variant="plain" size="lg">
                                     Cancel
                                 </Button>
@@ -202,7 +205,7 @@ function SellerDetail() {
                     Delete Account
                 </Button>
                 <Typography variant="body2" marginTop={2} color="rgb(108, 115, 127)">
-                    Remove this seller’s chart if he requested that, if not please be aware that what has been deleted
+                    Remove this customer’s chart if he requested that, if not please be aware that what has been deleted
                     can never brought back
                 </Typography>
                 <Dialog
@@ -228,4 +231,4 @@ function SellerDetail() {
     );
 }
 
-export default SellerDetail;
+export default CustomerDetail;

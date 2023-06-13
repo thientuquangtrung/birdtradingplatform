@@ -21,11 +21,13 @@ const {
     updateAccountByAdmin,
     deleteAccount,
     createNewAccount,
+    getAccountById
 } = authController;
 
 router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
 router.get('/auth/me', verifyAccessToken, getCurrentUser);
 router.get('/auth/account', verifyAccessToken, getAccounts);
+router.get('/auth/account/:id', verifyAccessToken, getAccountById);
 router.post('/auth/seller/register', checkMail, createSellerAccount);
 router.post('/auth/seller/login', sellerLogin);
 router.patch('/auth/seller/me', verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
