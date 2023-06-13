@@ -1,10 +1,17 @@
 const createError = require('http-errors');
 const { redisClient } = require('../../config');
-const { setProduct, getProduct } = require('./cart.repo');
+const { setProduct, getProduct } = require('../product/product.repo');
 
 const addToCart = async ({ userId, product = {}, quantity }) => {
     try {
-        await setProduct(product);
+        const foundProduct = await getProduct(product.id);
+        if (!foundProduct) {
+            throw createError.NotFound('Product not found!');
+        }
+
+        if (foundProduct.shopId !== product.shopId) {
+            throw createError.NotFound('Product not found!');
+        }
 
         const userCart = await redisClient.hGetAll(`cart:${userId}`);
         if (!userCart) {
@@ -64,7 +71,6 @@ const getUserCart = async ({ userId }) => {
         let productList = [];
 
         const cartList = await redisClient.hGetAll(`cart:${userId}`);
-
         if (!cartList) {
             return productList;
         }
@@ -72,7 +78,7 @@ const getUserCart = async ({ userId }) => {
         for (const itemKey of Object.keys(cartList)) {
             const product = await redisClient.json.get(itemKey);
 
-            productList.push({ product: JSON.parse(product), quantity: cartList[itemKey] });
+            productList.push({ product, quantity: cartList[itemKey] });
         }
 
         return productList;

@@ -3,6 +3,8 @@ DECLARE @sqlCommand varchar(1000)
 DECLARE @pagination varchar(1000)
 SET @pagination = ' OFFSET ' + @offset + ' ROWS FETCH NEXT ' + @RowsOfPage + ' ROWS ONLY'
 
+SET @sqlCommand = 'select *, count(*) over() as total from product where ' +  @categoryId + @q + ' and [enabled] = 1 order by (select null) ' + @pagination
+
 IF @sortBy = 'newest'
 BEGIN
     SET @sqlCommand = 'select *, count(*) over() as total from product where ' +  @categoryId + @q + ' and [enabled] = 1 order by [id] desc ' + @pagination

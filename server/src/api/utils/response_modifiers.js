@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const { signAccessToken, signRefreshToken } = require('./jwt_utils');
 
 const { readAccountById } = require('../services/auth');
-const { getProduct } = require('../services/cart/cart.repo');
+const { getProduct } = require('../services/product/product.repo');
 
 const modifyUserInfo = async (user) => {
     try {
