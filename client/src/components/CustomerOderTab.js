@@ -30,14 +30,16 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import StoreIcon from '@mui/icons-material/Store';
 import UploadImage from './UploadImage';
+import { enqueueSnackbar } from 'notistack';
 
 function CustomerOrderTab({ status }) {
     const [open, setOpen] = useState(false);
-    const [upLoadFile, setUpLoadFile] = useState('');
+    const [upLoadFile, setUpLoadFile] = useState(null);
+    const [feedbackContent, setFeedbackContent] = useState('');
+    const [modalState, setModalState] = useState(null);
     const [value, setValue] = useState('1');
     const [orderId, setOrderId] = useState(null);
     const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [tableData, setTableData] = useState([]);
     const { currentUser } = useContext(AuthContext);
     useEffect(() => {
@@ -71,7 +73,10 @@ function CustomerOrderTab({ status }) {
             });
     };
 
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (item) => {
+        setModalState(item);
+        setOpen(true);
+    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -116,6 +121,24 @@ function CustomerOrderTab({ status }) {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
         }
     };
+
+    function handleSubmitFeedback() {
+        const formData = new FormData();
+        formData.append('content', feedbackContent);
+        formData.append('image', upLoadFile);
+        formData.append('orderId', modalState.orderId);
+        axiosClient
+            .post('feedback', formData)
+            .then((response) => {
+                enqueueSnackbar('Đã feedback thành công', {
+                    variant: 'success',
+                });
+                handleClose();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     return (
         <Stack>
@@ -202,7 +225,7 @@ function CustomerOrderTab({ status }) {
                                                 </Button>
                                             </>
                                         ) : item.status === 'COMPLETED' ? (
-                                            <Button variant="contained" onClick={handleOpen}>
+                                            <Button variant="contained" onClick={() => handleOpen(item)}>
                                                 Đánh Giá
                                             </Button>
                                         ) : null}
@@ -249,8 +272,8 @@ function CustomerOrderTab({ status }) {
                                         }}
                                     >
                                         <TextareaAutosize
-                                            // value={description}
-                                            // onChange={(e) => setDescription(e.target.value)}
+                                            value={feedbackContent}
+                                            onChange={(e) => setFeedbackContent(e.target.value)}
                                             minRows={3}
                                             placeholder="Nhập đánh giá sản phẩm"
                                             style={{
@@ -281,7 +304,7 @@ function CustomerOrderTab({ status }) {
                                 Trở Lại
                             </Button>
 
-                            <Button size="small" variant="contained" onClick={handleClose}>
+                            <Button size="small" variant="contained" onClick={handleSubmitFeedback}>
                                 Hoàn Thành
                             </Button>
                         </Stack>

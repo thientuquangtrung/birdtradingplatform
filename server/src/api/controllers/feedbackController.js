@@ -22,15 +22,11 @@ const createFeedback = async (req, res, next) => {
 const getFeedbackOfProduct = async (req, res, next) => {
     try {
         const productId = req.params.productId;
-        const data = await feedbackData.getFeedbackOfProduct({ productId });
-
-        data.map((feedback) => {
-            feedback.image = `${process.env.HOST_URL}/feedback/${feedback.image}`;
-        });
+        const data = await feedbackData.getFeedbackOfProduct({ productId, ...req.query });
         return res.send({
             status: 200,
             message: 'OK',
-            data,
+            ...data,
         });
     } catch (error) {
         next(error);
