@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/joy/Button';
+import {Button as JoyButton} from '@mui/joy';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -126,7 +127,7 @@ function ProductDetail() {
                                                 <Typography variant="subtitle2" gutterBottom fontSize={16}>
                                                     Zenme VietNam
                                                 </Typography>
-                                                <Button
+                                                <JoyButton
                                                     color="neutral"
                                                     size="sm"
                                                     variant="outlined"
@@ -135,7 +136,7 @@ function ProductDetail() {
                                                     startDecorator={<StorefrontIcon fontSize="small" />}
                                                 >
                                                     Xem Shop
-                                                </Button>
+                                                </JoyButton>
                                             </Stack>
                                         </Stack>
                                     </Stack>
