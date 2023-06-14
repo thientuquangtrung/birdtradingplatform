@@ -92,18 +92,26 @@ function ProductDetail() {
                 <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <Stack direction="column" gap={4} padding={3}>
                         <img
-                            style={{ width: '500px', height: '600px', objectFit: 'contain' }}
+                            style={{
+                                width: '500px',
+                                height: '600px',
+                                objectFit: 'contain',
+                                overflowClipMargin: 'content-box',
+                            }}
                             src={product.image}
                             alt="Bird"
                         />
                     </Stack>
                     <Box sx={{ padding: 4, width: '70%' }}>
                         <Stack direction="column" gap={3}>
-                           <Stack direction='column' gap={1}>
+                            <Stack direction="column" gap={1}>
                                 <Typography variant="h5" gutterBottom fontWeight={'bold'}>
                                     {product.name}
                                 </Typography>
-                                <Paper elevation={0} sx={{ padding: 2 , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{ padding: 2, backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}
+                                >
                                     <Stack direction="row" gap={6} alignItems="center">
                                         <Typography variant="body2" gutterBottom>
                                             Được bán bởi
@@ -132,7 +140,7 @@ function ProductDetail() {
                                         </Stack>
                                     </Stack>
                                 </Paper>
-                           </Stack>
+                            </Stack>
                             <Typography variant="h4" gutterBottom color="#c80606">
                                 {product.price ? product.price.toLocaleString('vi-VN') : ''}₫
                             </Typography>
