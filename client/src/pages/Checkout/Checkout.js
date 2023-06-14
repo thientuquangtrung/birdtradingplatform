@@ -19,7 +19,7 @@ import VNPayButton from '../../components/VNPayButton';
 import Button from '@mui/joy/Button';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import MoMoButton from '../../components/MoMoButton';
-
+import { fontSize } from '@mui/system';
 
 function Checkout() {
     const location = useLocation();
@@ -157,45 +157,76 @@ function Checkout() {
                         paddingBottom: '10px',
                     }}
                 >
-                    <div>
-                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                            <Payment selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ marginRight: '10px' }}>
+                            <Typography style={{ fontSize: '21px', fontWeight: 400 }}>Phương thức:</Typography>
+                        </div>
+                        <Typography style={{ fontSize: '22px', color: '#424242', fontWeight: 400 }}>
+                            {selectedOption && JSON.parse(selectedOption).label}
                         </Typography>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div>
-                            <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                                Phương thức: {selectedOption && JSON.parse(selectedOption).label}
-                            </Typography>
-                        </div>
+                    <div>
+                        <Typography style={{ fontSize: '22px', fontWeight: 400 }}>
+                            <Payment selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+                        </Typography>
                     </div>
                 </div>
 
                 <div>
                     <Box align="center">
-                        <Stack gap={3} direction={'row'} justifyContent="flex-end" alignItems={'center'} flexDirection="column">
-                            <div style={{ margin: '10px 0 10px 0' }}>
-                                <Typography style={{ fontSize: '22px', color: 'red' }}>
-                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
+                        <Stack
+                            gap={3}
+                            direction={'column'}
+                            justifyContent="flex-end"
+                            alignItems={'center'}
+                            flexDirection="column"
+                        >
+                            <div style={{ margin: '30px 0 10px 0', display: 'flex', alignItems: 'center' }}>
+                                <div style={{ margin: '0 10px 0 0' }}>
+                                    <Typography style={{ fontSize: '20px', color: '#212121', fontWeight: '400' }}>
+                                        Tổng tiền hàng:
+                                    </Typography>
+                                </div>
+
+                                <Typography style={{ fontSize: '25px', color: 'rgb(254, 56, 52)' }}>
+                                    {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
-                            <Button
-                                onClick={handlePlaceOrder}
-                                sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px', width: '250px', height: '40px' }}
-                                size="large"
-                                variant="soft"
-                                color="neutral"
-                                startDecorator= {<PaymentsIcon />}
-                            >
-                                <Stack direction='row' alignItems='center' gap={1} marginLeft={2}>
-                                    <Typography variant="h6" fontSize={16} >Thanh toán khi nhận hàng</Typography>
-                                </Stack>
-                            </Button>
-                            <MoMoButton />
-                            <VNPayButton />
-                            <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
-                            {/* {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
-                            )} */}
+                            {selectedOption && JSON.parse(selectedOption).value === 'COD' && (
+                                <Button
+                                    ordersData={{ userId: currentUser.id, shopOrderIds }}
+                                    onClick={handlePlaceOrder}
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        marginTop: '10px',
+                                        width: '280px',
+                                        height: '52px',
+                                    }}
+                                    size="large"
+                                    variant="soft"
+                                    color="neutral"
+                                    startDecorator={<PaymentsIcon />}
+                                >
+                                    <Stack direction="row" alignItems="center" gap={1} marginLeft={2}>
+                                        <Typography variant="h6" fontSize={16}>
+                                            Thanh toán khi nhận hàng
+                                        </Typography>
+                                    </Stack>
+                                </Button>
+                            )}
+
+                            {selectedOption && JSON.parse(selectedOption).value === 'MOMO' && (
+                                <MoMoButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
+
+                            {selectedOption && JSON.parse(selectedOption).value === 'VNPAY' && (
+                                <VNPayButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
+
+                            {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
+                                <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
                         </Stack>
                     </Box>
                     <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>

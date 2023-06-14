@@ -12,7 +12,7 @@ function VNPayButton() {
     };
 
     return (
-        <Button variant="soft" onClick={handlePay} sx={{width: '250px'}}>
+        <Button variant="soft" onClick={handlePay} sx={{ width: '280px', height: '50px' }}>
             <img width={80} height={15} src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR.png" />
         </Button>
     );
