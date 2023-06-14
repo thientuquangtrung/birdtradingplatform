@@ -49,7 +49,7 @@ function OrderTab({ status }) {
             .get(`seller/order/${currentUser.id}`, {
                 params: {
                     page: currentPage,
-                    perPage: 5,
+                    perPage: 30,
                     status,
                 },
             })

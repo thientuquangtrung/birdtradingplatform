@@ -55,7 +55,7 @@ function CustomerOrderTab({ status }) {
             .get(`customer/order/${currentUser.id}`, {
                 params: {
                     page: currentPage,
-                    perPage: 5,
+                    perPage: 10,
                     status,
                 },
             })

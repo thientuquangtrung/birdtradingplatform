@@ -51,7 +51,22 @@ const cancelOrder = async (req, res, next) => {
         next(error);
     }
 };
+const changeOrderStatus = async (req, res, next) => {
+    try {
+        const orderId = req.params.orderId;
+        if (!orderId) return createHttpError.BadRequest('Invalid request');
+        const status = req.body.status ? req.body.status : 'PENDING';
+        const data = await orderData.changeOrderStatus({ orderId, status });
 
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 const getRevenue = async (req, res, next) => {
     try {
         const data = await orderData.getRevenue({ ...req.query, id: req.params.id });
@@ -68,6 +83,7 @@ const getRevenue = async (req, res, next) => {
 
 module.exports = {
     getOrdersByCusId,
+    changeOrderStatus,
     cancelOrder,
     getOrdersByShop,
     getRevenue,

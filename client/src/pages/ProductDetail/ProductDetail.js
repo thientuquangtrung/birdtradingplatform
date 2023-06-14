@@ -91,9 +91,9 @@ function ProductDetail() {
         <div>
             <Paper>
                 <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <Stack direction="column" gap={4} padding={3}>
+                    <Stack direction="column" gap={4} padding={3} justifyContent='flex-start'>
                         <img
-                            style={{ width: '500px', height: '600px', objectFit: 'contain' }}
+                            style={{ width: '500px', height: '600px', objectFit: 'contain', objectPosition: 'top center' }}
                             src={product.image}
                             alt="Bird"
                         />
@@ -104,15 +104,13 @@ function ProductDetail() {
                                 <Typography variant="h5" gutterBottom fontWeight={'bold'}>
                                     {product.name}
                                 </Typography>
-                                <Paper
-                                    elevation={0}
-                                    sx={{ padding: 2, backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}
-                                >
+
+                                <Paper elevation={0} sx={{ padding: '7px' , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
                                     <Stack direction="row" gap={6} alignItems="center">
-                                        <Typography variant="body2" gutterBottom>
+                                        <Typography variant="body2" gutterBottom marginLeft={2}>
                                             Được bán bởi
                                         </Typography>
-                                        <Stack direction="row" gap={2}>
+                                        <Stack direction="row" gap={2} alignItems='center'>
                                             <Avatar
                                                 alt="Remy Sharp"
                                                 src={product.shop?.image}
@@ -211,7 +209,9 @@ function ProductDetail() {
                                                 gutterBottom
                                                 sx={{ color: 'grey', fontSize: '10px' }}
                                             >
-                                                {dayjs(feedback.createdAt).format('DD/MM/YYYY H:mm A')}
+                                                {dayjs(feedback.createdAt, 'YYYY-MM-DD HH:mm:ss').format(
+                                                    'DD/MM/YYYY H:mm A',
+                                                )}
                                             </Typography>
                                             <Typography
                                                 variant="body2"
