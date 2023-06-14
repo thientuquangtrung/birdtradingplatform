@@ -27,7 +27,10 @@ axiosClient.interceptors.response.use(
         // Any status code that lie within the range of 2xx cause this function to trigger
         // Do something with response data
 
-        const { status, message } = response.data;
+        const { status, message, redirect_url } = response.data;
+        if (redirect_url) {
+            window.location.href = redirect_url;
+        }
         if (status && status === 401) {
             if (message && message === 'jwt expired') {
                 axiosClient.defaults.headers.common['x-token'] = localStorage.getItem('refresh_token');

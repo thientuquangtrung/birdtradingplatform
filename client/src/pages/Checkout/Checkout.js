@@ -15,6 +15,7 @@ import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
 import Payment from '../../components/Payment';
 import PaypalButton from '../../components/PaypalButton';
+import VNPayButton from '../../components/VNPayButton';
 
 function Checkout() {
     const location = useLocation();
@@ -182,6 +183,7 @@ function Checkout() {
                             >
                                 Đặt hàng
                             </Button> */}
+                            <VNPayButton />
                             {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                                 <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             )}
