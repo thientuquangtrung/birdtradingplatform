@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {Button as JoyButton} from '@mui/joy';
+import { Button as JoyButton } from '@mui/joy';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -213,7 +213,9 @@ function ProductDetail() {
                                                 gutterBottom
                                                 sx={{ color: 'grey', fontSize: '10px' }}
                                             >
-                                                {dayjs(feedback.createdAt).format('DD/MM/YYYY H:mm A')}
+                                                {dayjs(feedback.createdAt, 'YYYY-MM-DD HH:mm:ss').format(
+                                                    'DD/MM/YYYY H:mm A',
+                                                )}
                                             </Typography>
                                             <Typography
                                                 variant="body2"
