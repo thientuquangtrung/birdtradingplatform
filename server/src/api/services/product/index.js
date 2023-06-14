@@ -5,6 +5,7 @@ const { pagination } = require('../../utils/pagination');
 const createError = require('http-errors');
 const { setProduct, getProduct, searchItems, addSuggestions } = require('./product.repo');
 const { redisClient } = require('../../config');
+const { readAccountById } = require('../auth');
 
 const getProducts = async (pageNo) => {
     try {
@@ -26,11 +27,20 @@ const getProducts = async (pageNo) => {
 
 const getProductById = async (id) => {
     try {
-        let pool = await sql.connect(config.sql);
-        const sqlQueries = await loadSqlQueries('product');
-        const oneProduct = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.productById);
+        let product = await getProduct(id);
+        if (!product) {
+            let pool = await sql.connect(config.sql);
+            const sqlQueries = await loadSqlQueries('product');
+            product = (await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.productById))
+                .recordset[0];
+        }
 
-        return oneProduct.recordset[0];
+        const result = {
+            ...product,
+            image: `${process.env.HOST_URL}/product/${product.image}`,
+            shop: await readAccountById(product.shopId, 'SELLER'),
+        };
+        return result;
     } catch (error) {
         throw createError(error);
     }

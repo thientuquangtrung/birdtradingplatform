@@ -22,8 +22,8 @@ const priceOption = [
 function Shopping() {
     const location = useLocation();
     const [listProduct, setListProduct] = useState([]);
-    const [q, setQ] = useState('');
-    const [categoryId, setCategoryId] = useState(0);
+    const [q, setQ] = useState(() => location.state?.q || '');
+    const [categoryId, setCategoryId] = useState(() => location.state?.categoryId || 0);
     const [sortBy, setSortBy] = useState('');
     const [order, setOrder] = useState('');
     const [totalPage, setTotalPage] = useState(0);
@@ -47,7 +47,7 @@ function Shopping() {
             })
             .then((response) => {
                 const list = response.data.data.flatMap((document) => document.value);
-                setListProduct(list);
+                setListProduct((prev) => [...list]);
                 setTotalPage(response.data.meta.totalPages);
                 setPage(response.data.meta.currentPage);
             })
@@ -129,13 +129,14 @@ function Shopping() {
                     </Box>
                 </Paper>
                 <Grid sx={{ paddingTop: 3 }} container spacing={1.5}>
-                    {listProduct.map(function (product) {
-                        return (
-                            <Grid item xs={2.4} key={product.id}>
-                                <ProductCard data={product} />
-                            </Grid>
-                        );
-                    })}
+                    {listProduct.length > 0 &&
+                        listProduct.map(function (product) {
+                            return (
+                                <Grid item xs={2.4} key={product.id}>
+                                    <ProductCard data={product} />
+                                </Grid>
+                            );
+                        })}
                 </Grid>
                 {totalPage > 0 && (
                     <Pagination

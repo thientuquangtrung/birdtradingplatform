@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {Button as JoyButton} from '@mui/joy';
+import { Button as JoyButton } from '@mui/joy';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import TextField from '@mui/material/TextField';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ function ProductDetail() {
     const { currentUser } = useContext(AuthContext);
     const { setCartList, setCartLength } = useContext(CartContext);
     const location = useLocation();
-    const [product, setProduct] = useState('');
+    const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [feedbackList, setFeedbackList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -100,11 +100,14 @@ function ProductDetail() {
                     </Stack>
                     <Box sx={{ padding: 4, width: '70%' }}>
                         <Stack direction="column" gap={3}>
-                           <Stack direction='column' gap={1}>
+                            <Stack direction="column" gap={1}>
                                 <Typography variant="h5" gutterBottom fontWeight={'bold'}>
                                     {product.name}
                                 </Typography>
-                                <Paper elevation={0} sx={{ padding: 2 , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{ padding: 2, backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}
+                                >
                                     <Stack direction="row" gap={6} alignItems="center">
                                         <Typography variant="body2" gutterBottom>
                                             Được bán bởi
@@ -112,19 +115,22 @@ function ProductDetail() {
                                         <Stack direction="row" gap={2}>
                                             <Avatar
                                                 alt="Remy Sharp"
-                                                src="https://s1.media.ngoisao.vn/resize_580/news/2022/04/19/4da578dae741291f7050-ngoisaovn-w1126-h1612.jpg"
+                                                src={product.shop?.image}
                                                 sx={{ width: 56, height: 56 }}
                                             />
                                             <Stack direction="column">
                                                 <Typography variant="subtitle2" gutterBottom fontSize={16}>
-                                                    Zenme VietNam
+                                                    {product.shop?.name}
                                                 </Typography>
                                                 <JoyButton
                                                     color="neutral"
                                                     size="sm"
                                                     variant="outlined"
                                                     component={Link}
-                                                    to="/shop/:shopname"
+                                                    state={{
+                                                        shopId: product.shopId,
+                                                    }}
+                                                    to={`/shop/${product.shop?.name}`}
                                                     startDecorator={<StorefrontIcon fontSize="small" />}
                                                 >
                                                     Xem Shop
@@ -133,7 +139,7 @@ function ProductDetail() {
                                         </Stack>
                                     </Stack>
                                 </Paper>
-                           </Stack>
+                            </Stack>
                             <Typography variant="h4" gutterBottom color="#c80606">
                                 {product.price ? product.price.toLocaleString('vi-VN') : ''}₫
                             </Typography>

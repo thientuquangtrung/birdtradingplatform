@@ -84,7 +84,7 @@ function Header() {
     }, [productName]);
 
     return (
-        <AppBar  position="sticky" sx={{ fontSize: 'xx-small' }}>
+        <AppBar position="sticky" sx={{ fontSize: 'xx-small' }}>
             <Toolbar>
                 <Container sx={{ padding: 1 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
@@ -130,7 +130,11 @@ function Header() {
                                 placement="bottom-start"
                                 render={(attrs) => (
                                     <Box tabIndex="-1" {...attrs} width={`${searchRef.current.offsetWidth}px`}>
-                                        <SuggestionList data={suggestData} setSuggestData={setSuggestData} />
+                                        <SuggestionList
+                                            data={suggestData}
+                                            setSuggestData={setSuggestData}
+                                            setProductName={setProductName}
+                                        />
                                     </Box>
                                 )}
                             >
