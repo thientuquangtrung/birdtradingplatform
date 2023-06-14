@@ -192,7 +192,7 @@ function Checkout() {
                                 </Typography>
                             </div>
                             {selectedOption && JSON.parse(selectedOption).value === 'COD' && (
-                                <Button
+                                <JoyButton
                                     ordersData={{ userId: currentUser.id, shopOrderIds }}
                                     onClick={handlePlaceOrder}
                                     sx={{
@@ -212,7 +212,7 @@ function Checkout() {
                                             Thanh toán khi nhận hàng
                                         </Typography>
                                     </Stack>
-                                </Button>
+                                </JoyButton>
                             )}
 
                             {selectedOption && JSON.parse(selectedOption).value === 'MOMO' && (
@@ -226,36 +226,6 @@ function Checkout() {
                             {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                                 <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             )}
-                            <div style={{ margin: '10px 0 10px 0' }}>
-                                <Typography style={{ fontSize: '22px', color: 'red' }}>
-                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
-                                </Typography>
-                            </div>
-                            <JoyButton
-                                onClick={handlePlaceOrder}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    marginTop: '10px',
-                                    width: '250px',
-                                    height: '40px',
-                                }}
-                                size="large"
-                                variant="soft"
-                                color="neutral"
-                                startDecorator={<PaymentsIcon />}
-                            >
-                                <Stack direction="row" alignItems="center" gap={1} marginLeft={2}>
-                                    <Typography variant="h6" fontSize={16}>
-                                        Thanh toán khi nhận hàng
-                                    </Typography>
-                                </Stack>
-                            </JoyButton>
-                            <MoMoButton />
-                            <VNPayButton />
-                            <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
-                            {/* {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
-                            )} */}
                         </Stack>
                     </Box>
                     <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>
