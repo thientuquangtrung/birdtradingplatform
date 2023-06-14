@@ -14,6 +14,8 @@ import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
 import CartContext from '../../contexts/CartContext';
 import Payment from '../../components/Payment';
+import PaypalButton from '../../components/PaypalButton';
+import VNPayButton from '../../components/VNPayButton';
 
 function Checkout() {
     const location = useLocation();
@@ -28,7 +30,7 @@ function Checkout() {
     const [shopOrderIds, setShopOrderIds] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
-    const [selectedOption, setSelectedOption] = useState({});
+    const [selectedOption, setSelectedOption] = useState('');
 
     const isChange = () => {
         return !(currentUser.phone !== phone || currentUser.shipToAddress !== shipToAddress);
@@ -38,7 +40,7 @@ function Checkout() {
         axiosClient
             .post('place_order', {
                 userId: currentUser.id,
-                shopOrderIds: shopOrderIds,
+                shopOrderIds,
             })
             .then((response) => {
                 setCartList(response.data.data.cartList);
@@ -159,7 +161,7 @@ function Checkout() {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div>
                             <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                                Phương thức: {selectedOption.value}
+                                Phương thức: {selectedOption && JSON.parse(selectedOption).label}
                             </Typography>
                         </div>
                     </div>
@@ -173,14 +175,18 @@ function Checkout() {
                                     Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
-                            <Button
+                            {/* <Button
                                 onClick={handlePlaceOrder}
                                 sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}
                                 size="large"
                                 variant="contained"
                             >
                                 Đặt hàng
-                            </Button>
+                            </Button> */}
+                            <VNPayButton />
+                            {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
+                                <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
                         </Stack>
                     </Box>
                     <Box align="center" style={{ margin: '10px 0 0 0' }}></Box>

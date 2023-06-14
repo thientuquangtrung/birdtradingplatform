@@ -11,6 +11,7 @@ const cartRoutes = require('./src/api/routes/cartRoutes');
 const checkoutRoutes = require('./src/api/routes/checkoutRoutes');
 const orderRoutes = require('./src/api/routes/orderRoutes');
 const feedbackRoutes = require('./src/api/routes/feedbackRoutes');
+const paymentRoutes = require('./src/api/routes/paymentRoutes');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api', cartRoutes.routes);
 app.use('/api', checkoutRoutes.routes);
 app.use('/api', orderRoutes.routes);
 app.use('/api', feedbackRoutes.routes);
+app.use('/api', paymentRoutes.routes);
 
 app.use((req, res, next) => {
     next(createError(404, 'Not Found!'));
