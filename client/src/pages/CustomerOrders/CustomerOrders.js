@@ -3,7 +3,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Grid, ImageList, ImageListItem, Paper, Stack, TextareaAutosize } from '@mui/material';
+import { Grid, ImageList, ImageListItem, Pagination, Paper, Stack, TextareaAutosize } from '@mui/material';
 import { useState } from 'react';
 import SubCustomerLayout from '../../layouts/SubCustomerLayout/SubCustomerLayout';
 

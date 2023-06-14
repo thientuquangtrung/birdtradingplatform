@@ -16,8 +16,10 @@ import CartContext from '../../contexts/CartContext';
 import Payment from '../../components/Payment';
 import PaypalButton from '../../components/PaypalButton';
 import VNPayButton from '../../components/VNPayButton';
-import MomoButton from '../../components/MomoButton';
-
+import { Button as JoyButton } from '@mui/joy';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import MoMoButton from '../../components/MoMoButton';
+import { fontSize } from '@mui/system';
 function Checkout() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -154,38 +156,73 @@ function Checkout() {
                         paddingBottom: '10px',
                     }}
                 >
-                    <div>
-                        <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                            <Payment selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ marginRight: '10px' }}>
+                            <Typography style={{ fontSize: '21px', fontWeight: 400 }}>Phương thức:</Typography>
+                        </div>
+                        <Typography style={{ fontSize: '22px', color: '#424242', fontWeight: 400 }}>
+                            {selectedOption && JSON.parse(selectedOption).label}
                         </Typography>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div>
-                            <Typography style={{ fontSize: '20px', fontWeight: 450 }}>
-                                Phương thức: {selectedOption && JSON.parse(selectedOption).label}
-                            </Typography>
-                        </div>
+                    <div>
+                        <Typography style={{ fontSize: '22px', fontWeight: 400 }}>
+                            <Payment selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+                        </Typography>
                     </div>
                 </div>
 
                 <div>
                     <Box align="center">
-                        <Stack direction={'row'} justifyContent="flex-end" alignItems={'center'} flexDirection="column">
-                            <div style={{ margin: '10px 0 10px 0' }}>
-                                <Typography style={{ fontSize: '22px', color: 'red' }}>
-                                    Tổng tiền hàng: {totalPrice.toLocaleString('vi-VN')}₫
+                        <Stack
+                            gap={3}
+                            direction={'column'}
+                            justifyContent="flex-end"
+                            alignItems={'center'}
+                            flexDirection="column"
+                        >
+                            <div style={{ margin: '30px 0 10px 0', display: 'flex', alignItems: 'center' }}>
+                                <div style={{ margin: '0 10px 0 0' }}>
+                                    <Typography style={{ fontSize: '20px', color: '#212121', fontWeight: '400' }}>
+                                        Tổng tiền hàng:
+                                    </Typography>
+                                </div>
+
+                                <Typography style={{ fontSize: '25px', color: 'rgb(254, 56, 52)' }}>
+                                    {totalPrice.toLocaleString('vi-VN')}₫
                                 </Typography>
                             </div>
-                            {/* <Button
-                                onClick={handlePlaceOrder}
-                                sx={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}
-                                size="large"
-                                variant="contained"
-                            >
-                                Đặt hàng
-                            </Button> */}
-                            <VNPayButton />
-                            <MomoButton />
+                            {selectedOption && JSON.parse(selectedOption).value === 'COD' && (
+                                <JoyButton
+                                    ordersData={{ userId: currentUser.id, shopOrderIds }}
+                                    onClick={handlePlaceOrder}
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        marginTop: '10px',
+                                        width: '280px',
+                                        height: '52px',
+                                    }}
+                                    size="large"
+                                    variant="soft"
+                                    color="neutral"
+                                    startDecorator={<PaymentsIcon />}
+                                >
+                                    <Stack direction="row" alignItems="center" gap={1} marginLeft={2}>
+                                        <Typography variant="h6" fontSize={16}>
+                                            Thanh toán khi nhận hàng
+                                        </Typography>
+                                    </Stack>
+                                </JoyButton>
+                            )}
+
+                            {selectedOption && JSON.parse(selectedOption).value === 'MOMO' && (
+                                <MoMoButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
+
+                            {selectedOption && JSON.parse(selectedOption).value === 'VNPAY' && (
+                                <VNPayButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
+                            )}
+
                             {selectedOption && JSON.parse(selectedOption).value === 'PAYPAL' && (
                                 <PaypalButton ordersData={{ userId: currentUser.id, shopOrderIds }} />
                             )}

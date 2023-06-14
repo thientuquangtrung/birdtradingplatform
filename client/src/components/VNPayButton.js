@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import Button from '@mui/joy/Button';
 import axiosClient from '../api/axiosClient';
 
 function VNPayButton() {
@@ -11,7 +11,11 @@ function VNPayButton() {
             .catch((error) => console.log(error));
     };
 
-    return <Button onClick={handlePay}>VNPAY</Button>;
+    return (
+        <Button variant="soft" onClick={handlePay} sx={{ width: '280px', height: '50px' }}>
+            <img width={80} height={15} src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR.png" />
+        </Button>
+    );
 }
 
 export default VNPayButton;

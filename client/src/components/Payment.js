@@ -96,7 +96,12 @@ export default function Payment({ selectedOption, setSelectedOption }) {
             <Button color="primary" variant="outlined" onClick={handleClickOpen}>
                 Chọn phương thức thanh toán
             </Button>
-            <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <BootstrapDialog
+                onClose={handleClose}
+                aria-labelledby="customized-dialog-title"
+                open={open}
+                sx={{ padding: 10 }}
+            >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     Phương thức thanh toán
                 </BootstrapDialogTitle>
@@ -108,12 +113,12 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                             value={selectedOption}
                             onChange={handleOptionChange}
                         >
-                            <Stack direction="column" gap={2}>
+                            <Stack direction="column" gap={2} sx={{ paddingRight: 15 }}>
                                 {paymentOptions.map((payment, index) => (
                                     <FormControlLabel
                                         key={index}
                                         value={JSON.stringify(payment)}
-                                        control={<Radio />}
+                                        control={<Radio sx={{ paddingLeft: 5 }} />}
                                         label={
                                             <Stack direction="row" alignItems="center" gap={1}>
                                                 <img width={50} height={50} src={payment.image} alt="" />
@@ -127,8 +132,8 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        Save changes
+                    <Button  size="sm" variant="soft" color="primary" autoFocus onClick={handleClose} sx={{ marginRight: 1 }}>
+                        Xác nhận
                     </Button>
                 </DialogActions>
             </BootstrapDialog>

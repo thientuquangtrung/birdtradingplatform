@@ -8,12 +8,14 @@ import CustomerTable from '../../components/CustomerTable';
 
 function CustomerManagement() {
     const [data, setData] = useState([]);
+    const [name, setName] = useState('');
 
     useEffect(() => {
         axiosClient
             .get(`auth/account`, {
                 params: {
                     role: 'CUSTOMER',
+                    name,
                 },
             })
             .then(function (response) {
@@ -24,7 +26,7 @@ function CustomerManagement() {
                 // handle error
                 console.log(error);
             });
-    }, []);
+    }, [name]);
 
     return (
         <Stack direction="column" padding={5} gap={5}>
@@ -44,6 +46,10 @@ function CustomerManagement() {
             </Stack>
             <Paper elevation={2} sx={{ height: '80px', padding: 2 }}>
                 <Input
+                    value={name}
+                    onChange={(e) => {
+                        setName(e.target.value);
+                    }}
                     startDecorator={<Search />}
                     sx={{ width: '50%', height: '100%' }}
                     placeholder="Search for account..."

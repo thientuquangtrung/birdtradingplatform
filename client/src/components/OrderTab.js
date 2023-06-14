@@ -7,7 +7,9 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Grid,
     Modal,
+    Pagination,
     Paper,
     Stack,
     Typography,
@@ -36,23 +38,30 @@ function OrderTab({ status }) {
     const [modalState, setModalState] = useState({});
     const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
     const { currentUser } = useContext(AuthContext);
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
+    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
     useEffect(() => {
         axiosClient
             .get(`seller/order/${currentUser.id}`, {
                 params: {
-                    page: 1,
-                    perPage: 6,
+                    page: currentPage,
+                    perPage: 5,
                     status,
                 },
             })
             .then(function (response) {
                 setTableData(response.data.data);
-                console.log(response.data.data);
+                setTotalPage(response.data.meta.totalPages);
+                setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
                 console.log(error);
             });
-    }, []);
+    }, [currentPage]);
 
     const changeOrderStatus = (id, status) => {
         axiosClient
@@ -374,6 +383,16 @@ function OrderTab({ status }) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Grid>
+                <Pagination
+                    count={totalPage}
+                    color="primary"
+                    shape="rounded"
+                    page={currentPage}
+                    onChange={handleChangePage}
+                    style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                />
+            </Grid>
         </>
     );
 }
