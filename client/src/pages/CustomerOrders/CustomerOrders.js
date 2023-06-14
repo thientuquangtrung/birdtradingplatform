@@ -3,7 +3,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Grid, ImageList, ImageListItem, Paper, Stack, TextareaAutosize } from '@mui/material';
+import { Grid, ImageList, ImageListItem, Pagination, Paper, Stack, TextareaAutosize } from '@mui/material';
 import { useState } from 'react';
 import SubCustomerLayout from '../../layouts/SubCustomerLayout/SubCustomerLayout';
 
@@ -16,6 +16,12 @@ import UploadImage from '../../components/UploadImage';
 import CustomerOrderTab from '../../components/CustomerOderTab';
 
 function CustomerOrders() {
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
+    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
     const [open, setOpen] = useState(false);
     const [upLoadFile, setUpLoadFile] = useState('');
     const handleOpen = () => setOpen(true);

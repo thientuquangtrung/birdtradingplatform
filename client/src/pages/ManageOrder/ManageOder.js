@@ -12,14 +12,6 @@ import TabPanel from '@mui/lab/TabPanel';
 import OrderTab from '../../components/OrderTab';
 
 const ManageOrder = () => {
-    const totalItems = 100;
-    const itemsPerPage = 10;
-    const totalPage = Math.ceil(totalItems / itemsPerPage);
-    // const [totalPage, setTotalPage] = useState(0);
-    const [page, setPage] = useState(1);
-    const handleChangePage = (event, value) => {
-        setPage(value);
-    };
     const [value, setValue] = useState('1');
     const [selectedType, setSelectedType] = useState('Mã đơn hàng');
     const [inputValue, setInputValue] = useState('');
@@ -114,16 +106,6 @@ const ManageOrder = () => {
                     <OrderTab status="CANCELED" />
                 </TabPanel>
             </TabContext>
-            <Grid>
-                <Pagination
-                    count={totalPage}
-                    color="primary"
-                    shape="rounded"
-                    page={page}
-                    onChange={handleChangePage}
-                    style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
-                />
-            </Grid>
         </Stack>
     );
 };

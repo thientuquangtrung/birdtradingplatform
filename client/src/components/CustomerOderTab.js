@@ -16,7 +16,9 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Grid,
     Modal,
+    Pagination,
     Paper,
     TextareaAutosize,
     Typography,
@@ -33,11 +35,17 @@ import UploadImage from './UploadImage';
 import { enqueueSnackbar } from 'notistack';
 
 function CustomerOrderTab({ status }) {
+    const handleChangePage = (event, value) => {
+        setCurrentPage(value);
+    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
     const [open, setOpen] = useState(false);
     const [upLoadFile, setUpLoadFile] = useState(null);
     const [feedbackContent, setFeedbackContent] = useState('');
     const [modalState, setModalState] = useState(null);
-    const [value, setValue] = useState('1');
+
     const [orderId, setOrderId] = useState(null);
     const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
     const [tableData, setTableData] = useState([]);
@@ -46,18 +54,20 @@ function CustomerOrderTab({ status }) {
         axiosClient
             .get(`customer/order/${currentUser.id}`, {
                 params: {
-                    page: 1,
-                    perPage: 10,
+                    page: currentPage,
+                    perPage: 5,
                     status,
                 },
             })
             .then(function (response) {
                 setTableData(response.data.data);
+                setTotalPage(response.data.meta.totalPages);
+                setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
                 console.log(error);
             });
-    }, []);
+    }, [currentPage]);
     const cancelOrder = (id) => {
         axiosClient
             .delete(`order/cancel/${id}`, {
@@ -79,9 +89,6 @@ function CustomerOrderTab({ status }) {
     };
     const handleClose = () => {
         setOpen(false);
-    };
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
     };
     const style = {
         position: 'absolute',
@@ -332,6 +339,16 @@ function CustomerOrderTab({ status }) {
                     </DialogActions>
                 </Dialog>
             </div>
+            <Grid>
+                <Pagination
+                    count={totalPage}
+                    color="primary"
+                    shape="rounded"
+                    page={currentPage}
+                    onChange={handleChangePage}
+                    style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                />
+            </Grid>
         </Stack>
     );
 }
