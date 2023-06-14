@@ -6,7 +6,6 @@ const { CLIENT_ID, APP_SECRET } = process.env;
 const base = 'https://api-m.sandbox.paypal.com';
 
 async function createOrder({ userId, shopOrderIds }) {
-    console.log(shopOrderIds);
     const { checkoutOrder } = await checkoutReview({ userId, shopOrderIds });
     const totalPrice = checkoutOrder.totalPrice;
     const currencyConverter = new CC({ from: 'VND', to: 'USD', amount: totalPrice });

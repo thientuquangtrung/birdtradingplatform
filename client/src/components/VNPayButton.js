@@ -5,7 +5,7 @@ function VNPayButton() {
     const handlePay = () => {
         axiosClient
             .post('create_vnp_payment_url', {
-                amount: 10000,
+                amount: 20000,
             })
             .then((response) => console.log(response))
             .catch((error) => console.log(error));

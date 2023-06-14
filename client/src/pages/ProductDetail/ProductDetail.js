@@ -25,7 +25,7 @@ function ProductDetail() {
     const { currentUser } = useContext(AuthContext);
     const { setCartList, setCartLength } = useContext(CartContext);
     const location = useLocation();
-    const [product, setProduct] = useState('');
+    const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [feedbackList, setFeedbackList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -104,6 +104,7 @@ function ProductDetail() {
                                 <Typography variant="h5" gutterBottom fontWeight={'bold'}>
                                     {product.name}
                                 </Typography>
+
                                 <Paper elevation={0} sx={{ padding: '7px' , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
                                     <Stack direction="row" gap={6} alignItems="center">
                                         <Typography variant="body2" gutterBottom marginLeft={2}>
@@ -112,19 +113,22 @@ function ProductDetail() {
                                         <Stack direction="row" gap={2} alignItems='center'>
                                             <Avatar
                                                 alt="Remy Sharp"
-                                                src="https://s1.media.ngoisao.vn/resize_580/news/2022/04/19/4da578dae741291f7050-ngoisaovn-w1126-h1612.jpg"
+                                                src={product.shop?.image}
                                                 sx={{ width: 56, height: 56 }}
                                             />
                                             <Stack direction="column">
                                                 <Typography variant="subtitle2" gutterBottom fontSize={16}>
-                                                    Zenme VietNam
+                                                    {product.shop?.name}
                                                 </Typography>
                                                 <JoyButton
                                                     color="neutral"
                                                     size="sm"
                                                     variant="outlined"
                                                     component={Link}
-                                                    to="/shop/:shopname"
+                                                    state={{
+                                                        shopId: product.shopId,
+                                                    }}
+                                                    to={`/shop/${product.shop?.name}`}
                                                     startDecorator={<StorefrontIcon fontSize="small" />}
                                                 >
                                                     Xem Shop

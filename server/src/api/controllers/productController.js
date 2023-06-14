@@ -22,9 +22,6 @@ const getProducts = async (req, res, next) => {
 const getProductById = async (req, res, next) => {
     try {
         const product = await productData.getProductById(req.params.id);
-
-        product.image = `${process.env.HOST_URL}/product/${product.image}`;
-
         return res.send(product);
     } catch (error) {
         next(createError(error.message));

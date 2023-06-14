@@ -69,10 +69,6 @@ const getUserCart = async (req, res, next) => {
         const response = await cartData.getUserCart(req.query);
         const cartLength = await cartData.getCartLength(req.query);
 
-        response.map((item) => {
-            item.product.image = `${process.env.HOST_URL}/product/${item.product.image}`;
-        });
-
         return res.send({
             status: 200,
             message: 'OK',

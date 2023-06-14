@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-function SuggestionList({ data = [], setSuggestData }) {
+function SuggestionList({ data = [], setSuggestData, setProductName }) {
     return (
         <Paper sx={{ width: '100%' }}>
             <List>
@@ -17,7 +17,10 @@ function SuggestionList({ data = [], setSuggestData }) {
                             state={{
                                 q: suggestion,
                             }}
-                            onClick={() => setSuggestData([])}
+                            onClick={() => {
+                                setProductName('');
+                                setSuggestData([]);
+                            }}
                         >
                             <ListItem key={index} disablePadding>
                                 <ListItemButton>
