@@ -84,7 +84,7 @@ function Header() {
     }, [productName]);
 
     return (
-        <AppBar position="sticky" sx={{ fontSize: 'xx-small' }}>
+        <AppBar  position="sticky" sx={{ fontSize: 'xx-small' }}>
             <Toolbar>
                 <Container sx={{ padding: 1 }}>
                     <Stack direction={'row'} justifyContent="space-between" alignItems="center" mb={2}>
