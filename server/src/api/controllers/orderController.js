@@ -6,12 +6,12 @@ const getOrdersByCusId = async (req, res, next) => {
         const id = req.params.id;
         if (id !== req.payload.id) next(createHttpError.Unauthorized('Invalid id'));
 
-        const data = await orderData.getOrdersByCusId({ id, ...req.query });
+        const result = await orderData.getOrdersByCusId({ id, ...req.query });
 
         return res.send({
             status: 200,
             message: 'OK',
-            data,
+            ...result,
         });
     } catch (error) {
         next(error);
@@ -23,12 +23,12 @@ const getOrdersByShop = async (req, res, next) => {
         const id = req.params.id;
         if (id !== req.payload.id) next(createHttpError.Unauthorized('Invalid id'));
 
-        const data = await orderData.getOrdersByShop({ id, ...req.query });
+        const result = await orderData.getOrdersByShop({ id, ...req.query });
 
         return res.send({
             status: 200,
             message: 'OK',
-            data,
+            ...result,
         });
     } catch (error) {
         next(error);

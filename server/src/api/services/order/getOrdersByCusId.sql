@@ -1,6 +1,6 @@
 IF @status = 'ALL'
 BEGIN
-   SELECT oh.*, od.productId, od.price, od.quantity
+   SELECT oh.*, od.productId, od.price, od.quantity, count(*) over() as total
     FROM 
         (SELECT * FROM   OrderHeader  ORDER BY [date] desc
         OFFSET (@page - 1) * @perPage ROWS
@@ -10,7 +10,7 @@ BEGIN
 END
 ELSE
 BEGIN
-    SELECT oh.*, od.productId, od.price, od.quantity
+    SELECT oh.*, od.productId, od.price, od.quantity, count(*) over() as total
     FROM 
         (SELECT * FROM   OrderHeader  ORDER BY [date] desc
         OFFSET (@page - 1) * @perPage ROWS

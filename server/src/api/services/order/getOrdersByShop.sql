@@ -1,20 +1,20 @@
 IF @status = 'ALL'
 BEGIN
-    select oh.*, od.productId, od.price, od.quantity
-    from OrderHeader oh
-    join OrderDetail od on oh.id = od.orderHeaderId
-    where oh.shopId = @id
-    order by (select null)
-    offset (@page - 1) * @perPage rows
-    fetch next @perPage rows only
+   SELECT oh.*, od.productId, od.price, od.quantity, count(*) over() as total
+    FROM 
+        (SELECT * FROM   OrderHeader  ORDER BY [date] desc
+        OFFSET (@page - 1) * @perPage ROWS
+        FETCH NEXT @perPage ROWS ONLY) AS oh
+    JOIN OrderDetail od ON oh.id = od.orderHeaderId
+    WHERE oh.shopId = @id
 END
 ELSE
 BEGIN
-    select oh.*, od.productId, od.price, od.quantity
-    from OrderHeader oh
-    join OrderDetail od on oh.id = od.orderHeaderId
-    where oh.shopId = @id and oh.status = @status
-    order by (select null)
-    offset (@page - 1) * @perPage rows
-    fetch next @perPage rows only
+    SELECT oh.*, od.productId, od.price, od.quantity, count(*) over() as total
+    FROM 
+        (SELECT * FROM   OrderHeader  ORDER BY [date] desc
+        OFFSET (@page - 1) * @perPage ROWS
+        FETCH NEXT @perPage ROWS ONLY) AS oh
+    JOIN OrderDetail od ON oh.id = od.orderHeaderId
+    WHERE oh.shopId = @id and oh.status = @status
 END

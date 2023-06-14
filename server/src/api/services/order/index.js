@@ -18,8 +18,17 @@ const getOrdersByCusId = async ({ id, status, page, perPage }) => {
             .input('perPage', sql.Int, Number(perPage))
             .query(sqlQueries.getOrdersByCusId);
 
-        const response = await modifyOrder(list.recordset);
-        return response;
+        let total = 0;
+        if (list.recordset.length > 0) total = list.recordset[0].total;
+        const result = await modifyOrder(list.recordset);
+        return {
+            data: result,
+            meta: {
+                total,
+                currentPage: Number(page),
+                totalPages: Math.ceil(Number(total) / Number(perPage)),
+            },
+        };
     } catch (err) {
         throw createError(err);
     }
@@ -39,8 +48,17 @@ const getOrdersByShop = async ({ id, status, page, perPage }) => {
             .input('perPage', sql.Int, Number(perPage))
             .query(sqlQueries.getOrdersByShop);
 
-        const response = await modifyOrder(list.recordset);
-        return response;
+        let total = 0;
+        if (list.recordset.length > 0) total = list.recordset[0].total;
+        const result = await modifyOrder(list.recordset);
+        return {
+            data: result,
+            meta: {
+                total,
+                currentPage: Number(page),
+                totalPages: Math.ceil(Number(total) / Number(perPage)),
+            },
+        };
     } catch (err) {
         throw createError(err);
     }
