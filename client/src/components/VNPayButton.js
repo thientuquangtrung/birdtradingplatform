@@ -1,12 +1,10 @@
 import Button from '@mui/joy/Button';
 import axiosClient from '../api/axiosClient';
 
-function VNPayButton() {
+function VNPayButton({ ordersData }) {
     const handlePay = () => {
         axiosClient
-            .post('create_vnp_payment_url', {
-                amount: 20000,
-            })
+            .post('create_vnp_payment_url', ordersData)
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     };

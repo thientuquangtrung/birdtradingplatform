@@ -1,7 +1,9 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import axiosClient from '../api/axiosClient';
+import { useNavigate } from 'react-router-dom';
 
 function PaypalButton({ ordersData }) {
+    const navigate = useNavigate();
     const createOrder = async (data) => {
         // Order is created on the server and the order id is returned
         return await axiosClient
@@ -18,7 +20,10 @@ function PaypalButton({ ordersData }) {
             .post('capture-paypal-order', {
                 orderID: data.orderID,
             })
-            .then((response) => console.log(response))
+            .then((response) => {
+                console.log(response);
+                navigate('/orders');
+            })
             .catch((error) => console.log(error));
     };
     return (

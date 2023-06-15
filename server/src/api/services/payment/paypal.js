@@ -1,12 +1,13 @@
 const fetch = require('node-fetch');
-const { checkoutReview } = require('../checkout');
+const { checkoutReview, placeOrder } = require('../checkout');
 const CC = require('currency-converter-lt');
 
 const { CLIENT_ID, APP_SECRET } = process.env;
 const base = 'https://api-m.sandbox.paypal.com';
 
 async function createOrder({ userId, shopOrderIds }) {
-    const { checkoutOrder } = await checkoutReview({ userId, shopOrderIds });
+    const { checkoutOrder } = await placeOrder({ userId, shopOrderIds });
+
     const totalPrice = checkoutOrder.totalPrice;
     const currencyConverter = new CC({ from: 'VND', to: 'USD', amount: totalPrice });
     const dollarPrice = (await currencyConverter.convert()).toFixed(2);

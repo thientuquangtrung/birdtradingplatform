@@ -3,6 +3,7 @@ const dateFormat = require('dateformat');
 const querystring = require('qs');
 const crypto = require('crypto');
 const paypal = require('../services/payment/paypal');
+const { placeOrder } = require('../services/checkout');
 
 const createPaypalOrder = async (req, res, next) => {
     try {
@@ -25,6 +26,8 @@ const capturePaypalOrder = async (req, res, next) => {
 
 const createVNPayUrl = async (req, res, next) => {
     try {
+        const { checkoutOrder } = await placeOrder(req.body);
+
         var ipAddr =
             req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
@@ -34,13 +37,13 @@ const createVNPayUrl = async (req, res, next) => {
         var tmnCode = process.env.VNP_TMN_CODE;
         var secretKey = process.env.VNP_HASH_SECRET;
         var vnpUrl = process.env.VNP_URL;
-        var returnUrl = process.env.VNP_RETURN_URL;
+        var returnUrl = process.env.PAY_RETURN_URL;
 
         var date = new Date();
 
         var createDate = dateFormat(date, 'yyyymmddHHmmss');
         var orderId = dateFormat(date, 'HHmmss');
-        var amount = req.body.amount;
+        var amount = checkoutOrder.totalPrice;
         var bankCode = req.body.bankCode || 'NCB';
 
         var currCode = 'VND';
@@ -101,20 +104,21 @@ function sortObject(obj) {
     return sorted;
 }
 
-const createMomoPayUrl = (req, res, next) => {
+const createMomoPayUrl = async (request, response, next) => {
     try {
         //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
         //parameters
+        const { checkoutOrder } = await placeOrder(request.body);
         var partnerCode = process.env.MOMO_PARTNER_CODE || 'MOMO';
         var accessKey = process.env.MOMO_ACCESS_KEY || 'F8BBA842ECF85';
         var secretkey = process.env.MOMO_SECRET_KEY || 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
         var requestId = partnerCode + new Date().getTime();
         var orderId = requestId;
         var orderInfo = 'pay with MoMo';
-        var redirectUrl = 'https://momo.vn/return';
+        var redirectUrl = process.env.PAY_RETURN_URL;
         var ipnUrl = 'https://callback.url/notify';
         // var ipnUrl = redirectUrl = "https://webhook.site/454e7b77-f177-4ece-8236-ddf1c26ba7f8";
-        var amount = '50000';
+        var amount = checkoutOrder.totalPrice;
         var requestType = 'payWithATM';
         var extraData = ''; //pass empty value if your merchant does not have stores
 
@@ -192,6 +196,9 @@ const createMomoPayUrl = (req, res, next) => {
             });
             res.on('end', () => {
                 console.log('No more data in response.');
+                response.send({
+                    redirect_url,
+                });
             });
         });
 
@@ -202,10 +209,6 @@ const createMomoPayUrl = (req, res, next) => {
         console.log('Sending....');
         req.write(requestBody);
         req.end();
-
-        res.send({
-            redirect_url,
-        });
     } catch (error) {
         next(error);
     }

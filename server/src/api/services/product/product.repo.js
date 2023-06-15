@@ -12,7 +12,7 @@ const createProductIndex = async () => {
         'idx:products',
         {
             '$.id': {
-                type: SchemaFieldTypes.TEXT,
+                type: SchemaFieldTypes.TAG,
                 AS: 'id',
             },
             '$.name': {
@@ -21,7 +21,7 @@ const createProductIndex = async () => {
                 AS: 'name',
             },
             '$.shopId': {
-                type: SchemaFieldTypes.TEXT,
+                type: SchemaFieldTypes.TAG,
                 AS: 'shopId',
             },
             '$.description': {
