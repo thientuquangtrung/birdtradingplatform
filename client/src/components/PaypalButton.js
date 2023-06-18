@@ -1,6 +1,7 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import axiosClient from '../api/axiosClient';
 import { useNavigate } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
 
 function PaypalButton({ ordersData }) {
     const navigate = useNavigate();
@@ -19,17 +20,28 @@ function PaypalButton({ ordersData }) {
         return axiosClient
             .post('capture-paypal-order', {
                 orderID: data.orderID,
+                ...ordersData,
             })
             .then((response) => {
                 console.log(response);
                 navigate('/orders');
             })
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     };
+
+    const handleError = (err) => {
+        enqueueSnackbar('Something went wrong, try again!', {
+            variant: 'error',
+        });
+        console.log(err);
+    };
+
     return (
         <PayPalButtons
             createOrder={(data, actions) => createOrder(data, actions)}
             onApprove={(data, actions) => onApprove(data, actions)}
+            onError={handleError}
+            // onCancel()
         />
     );
 }

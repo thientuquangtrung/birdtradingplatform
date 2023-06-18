@@ -78,7 +78,7 @@ const checkoutReview = async ({ userId, shopOrderIds }) => {
     }
 };
 
-const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
+const insertOrderHeader = async (request, userId, shopOrderIdsNew, payment, transactionId) => {
     try {
         const orderHeaderIds = [];
         const sqlQueries = await loadSqlQueries('checkout');
@@ -86,10 +86,12 @@ const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
         for (let index = 0; index < shopOrderIdsNew.length; index++) {
             const element = shopOrderIdsNew[index];
             const shopId = element.shop.id;
-            request.replaceInput('shopId', sql.UniqueIdentifier, shopId);
+            request
+                .replaceInput('shopId', sql.UniqueIdentifier, shopId)
+                .replaceInput('payment', sql.VarChar, payment)
+                .replaceInput('transactionId', sql.VarChar, transactionId);
             const result = await request.query(sqlQueries.insertOrderHeader);
             const orderHeaderId = result.recordset[0].id;
-
             const items = element.items;
             for (let j = 0; j < items.length; j++) {
                 const product = items[j];
@@ -111,7 +113,7 @@ const insertOrderHeader = async (request, userId, shopOrderIdsNew) => {
     }
 };
 
-const placeOrder = async ({ shopOrderIds, userId }) => {
+const placeOrder = async ({ shopOrderIds, userId, payment = 'COD', transactionId = 'COD_NO_CODE' }) => {
     try {
         const { shopOrderIdsNew, checkoutOrder } = await checkoutReview({ shopOrderIds, userId });
 
@@ -123,8 +125,7 @@ const placeOrder = async ({ shopOrderIds, userId }) => {
             await transaction.begin();
             const request = new sql.Request(transaction);
 
-            const orderHeaderIds = await insertOrderHeader(request, userId, shopOrderIdsNew);
-
+            const orderHeaderIds = await insertOrderHeader(request, userId, shopOrderIdsNew, payment, transactionId);
             for (let index = 0; index < shopOrderIdsNew.length; index++) {
                 const orderByShop = shopOrderIdsNew[index];
 

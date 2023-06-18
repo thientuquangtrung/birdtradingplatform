@@ -32,7 +32,6 @@ function Checkout() {
     const [shopOrders, setShopOrders] = useState([]);
     const [shopOrderIds, setShopOrderIds] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
     const [selectedOption, setSelectedOption] = useState('');
 
     const isChange = () => {
@@ -65,9 +64,37 @@ function Checkout() {
                 setShopOrderIds(response.data.data.shopOrderIds);
                 setShopOrders(response.data.data.shopOrderIdsNew);
                 setTotalPrice(response.data.data.checkoutOrder.totalPrice);
+                localStorage.setItem('shopOrderIds', JSON.stringify(response.data.data.shopOrderIds));
             })
             .catch((error) => console.log(error));
     }, [location.state]);
+
+    useEffect(() => {
+        if (!location.search) return;
+        const controller = new AbortController();
+        if (localStorage.getItem('shopOrderIds')) {
+            axiosClient
+                .post(
+                    `vnpay_return${location.search}`,
+                    {
+                        userId: currentUser.id,
+                        shopOrderIds: JSON.parse(localStorage.getItem('shopOrderIds')),
+                    },
+                    {
+                        signal: controller.signal,
+                    },
+                )
+                .then((response) => {
+                    enqueueSnackbar('Placed order successfully!', { variant: 'success' });
+                    navigate('/orders');
+                })
+                .catch((error) => console.log(error));
+        }
+
+        return () => {
+            controller.abort();
+        };
+    }, []);
     return (
         <div>
             <Paper elevation={2} style={paperStyle}>
