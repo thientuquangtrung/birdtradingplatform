@@ -1,0 +1,1 @@
+Update [category] set [name] = @name where [id] = @id 

@@ -2,10 +2,10 @@ import Button from '@mui/joy/Button';
 import { Typography } from '@mui/material';
 import axiosClient from '../api/axiosClient';
 
-function MoMoButton() {
+function MoMoButton({ ordersData }) {
     const handlePayment = () => {
         axiosClient
-            .post('create_momo_payment')
+            .post('create_momo_payment', ordersData)
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     };

@@ -21,7 +21,8 @@ const {
     updateAccountByAdmin,
     deleteAccount,
     createNewAccount,
-    getAccountById
+    getAccountById,
+    changePassword,
 } = authController;
 
 router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
@@ -38,6 +39,7 @@ router.post('/auth/admin/login', adminLogin);
 router.patch('/auth/account', verifyAccessToken, updateAccountByAdmin);
 router.delete('/auth/account/:id', verifyAccessToken, deleteAccount);
 router.post('/auth/account', verifyAccessToken, uploadImg('profile').single('profile'), createNewAccount);
+router.put('/auth/password', verifyAccessToken, changePassword);
 
 module.exports = {
     routes: router,

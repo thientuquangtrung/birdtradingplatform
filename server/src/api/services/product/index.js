@@ -88,7 +88,7 @@ const searchProducts = async ({ sortBy, order, categoryId, q, page, shopId }) =>
                 query += q ? `@name:(${q})` : '';
             }
         } else {
-            query = `@shopId:(${shopId})`;
+            query = `@shopId:{${shopId.replaceAll('-', '\\-')}}`;
             if (categoryId !== '0' || q) {
                 query = categoryId !== '0' ? `${query} @categoryId:[${categoryId} ${categoryId}]` : query;
                 query = q ? `${query} @name:(${q})` : query;

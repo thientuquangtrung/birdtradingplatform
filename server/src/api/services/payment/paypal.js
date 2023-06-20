@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { checkoutReview } = require('../checkout');
+const { checkoutReview, placeOrder } = require('../checkout');
 const CC = require('currency-converter-lt');
 
 const { CLIENT_ID, APP_SECRET } = process.env;
@@ -7,6 +7,7 @@ const base = 'https://api-m.sandbox.paypal.com';
 
 async function createOrder({ userId, shopOrderIds }) {
     const { checkoutOrder } = await checkoutReview({ userId, shopOrderIds });
+
     const totalPrice = checkoutOrder.totalPrice;
     const currencyConverter = new CC({ from: 'VND', to: 'USD', amount: totalPrice });
     const dollarPrice = (await currencyConverter.convert()).toFixed(2);
@@ -35,9 +36,9 @@ async function createOrder({ userId, shopOrderIds }) {
     return handleResponse(response);
 }
 
-async function capturePayment(orderId) {
+async function capturePayment({ orderID, userId, shopOrderIds }) {
     const accessToken = await generateAccessToken();
-    const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+    const url = `${base}/v2/checkout/orders/${orderID}/capture`;
     const response = await fetch(url, {
         method: 'post',
         headers: {
@@ -45,6 +46,11 @@ async function capturePayment(orderId) {
             Authorization: `Bearer ${accessToken}`,
         },
     });
+
+    if (response.status === 200 || response.status === 201) {
+        // set orders to db
+        const result = await placeOrder({ shopOrderIds, userId, payment: 'PAYPAL', transactionId: orderID });
+    }
 
     return handleResponse(response);
 }
