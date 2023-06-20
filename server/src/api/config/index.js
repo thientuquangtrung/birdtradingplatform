@@ -3,6 +3,7 @@ dotenv.config();
 
 const { sql } = require('./init.mssql');
 const { redisClient } = require('./init.redis');
+const { mail } = require('./init.mail');
 
 const assert = require('assert');
 
@@ -17,4 +18,5 @@ module.exports = {
     url: HOST_URL,
     sql,
     redisClient,
+    mail,
 };
