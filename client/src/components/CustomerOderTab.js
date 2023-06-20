@@ -8,6 +8,7 @@ import CustomNoRowsOverlay from '../components/CustomNoRowsOverlay';
 import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 import {
     Button,
     Chip,
@@ -16,10 +17,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormControlLabel,
     Grid,
+    IconButton,
     Modal,
     Pagination,
     Paper,
+    Radio,
+    RadioGroup,
     TextareaAutosize,
     Typography,
 } from '@mui/material';
@@ -82,7 +88,9 @@ function CustomerOrderTab({ status }) {
                 console.log(error);
             });
     };
-
+    const sendCancelRequest = (orderId) => {
+        console.log('Da send');
+    };
     const handleOpen = (item) => {
         setModalState(item);
         setOpen(true);
@@ -101,19 +109,29 @@ function CustomerOrderTab({ status }) {
         boxShadow: 24,
         p: 4,
     };
+
     const handleCancelConfirmationOpen = (orderId) => {
         setOrderId(orderId);
         setCancelConfirmationOpen(true);
     };
     const handleCancelConfirmationClose = (confirmed) => {
-        setCancelConfirmationOpen(false);
         if (confirmed) {
-            const updatedTableData = tableData.map(
-                (item) => (item.orderId === orderId ? { ...item, status: 'CANCELED' } : item),
-                cancelOrder(orderId),
-            );
+            const updatedTableData = tableData.map((item) => {
+                if (item.orderId === orderId) {
+                    if (item.status === 'PENDING') {
+                        cancelOrder(orderId);
+                        return { ...item, status: 'CANCELED' };
+                    } else if (item.status === 'PICKUP') {
+                        sendCancelRequest(orderId);
+                        return item;
+                    }
+                } else {
+                    return item;
+                }
+            });
             setTableData(updatedTableData);
         }
+
         setCancelConfirmationOpen(false);
     };
 
@@ -126,6 +144,8 @@ function CustomerOrderTab({ status }) {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
         } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
+        } else if (status === 'PICKUP') {
+            return <Chip label="PICKUP" icon={<AllInboxIcon />} sx={{ color: 'white', backgroundColor: '#ffef62' }} />;
         }
     };
 
@@ -231,6 +251,23 @@ function CustomerOrderTab({ status }) {
                                                     Hủy Đơn Hàng
                                                 </Button>
                                             </>
+                                        ) : item.status === 'PICKUP' ? (
+                                            <>
+                                                <Button
+                                                    onClick={() => handleCancelConfirmationOpen(item.orderId)}
+                                                    variant="contained"
+                                                    style={{
+                                                        backgroundColor: '#fafafa',
+                                                        color: '#616161',
+                                                        fontWeight: '420',
+                                                        textTransform: 'none',
+                                                        boxShadow: '2px',
+                                                        border: '1px solid #9e9e9e',
+                                                    }}
+                                                >
+                                                    Hủy Đơn Hàng
+                                                </Button>
+                                            </>
                                         ) : item.status === 'COMPLETED' ? (
                                             <Button variant="contained" onClick={() => handleOpen(item)}>
                                                 Đánh Giá
@@ -249,75 +286,75 @@ function CustomerOrderTab({ status }) {
                     )}
                 </TableBody>
             </Table>
-            <div>
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        <Typography sx={{ paddingLeft: 1, paddingBottom: 2 }} id="modal-modal-title" variant="h4">
-                            Đánh Giá Sản Phẩm
-                        </Typography>
-                        <Box
-                            sx={{
-                                m: 1,
-                                width: 510,
-                            }}
-                        >
-                            <Paper variant="outlined" sx={{ backgroundColor: '#f5f5f5' }}>
-                                <Stack direction="column" sx={{ paddingBottom: 3 }}>
-                                    <Paper
-                                        variant="outlined"
-                                        sx={{
-                                            backgroundColor: 'white',
-                                            m: 3,
-                                            width: 460,
-                                            height: 250,
-                                            fontSize: 'small',
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography sx={{ paddingLeft: 1, paddingBottom: 2 }} id="modal-modal-title" variant="h4">
+                        Đánh Giá Sản Phẩm
+                    </Typography>
+                    <Box
+                        sx={{
+                            m: 1,
+                            width: 510,
+                        }}
+                    >
+                        <Paper variant="outlined" sx={{ backgroundColor: '#f5f5f5' }}>
+                            <Stack direction="column" sx={{ paddingBottom: 3 }}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        backgroundColor: 'white',
+                                        m: 3,
+                                        width: 460,
+                                        height: 250,
+                                        fontSize: 'small',
+                                    }}
+                                >
+                                    <TextareaAutosize
+                                        value={feedbackContent}
+                                        onChange={(e) => setFeedbackContent(e.target.value)}
+                                        minRows={3}
+                                        placeholder="Nhập đánh giá sản phẩm"
+                                        style={{
+                                            padding: 10,
+                                            height: '100%',
+                                            width: '100%',
+                                            fontSize: 15,
+                                            fontFamily: 'Roboto',
                                         }}
-                                    >
-                                        <TextareaAutosize
-                                            value={feedbackContent}
-                                            onChange={(e) => setFeedbackContent(e.target.value)}
-                                            minRows={3}
-                                            placeholder="Nhập đánh giá sản phẩm"
-                                            style={{
-                                                padding: 10,
-                                                height: '100%',
-                                                width: '100%',
-                                                fontSize: 15,
-                                                fontFamily: 'Roboto',
-                                            }}
-                                        />
-                                    </Paper>
-
-                                    <UploadImage
-                                        title="Select a logo"
-                                        uploadFile={upLoadFile}
-                                        setUploadFile={setUpLoadFile}
                                     />
-                                </Stack>
-                            </Paper>
-                        </Box>
-                        <Stack
-                            justifyContent="flex-end"
-                            spacing={1}
-                            direction="row"
-                            sx={{ marginRight: 1.8, paddingTop: 1 }}
-                        >
-                            <Button size="small" variant="text" onClick={handleClose}>
-                                Trở Lại
-                            </Button>
+                                </Paper>
 
-                            <Button size="small" variant="contained" onClick={handleSubmitFeedback}>
-                                Hoàn Thành
-                            </Button>
-                        </Stack>
+                                <UploadImage
+                                    title="Select a logo"
+                                    uploadFile={upLoadFile}
+                                    setUploadFile={setUpLoadFile}
+                                />
+                            </Stack>
+                        </Paper>
                     </Box>
-                </Modal>
-                <Dialog
+                    <Stack
+                        justifyContent="flex-end"
+                        spacing={1}
+                        direction="row"
+                        sx={{ marginRight: 1.8, paddingTop: 1 }}
+                    >
+                        <Button size="small" variant="text" onClick={handleClose}>
+                            Trở Lại
+                        </Button>
+
+                        <Button size="small" variant="contained" onClick={handleSubmitFeedback}>
+                            Hoàn Thành
+                        </Button>
+                    </Stack>
+                </Box>
+            </Modal>
+            {/* <Dialog
                     open={cancelConfirmationOpen}
                     onClose={() => handleCancelConfirmationClose(false)}
                     aria-labelledby="cancel-confirmation-dialog-title"
@@ -337,8 +374,61 @@ function CustomerOrderTab({ status }) {
                             Không
                         </Button>
                     </DialogActions>
-                </Dialog>
-            </div>
+                </Dialog> */}
+
+            <Modal
+                open={cancelConfirmationOpen}
+                onClose={() => handleCancelConfirmationClose()}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Stack direction="column" alignItems="center" spacing={2}>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+                            <Typography></Typography>
+                            <Typography
+                                style={{ marginLeft: '50px' }}
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                            >
+                                Chọn lý do hủy
+                            </Typography>
+                            <IconButton onClick={handleCancelConfirmationClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Stack>
+                        <FormControl>
+                            <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
+                                <FormControlLabel
+                                    value="address"
+                                    control={<Radio />}
+                                    label="Muốn thay đổi địa chỉ giao hàng"
+                                />
+                                <FormControlLabel
+                                    value="amount"
+                                    control={<Radio />}
+                                    label="Muốn thay đổi số lượng sản phẩm trong đơn hàng"
+                                />
+                                <FormControlLabel
+                                    value="another"
+                                    control={<Radio />}
+                                    label="Tìm thấy shop khác bán rẻ hơn"
+                                />
+                                <FormControlLabel
+                                    value="newshop"
+                                    control={<Radio />}
+                                    label="Đổi ý, không muốn mua nữa"
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                        <Button variant="contained" onClick={handleCancelConfirmationClose} sx={{ width: '100%' }}>
+                            ĐỒNG Ý
+                        </Button>
+                    </Stack>
+                </Box>
+            </Modal>
+
             <Grid>
                 <Pagination
                     count={totalPage}

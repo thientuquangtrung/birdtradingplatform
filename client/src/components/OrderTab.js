@@ -31,6 +31,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 
 function OrderTab({ status }) {
     const [tableData, setTableData] = useState([]);
@@ -87,7 +88,19 @@ function OrderTab({ status }) {
         }
         handleClose();
     }
+    const handlePickup = () => {
+        const updatedTableData = tableData.map((item) => {
+            if (item.orderId === modalState.orderId) {
+                changeOrderStatus(modalState.orderId, 'PICKUP');
+                return { ...item, status: 'PICKUP' };
+            }
+            return item;
+        });
+        filterTable(updatedTableData, 'PICKUP');
+        enqueueSnackbar('Đang lấy hàng', { variant: 'success' });
 
+        return;
+    };
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
             if (item.orderId === modalState.orderId) {
@@ -146,6 +159,8 @@ function OrderTab({ status }) {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
         } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
+        } else if (status === 'PICKUP') {
+            return <Chip label="PICKUP" icon={<AllInboxIcon />} sx={{ color: 'white', backgroundColor: '#ffeb3b' }} />;
         }
     };
     const renderStatusOnCustomer = (status) => {
@@ -158,13 +173,50 @@ function OrderTab({ status }) {
                     <Stack direction="row">
                         <Button
                             variant="contained"
-                            color="info"
                             size="small"
+                            sx={{
+                                borderRadius: '10px',
+                                color: 'white',
+                                backgroundColor: '#ffeb3b',
+                                '&:hover': {
+                                    backgroundColor: '#ffeb3b',
+                                },
+                            }}
+                            onClick={() => handlePickup()}
+                        >
+                            <AllInboxIcon />
+                            PICKUP
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            sx={{ borderRadius: '10px', marginLeft: '20px' }}
+                            onClick={() => setCancelConfirmationOpen(true)}
+                        >
+                            <CloseIcon />
+                            CANCELLED
+                        </Button>
+                    </Stack>
+                </Stack>
+            );
+        }
+        if (status === 'PICKUP') {
+            return (
+                <Stack direction="row" justifyContent="space-between" marginTop="10px">
+                    <Stack>
+                        <Button onClick={handleClose}>Trở lại</Button>
+                    </Stack>
+                    <Stack direction="row">
+                        <Button
+                            variant="contained"
+                            size="small"
+                            color="info"
                             sx={{ borderRadius: '10px' }}
                             onClick={() => handleDelivering()}
                         >
                             <DeliveryDiningIcon />
-                            Delivering
+                            DELIVERING
                         </Button>
                         <Button
                             variant="contained"
