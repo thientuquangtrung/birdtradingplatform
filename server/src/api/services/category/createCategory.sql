@@ -1,0 +1,1 @@
+INSERT [category] values (@name)

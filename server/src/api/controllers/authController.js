@@ -39,7 +39,7 @@ const getAccountById = async (req, res, next) => {
             data,
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -82,7 +82,7 @@ const getCurrentUser = async (req, res, next) => {
             image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -95,7 +95,7 @@ const getNewAccessToken = async (req, res, next) => {
             accessToken,
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -111,7 +111,7 @@ const createSellerAccount = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -146,7 +146,7 @@ const updateSeller = async (req, res, next) => {
             },
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -174,7 +174,7 @@ const sellerLogin = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -202,7 +202,7 @@ const customerLogin = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -230,7 +230,7 @@ const adminLogin = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -246,7 +246,7 @@ const createCustomerAccount = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -281,7 +281,7 @@ const updateCustomer = async (req, res, next) => {
             },
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
     }
 };
 
@@ -298,7 +298,21 @@ const updateAccountByAdmin = async (req, res, next) => {
             data: response,
         });
     } catch (error) {
-        next(createError(error.message));
+        next(error);
+    }
+};
+
+const changePassword = async (req, res, next) => {
+    try {
+        const result = await changePassword(req.body);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -318,4 +332,5 @@ module.exports = {
     deleteAccount,
     createNewAccount,
     getAccountById,
+    changePassword,
 };
