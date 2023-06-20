@@ -1,3 +1,4 @@
+const validate = require('deep-email-validator');
 const createError = require('http-errors');
 const fs = require('fs-extra');
 
@@ -237,6 +238,8 @@ const adminLogin = async (req, res, next) => {
 const createCustomerAccount = async (req, res, next) => {
     try {
         const data = req.body;
+        const mailCheck = await validate.validate(data.email);
+        if (!mailCheck.valid) next(createError.Unauthorized('Mail is invalid'));
 
         data.password = await hashing(data.password);
 
