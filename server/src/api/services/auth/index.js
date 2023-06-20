@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
+const { compareHashing, hashing } = require('../../utils/hash_utils');
 
 const getAccounts = async ({ name, role }) => {
     try {
@@ -234,6 +235,29 @@ const createNewAccount = async ({ name, email, image, phone, password, address, 
     }
 };
 
+const changePassword = async ({ id, oldPassword, newPassword, confirmPassword }) => {
+    try {
+        if (newPassword !== confirmPassword) throw createError[400]('Confirm password does not match the new password');
+
+        const account = await readAccountById(id, 'ALL');
+        if (!account) throw createError.BadRequest('Account not found');
+        const isValid = await compareHashing(account.password, oldPassword);
+        if (!isValid) throw createError.BadRequest('Incorrect password');
+
+        const newHashPassword = await hashing(newPassword);
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('password', sql.Char, newHashPassword)
+            .query(sqlQueries.changePassword);
+        return 'OK';
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     checkMail,
     createSellerAccount,
@@ -248,4 +272,5 @@ module.exports = {
     deleteAccount,
     createNewAccount,
     getAccountById,
+    changePassword,
 };

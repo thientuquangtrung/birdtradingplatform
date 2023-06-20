@@ -45,6 +45,11 @@ const createProductIndex = async () => {
                 type: SchemaFieldTypes.TAG,
                 AS: 'enabled',
             },
+            '$.timestamp': {
+                type: SchemaFieldTypes.NUMERIC,
+                SORTABLE: true,
+                AS: 'timestamp',
+            },
             '$.sold': {
                 type: SchemaFieldTypes.NUMERIC,
                 SORTABLE: true,

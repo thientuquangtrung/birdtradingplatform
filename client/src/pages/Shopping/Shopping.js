@@ -94,9 +94,9 @@ function Shopping() {
                                     </Typography>
 
                                     <Button
-                                        startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
-                                        variant={sortBy === 'name' ? 'contained' : 'outlined'}
-                                        onClick={() => handleFilter('name')}
+                                        startIcon={sortBy === 'timestamp' ? <CheckIcon /> : ''}
+                                        variant={sortBy === 'timestamp' ? 'contained' : 'outlined'}
+                                        onClick={() => handleFilter('timestamp')}
                                     >
                                         Mới Nhất
                                     </Button>

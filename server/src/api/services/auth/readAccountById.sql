@@ -8,3 +8,8 @@ BEGIN
     Select a.*, c.shipToAddress, c.category  from account a, customer c where a.id = @id and a.id = c.id
 end
 
+if @role = 'ALL'
+BEGIN
+    select * from account where [id] = @id
+END
+
