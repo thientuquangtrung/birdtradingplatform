@@ -204,11 +204,15 @@ const updateAccountByAdmin = async (data) => {
     }
 };
 
-const deleteAccount = async (id) => {
+const deleteAccount = async (id, bannedId) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const account = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.deleteAccount);
+        const account = await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('bannedId', sql.Int, bannedId)
+            .query(sqlQueries.deleteAccount);
 
         return account.recordset;
     } catch (error) {

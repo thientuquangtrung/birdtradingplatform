@@ -18,6 +18,8 @@ const checkoutRoutes = require('./src/api/routes/checkoutRoutes');
 const orderRoutes = require('./src/api/routes/orderRoutes');
 const feedbackRoutes = require('./src/api/routes/feedbackRoutes');
 const paymentRoutes = require('./src/api/routes/paymentRoutes');
+const chatRoutes = require('./src/api/routes/chatRoutes');
+const messageRoutes = require('./src/api/routes/messageRoutes');
 const { connection } = require('./src/api/services/socket');
 
 app.use(cors());
@@ -35,6 +37,8 @@ app.use('/api', checkoutRoutes.routes);
 app.use('/api', orderRoutes.routes);
 app.use('/api', feedbackRoutes.routes);
 app.use('/api', paymentRoutes.routes);
+app.use('/api', chatRoutes.routes);
+app.use('/api', messageRoutes.routes);
 
 io.on('connection', connection);
 

@@ -45,7 +45,7 @@ const getAccountById = async (req, res, next) => {
 
 const deleteAccount = async (req, res, next) => {
     try {
-        await authData.deleteAccount(req.params.id);
+        await authData.deleteAccount(req.params.id, req.query.bannedId);
 
         res.send({
             status: 200,

@@ -39,8 +39,9 @@ const cancelOrder = async (req, res, next) => {
     try {
         const orderId = req.params.orderId;
         if (!orderId) return createHttpError.BadRequest('Invalid request');
-        const status = req.query.status ? req.query.status : 'PENDING';
-        const data = await orderData.changeOrderStatus({ orderId, status });
+        const status = req.query.status ? req.query.status : 'CANCELED';
+        const cancelId = req.query.cancelId ? req.query.cancelId : 0;
+        const data = await orderData.changeOrderStatus({ orderId, status, cancelId });
 
         return res.send({
             status: 200,
