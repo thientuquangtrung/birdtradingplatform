@@ -3,6 +3,7 @@ const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { compareHashing, hashing } = require('../../utils/hash_utils');
+const { sendMail } = require('../mail');
 
 const getAccounts = async ({ name, role }) => {
     try {
@@ -258,6 +259,42 @@ const changePassword = async ({ id, oldPassword, newPassword, confirmPassword })
     }
 };
 
+const sendResetLinkMail = async (email) => {
+    try {
+        const hashString = await hashing(email);
+        const html = `<a href="${process.env.CLIENT_HOST}/password/reset/${user.email}?token=${hashString}"> Reset Password </a>`;
+
+        const result = await sendMail({
+            to: email,
+            subject: 'Reset Password',
+            html,
+        });
+
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const resetPassword = async ({ email, token, password }) => {
+    try {
+        const isValid = await compareHashing(email, token);
+        if (!isValid) throw createError.BadRequest('Invalid secret key');
+
+        const newHashPassword = await hashing(password);
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        await pool
+            .request()
+            .input('email', sql.VarChar, email)
+            .input('password', sql.Char, newHashPassword)
+            .query(sqlQueries.resetPassword);
+        return 'Reset Password Success';
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     checkExistingMail,
     createSellerAccount,
@@ -273,4 +310,6 @@ module.exports = {
     createNewAccount,
     getAccountById,
     changePassword,
+    sendResetLinkMail,
+    resetPassword,
 };
