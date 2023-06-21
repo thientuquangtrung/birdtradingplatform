@@ -147,11 +147,11 @@ const createCustomerAccount = async ({ name, phone, email, shipToAddress, passwo
 
 // helper methods
 
-const checkMail = async ({ email }) => {
+const checkExistingMail = async ({ email }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const count = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.checkMail);
+        const count = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.checkExistingMail);
 
         return count.recordset[0].count === 0;
     } catch (error) {
@@ -259,7 +259,7 @@ const changePassword = async ({ id, oldPassword, newPassword, confirmPassword })
 };
 
 module.exports = {
-    checkMail,
+    checkExistingMail,
     createSellerAccount,
     readOneAccount,
     readAccountById,
