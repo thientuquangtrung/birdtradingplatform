@@ -9,10 +9,10 @@ module.exports = {
             if (isValid) {
                 next();
             } else {
-                next(createError(409, 'User has registered with this email address.'));
+                throw createError(409, 'User has registered with this email address.');
             }
         } catch (error) {
-            next(createError(error.message));
+            next(error);
         }
     },
 };
