@@ -1,9 +1,11 @@
 const createError = require('http-errors');
 const sql = require('mssql');
+const OtpGenerator = require('otp-generator');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { compareHashing, hashing } = require('../../utils/hash_utils');
 const { sendMail } = require('../mail');
+const { redisClient } = require('../../config');
 
 const getAccounts = async ({ name, role }) => {
     try {
@@ -322,6 +324,41 @@ const resetPassword = async ({ email, token, password }) => {
     }
 };
 
+const generateOtp = async (email) => {
+    try {
+        const OTP = OtpGenerator.generate(6, {
+            digits: true,
+        });
+
+        // send OTP email
+
+        // encrypt OTP
+        const hashOtp = await hashing(OTP);
+        // save OTP hashed to redis with expiration time
+        await redisClient.setEx(email, 60, hashOtp);
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const verifyOtp = async ({ email, otp }) => {
+    try {
+        const hashOTP = await redisClient.get(email);
+        if (!hashOTP) throw createError.NotFound('Expired OTP!');
+
+        const isValid = await compareHashing(otp, hashOTP);
+        if (!isValid) throw createError[401]('Invalid OTP!');
+
+        await redisClient.del(email);
+
+        return true;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     checkExistingMail,
     createSellerAccount,
@@ -341,4 +378,6 @@ module.exports = {
     resetPassword,
     getBanReason,
     verifyPassword,
+    generateOtp,
+    verifyOtp,
 };

@@ -379,6 +379,35 @@ const resetPassword = async (req, res, next) => {
     }
 };
 
+const generateOtp = async (req, res, next) => {
+    try {
+        const email = req.body.email;
+        const result = await authData.generateOtp(email);
+
+        res.send({
+            status: 200,
+            message: 'OTP has been sent via email',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const verifyOtp = async (req, res, next) => {
+    try {
+        const result = await authData.verifyOtp(req.body);
+
+        res.send({
+            status: 200,
+            message: 'Verified OTP successfully',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createSellerAccount,
     customerLogin,
@@ -400,4 +429,6 @@ module.exports = {
     resetPassword,
     getBanReason,
     verifyPassword,
+    generateOtp,
+    verifyOtp,
 };

@@ -27,6 +27,8 @@ const {
     resetPassword,
     getBanReason,
     verifyPassword,
+    generateOtp,
+    verifyOtp,
 } = authController;
 
 router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
@@ -42,6 +44,8 @@ router.post('/auth/seller/register', checkValidMail, checkExistingMail, createSe
 router.post('/auth/customer/register', checkValidMail, checkExistingMail, createCustomerAccount);
 router.post('/auth/account', verifyAccessToken, uploadImg('profile').single('profile'), createNewAccount);
 router.post('password/email', checkValidMail, checkExistingMail, sendResetLinkMail);
+router.post('/otp/generate', checkValidMail, checkExistingMail, generateOtp);
+router.post('/otp/verify', checkValidMail, checkExistingMail, verifyOtp);
 
 router.patch('/auth/seller/me', verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
 router.patch('/auth/customer/me', verifyAccessToken, uploadImg('profile').single('profile'), updateCustomer);
