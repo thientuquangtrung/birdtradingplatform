@@ -7,10 +7,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormControlLabel,
     Grid,
+    IconButton,
     Modal,
     Pagination,
     Paper,
+    Radio,
+    RadioGroup,
     Stack,
     Typography,
 } from '@mui/material';
@@ -31,6 +36,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 
 function OrderTab({ status }) {
     const [tableData, setTableData] = useState([]);
@@ -63,6 +69,16 @@ function OrderTab({ status }) {
             });
     }, [currentPage]);
 
+    const [selectedValue, setSelectedValue] = useState('');
+    useEffect(() => {
+        // Auto select option "b" when the form is opened
+        setSelectedValue('a');
+    }, []);
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
     const changeOrderStatus = (id, status) => {
         axiosClient
             .put(`order/change_status/${id}`, {
@@ -76,6 +92,19 @@ function OrderTab({ status }) {
             });
     };
 
+    const style1 = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'white', // Update the background color here
+        border: 'none',
+        boxShadow: 24,
+        p: 2,
+        borderRadius: 2,
+    };
+
     const paperStyle = { width: '100%', margin: '20px auto' };
 
     function filterTable(updatedTableData, ignoreStatus) {
@@ -87,7 +116,19 @@ function OrderTab({ status }) {
         }
         handleClose();
     }
+    const handlePickup = () => {
+        const updatedTableData = tableData.map((item) => {
+            if (item.orderId === modalState.orderId) {
+                changeOrderStatus(modalState.orderId, 'PICKUP');
+                return { ...item, status: 'PICKUP' };
+            }
+            return item;
+        });
+        filterTable(updatedTableData, 'PICKUP');
+        enqueueSnackbar('Đang lấy hàng', { variant: 'success' });
 
+        return;
+    };
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
             if (item.orderId === modalState.orderId) {
@@ -129,6 +170,11 @@ function OrderTab({ status }) {
             enqueueSnackbar('Hủy đơn hàng thành công', { variant: 'success' });
         }
     };
+
+    const handleCancelConfirmationOpen = () => {
+        setCancelConfirmationOpen(false);
+    };
+
     const handleOpen = (item) => {
         setModalState(item);
         setOpen(true);
@@ -137,6 +183,7 @@ function OrderTab({ status }) {
     const handleClose = () => {
         setOpen(false);
     };
+
     const renderStatus = (status) => {
         if (status === 'PENDING') {
             return <Chip label="PENDING" icon={<PendingActionsIcon />} color="warning" />;
@@ -146,6 +193,8 @@ function OrderTab({ status }) {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
         } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
+        } else if (status === 'PICKUP') {
+            return <Chip label="PICKUP" icon={<AllInboxIcon />} sx={{ color: 'white', backgroundColor: '#ffeb3b' }} />;
         }
     };
     const renderStatusOnCustomer = (status) => {
@@ -158,13 +207,50 @@ function OrderTab({ status }) {
                     <Stack direction="row">
                         <Button
                             variant="contained"
-                            color="info"
                             size="small"
+                            sx={{
+                                borderRadius: '10px',
+                                color: 'white',
+                                backgroundColor: '#ffeb3b',
+                                '&:hover': {
+                                    backgroundColor: '#ffeb3b',
+                                },
+                            }}
+                            onClick={() => handlePickup()}
+                        >
+                            <AllInboxIcon />
+                            PICKUP
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            sx={{ borderRadius: '10px', marginLeft: '20px' }}
+                            onClick={() => setCancelConfirmationOpen(true)}
+                        >
+                            <CloseIcon />
+                            CANCELLED
+                        </Button>
+                    </Stack>
+                </Stack>
+            );
+        }
+        if (status === 'PICKUP') {
+            return (
+                <Stack direction="row" justifyContent="space-between" marginTop="10px">
+                    <Stack>
+                        <Button onClick={handleClose}>Trở lại</Button>
+                    </Stack>
+                    <Stack direction="row">
+                        <Button
+                            variant="contained"
+                            size="small"
+                            color="info"
                             sx={{ borderRadius: '10px' }}
                             onClick={() => handleDelivering()}
                         >
                             <DeliveryDiningIcon />
-                            Delivering
+                            DELIVERING
                         </Button>
                         <Button
                             variant="contained"
@@ -362,27 +448,72 @@ function OrderTab({ status }) {
                     <Stack marginTop="10px">{renderStatusOnCustomer(modalState.status)}</Stack>
                 </Box>
             </Modal>
-            <Dialog
+
+            <Modal
                 open={cancelConfirmationOpen}
                 onClose={() => handleCancelConfirmationClose(false)}
                 aria-labelledby="cancel-confirmation-dialog-title"
                 aria-describedby="cancel-confirmation-dialog-description"
             >
-                <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="cancel-confirmation-dialog-description">
-                        Bạn có chắn chắn muốn hủy đơn hàng
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                        Có
-                    </Button>
-                    <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                        Không
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                <Box sx={style1}>
+                    <Stack direction="column" alignItems="center" spacing={2}>
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            width="100%"
+                            marginTop={1}
+                        >
+                            <Typography></Typography>
+                            <Typography
+                                style={{ marginLeft: '50px' }}
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                            >
+                                Lý Do Hủy Đơn Hàng
+                            </Typography>
+                            <IconButton onClick={handleCancelConfirmationOpen}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Stack>
+
+                        <FormControl sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <RadioGroup
+                                value={selectedValue}
+                                onChange={handleChange}
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio-buttons-group"
+                            >
+                                <FormControlLabel value="a" control={<Radio />} label="Sản phẩm hiện đang hết hàng." />
+
+                                <FormControlLabel
+                                    value="b"
+                                    control={<Radio />}
+                                    label="Lỗi hệ thống, sự cố vận chuyển."
+                                />
+
+                                <FormControlLabel
+                                    sx={{ paddingBottom: 1 }}
+                                    value="c"
+                                    control={<Radio />}
+                                    label="Sai sót trong giá sản phẩm."
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </Stack>
+                    <div
+                        style={{
+                            textAlign: 'right',
+                            paddingRight: '15px',
+                        }}
+                    >
+                        <Button variant="contained" color="error" onClick={handleCancelConfirmationClose}>
+                            XÁC NHẬN
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
             <Grid>
                 <Pagination
                     count={totalPage}

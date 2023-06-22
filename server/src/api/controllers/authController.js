@@ -45,11 +45,25 @@ const getAccountById = async (req, res, next) => {
 
 const deleteAccount = async (req, res, next) => {
     try {
-        await authData.deleteAccount(req.params.id);
+        await authData.deleteAccount(req.params.id, req.query.bannedId);
 
         res.send({
             status: 200,
             message: 'OK',
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getBanReason = async (req, res, next) => {
+    try {
+        const list = await authData.getBanReason(req.params.role);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: list,
         });
     } catch (error) {
         next(error);
@@ -304,11 +318,60 @@ const updateAccountByAdmin = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
     try {
-        const result = await changePassword(req.body);
+        const result = await authData.changePassword(req.body);
 
         return res.send({
             status: 200,
             message: 'OK',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const verifyPassword = async (req, res, next) => {
+    try {
+        const result = await authData.verifyPassword(req.body);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const sendResetLinkMail = async (req, res, next) => {
+    try {
+        if (!req.body.email) {
+            next(createError.BadRequest('Lack of email address'));
+        }
+        const result = await authData.sendResetLinkMail(req.body.email);
+
+        res.send({
+            status: 200,
+            message: 'Reset link has been sent',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { email, token, password } = req.body;
+        if (!email || !token || !password) {
+            next(createError.BadRequest('Lack of information'));
+        }
+        const result = await authData.resetPassword(req.body);
+
+        res.send({
+            status: 200,
+            message: 'Reset link has been sent',
             data: result,
         });
     } catch (error) {
@@ -333,4 +396,8 @@ module.exports = {
     createNewAccount,
     getAccountById,
     changePassword,
+    sendResetLinkMail,
+    resetPassword,
+    getBanReason,
+    verifyPassword,
 };

@@ -2,10 +2,10 @@ const createError = require('http-errors');
 const authData = require('../services/auth');
 
 module.exports = {
-    async checkMail(req, res, next) {
+    async checkExistingMail(req, res, next) {
         try {
             const data = req.body;
-            const isValid = await authData.checkMail(data);
+            const isValid = await authData.checkExistingMail(data);
             if (isValid) {
                 next();
             } else {
