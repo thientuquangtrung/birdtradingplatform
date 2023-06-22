@@ -98,16 +98,28 @@ function CustomerOrderTab({ status }) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const [selectedValue, setSelectedValue] = useState('');
+
+    useEffect(() => {
+        // Auto select option "address" when the form is opened
+        setSelectedValue('address');
+    }, []);
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
     const style = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 600,
+        width: 500,
         bgcolor: 'white', // Update the background color here
-        border: '2px solid #000',
+        border: 'none',
         boxShadow: 24,
-        p: 4,
+        p: 2,
+        borderRadius: 2,
     };
 
     const handleCancelConfirmationOpen = (orderId) => {
@@ -387,7 +399,7 @@ function CustomerOrderTab({ status }) {
                         <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
                             <Typography></Typography>
                             <Typography
-                                style={{ marginLeft: '50px' }}
+                                style={{ marginLeft: '50px', marginTop: '10px' }}
                                 id="modal-modal-title"
                                 variant="h6"
                                 component="h2"
@@ -399,7 +411,12 @@ function CustomerOrderTab({ status }) {
                             </IconButton>
                         </Stack>
                         <FormControl>
-                            <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
+                            <RadioGroup
+                                value={selectedValue}
+                                onChange={handleChange}
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio-buttons-group"
+                            >
                                 <FormControlLabel
                                     value="address"
                                     control={<Radio />}
@@ -422,10 +439,17 @@ function CustomerOrderTab({ status }) {
                                 />
                             </RadioGroup>
                         </FormControl>
-                        <Button variant="contained" onClick={handleCancelConfirmationClose} sx={{ width: '100%' }}>
-                            ĐỒNG Ý
-                        </Button>
                     </Stack>
+                    <div
+                        style={{
+                            textAlign: 'right',
+                            paddingRight: '15px',
+                        }}
+                    >
+                        <Button variant="contained" color="error" onClick={handleCancelConfirmationClose}>
+                            XÁC NHẬN
+                        </Button>
+                    </div>
                 </Box>
             </Modal>
 

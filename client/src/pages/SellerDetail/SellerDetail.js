@@ -8,11 +8,11 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/joy';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
+import { FormControl, FormControlLabel, IconButton, Modal, Radio, RadioGroup } from '@mui/material';
+import { Box } from '@mui/system';
+import CloseIcon from '@mui/icons-material/Close';
 
 function SellerDetail() {
     const location = useLocation();
@@ -25,6 +25,8 @@ function SellerDetail() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+
+    const [isUserActive, setIsUserActive] = useState(false);
 
     useEffect(function () {
         axiosClient
@@ -40,6 +42,7 @@ function SellerDetail() {
                 setEmail(fetchUser.email);
                 setPhone(fetchUser.phone);
                 setAddress(fetchUser.pickUpAddress);
+                setIsUserActive(fetchUser.enabled);
             })
             .catch(function (error) {
                 console.log(error);
@@ -62,6 +65,32 @@ function SellerDetail() {
         setIsHovered(false);
     };
 
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        bgcolor: 'white', // Update the background color here
+        border: 'none',
+        boxShadow: 24,
+        paddingBottom: 2,
+        paddingTop:2,
+        paddingRight:3,
+        paddingLeft:3,
+        borderRadius: 2,
+    };
+
+    const [selectedValue, setSelectedValue] = useState('');
+    useEffect(() => {
+        // Auto select option "b" when the form is opened
+        setSelectedValue('a');
+    }, []);
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
     const handleDelete = () => {
         axiosClient
             .delete(`auth/account/${location.state.id}`)
@@ -79,22 +108,21 @@ function SellerDetail() {
     };
     function handleUpdate() {
         axiosClient
-        .patch('auth/account', {
-            id: user.id,
-            email,
-            name,
-            phone,
-            address,
-            role : 'SELLER',
-        })
-        .then((response) => {
-            enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-            navigate('/seller_management');
-        })
-        .catch((error) => {
-            console.log(error);
-        });;
-
+            .patch('auth/account', {
+                id: user.id,
+                email,
+                name,
+                phone,
+                address,
+                role: 'SELLER',
+            })
+            .then((response) => {
+                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+                navigate('/seller_management');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -198,14 +226,27 @@ function SellerDetail() {
                 <Typography variant="h6" gutterBottom>
                     Data Management
                 </Typography>
-                <Button color="danger" variant="outlined" sx={{ marginTop: 1 }} onClick={handleClickOpen} size="lg">
+                <Button
+                    color="danger"
+                    variant="outlined"
+                    sx={{
+                        marginTop: 1,
+                        '&:disabled': {
+                            bgcolor: '#eeeeee',
+                            color: 'grey',
+                        },
+                    }}
+                    onClick={handleClickOpen}
+                    size="lg"
+                    disabled={!isUserActive}
+                >
                     Delete Account
                 </Button>
                 <Typography variant="body2" marginTop={2} color="rgb(108, 115, 127)">
                     Remove this seller’s chart if he requested that, if not please be aware that what has been deleted
                     can never brought back
                 </Typography>
-                <Dialog
+                {/* <Dialog
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="alert-dialog-title"
@@ -222,7 +263,88 @@ function SellerDetail() {
                             </Button>
                         </Stack>
                     </DialogActions>
-                </Dialog>
+                </Dialog> */}
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Stack direction="column" alignItems="center" spacing={2}>
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                width="100%"
+                                marginTop={1}
+                            >
+                                <Typography></Typography>
+                                <Typography
+                                    style={{ marginLeft: '50px' }}
+                                    id="modal-modal-title"
+                                    variant="h6"
+                                    component="h2"
+                                >
+                                    Khóa Tài Khoản
+                                </Typography>
+                                <IconButton onClick={handleClose}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Stack>
+                            <FormControl>
+                                <RadioGroup
+                                    value={selectedValue}
+                                    onChange={handleChange}
+                                    aria-labelledby="demo-radio-buttons-group-label"
+                                    name="radio-buttons-group"
+                                >
+                                    <FormControlLabel
+                                        sx={{ paddingBottom: 2 }}
+                                        value="a"
+                                        control={<Radio />}
+                                        label="Sử dụng nhiều tài khoản khác nhau để đăng bán một sản phẩm giống nhau."
+                                    />
+
+                                    <FormControlLabel
+                                        value="b"
+                                        control={<Radio />}
+                                        sx={{ paddingBottom: 2 }}
+                                        label="Đăng một sản phẩm giống nhau nhiều lần với nhiều danh mục khác nhau."
+                                    />
+                                    <FormControlLabel
+                                        value="c"
+                                        control={<Radio />}
+                                        sx={{ paddingBottom: 2 }}
+                                        label="Chứa đường dẫn tới trang web có hình thức kinh doanh gần giống với Shopee(description)."
+                                    />
+                                    <FormControlLabel
+                                        value="d"
+                                        control={<Radio />}
+                                        sx={{ paddingBottom: 1 }}
+                                        label="Sử dụng ngôn từ, hình ảnh thô tục trong quá trình bán hàng cũng như khi giao tiếp trên Shopee."
+                                    />
+                                    <FormControlLabel
+                                        sx={{ paddingBottom: 1 }}
+                                        value="e"
+                                        control={<Radio />}
+                                        label="Đăng bán chim danh sách đỏ."
+                                    />
+                                </RadioGroup>
+                            </FormControl>
+                        </Stack>
+                        <div
+                            style={{
+                                textAlign: 'right',
+                                paddingRight: '10px',
+                            }}
+                        >
+                            <Button color="danger" onClick={handleDelete}>
+                                XÁC NHẬN
+                            </Button>
+                        </div>
+                    </Box>
+                </Modal>
             </Paper>
         </Stack>
     );

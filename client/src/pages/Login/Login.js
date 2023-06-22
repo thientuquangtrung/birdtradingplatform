@@ -23,6 +23,7 @@ const Login = ({ role }) => {
     const [validationMsg, setValidationMsg] = useState('');
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState('');
+    const [deleteReason, setDeleteReason] = useState('');
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -71,7 +72,15 @@ const Login = ({ role }) => {
                     }
                 })
                 .catch(function (error) {
-                    setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');
+                    setError('Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.');
+                    if (
+                        error.response &&
+                        error.response.data &&
+                        error.response.data.data &&
+                        error.response.data.data.deleteReason
+                    ) {
+                        setDeleteReason(error.response.data.data.deleteReason);
+                    }
                     console.log(error);
                 });
         }
@@ -110,7 +119,14 @@ const Login = ({ role }) => {
                     <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
                         {validationMsg.email}
                     </Typography>
-                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
+                    {error && (
+                        <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
+                    )}
+                    {deleteReason && (
+                        <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                            {deleteReason}
+                        </Typography>
+                    )}
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
                         <Typography style={marginStyle}>

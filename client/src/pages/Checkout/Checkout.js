@@ -18,7 +18,7 @@ import PaypalButton from '../../components/PaypalButton';
 import VNPayButton from '../../components/VNPayButton';
 import { Button as JoyButton } from '@mui/joy';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import MoMoButton from '../../components/MomoButton';
+import MoMoButton from '../../components/MoMoButton';
 
 function Checkout() {
     const location = useLocation();
