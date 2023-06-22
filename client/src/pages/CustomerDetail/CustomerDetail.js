@@ -27,8 +27,10 @@ function CustomerDetail() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [banReasons, setBanReasons] = useState([]);
 
     const [isUserActive, setIsUserActive] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(0);
 
     useEffect(function () {
         axiosClient
@@ -49,6 +51,20 @@ function CustomerDetail() {
             .catch(function (error) {
                 console.log(error);
             });
+
+        axiosClient
+            .get('account/ban_reason', {
+                params: {
+                    role: 'CUSTOMER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setBanReasons(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     const handleClickOpen = () => {
@@ -67,19 +83,17 @@ function CustomerDetail() {
         setIsHovered(false);
     };
 
-    const [selectedValue, setSelectedValue] = useState('');
-    useEffect(() => {
-        // Auto select option "b" when the form is opened
-        setSelectedValue('a');
-    }, []);
-
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
     };
 
     const handleDelete = () => {
         axiosClient
-            .delete(`auth/account/${location.state.id}`)
+            .delete(`auth/account/${location.state.id}`, {
+                params: {
+                    bannedId: selectedValue,
+                },
+            })
             .then(function (response) {
                 // handle success
                 enqueueSnackbar('Đã xóa thành công', {
@@ -299,19 +313,16 @@ function CustomerDetail() {
                                     aria-labelledby="demo-radio-buttons-group-label"
                                     name="radio-buttons-group"
                                 >
-                                    <FormControlLabel
-                                        sx={{ paddingBottom: 2 }}
-                                        value="a"
-                                        control={<Radio />}
-                                        label=" Hủy đơn hàng và trả hàng quá nhiều mà không có lý do hợp lý."
-                                    />
-
-                                    <FormControlLabel
-                                        sx={{ paddingBottom: 2 }}
-                                        value="b"
-                                        control={<Radio />}
-                                        label="Phản hồi tiêu cực không đúng lý do để hạ thấp uy tín của người bán."
-                                    />
+                                    {banReasons.length > 0 &&
+                                        banReasons.map((reasonItem) => (
+                                            <FormControlLabel
+                                                key={reasonItem.id}
+                                                sx={{ paddingBottom: 2 }}
+                                                value={reasonItem.id}
+                                                control={<Radio />}
+                                                label={reasonItem.reason}
+                                            />
+                                        ))}
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
@@ -321,7 +332,7 @@ function CustomerDetail() {
                                 paddingRight: '10px',
                             }}
                         >
-                            <Button color="danger" onClick={handleDelete}>
+                            <Button disabled={selectedValue === 0} color="danger" onClick={handleDelete}>
                                 XÁC NHẬN
                             </Button>
                         </div>
