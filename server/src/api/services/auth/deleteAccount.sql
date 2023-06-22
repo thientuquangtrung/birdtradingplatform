@@ -1,1 +1,1 @@
-update account set [enabled] = '0' where [id] = @id;
+update account set [enabled] = '0', [bannedId] = @bannedId where [id] = @id;
