@@ -98,9 +98,22 @@ const getRevenue = async ({ startDate, endDate, id }) => {
     }
 };
 
+const getCancelReason = async (role) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('order');
+        const list = await pool.request().input('role', VarChar, role).query(sqlQueries.getCancelReason);
+
+        return list.recordset;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     changeOrderStatus,
     getOrdersByShop,
     getRevenue,
+    getCancelReason,
 };

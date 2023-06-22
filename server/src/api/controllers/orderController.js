@@ -82,10 +82,25 @@ const getRevenue = async (req, res, next) => {
     }
 };
 
+const getCancelReason = async (req, res, next) => {
+    try {
+        const list = await orderData.getCancelReason(req.params.role);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: list,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     changeOrderStatus,
     cancelOrder,
     getOrdersByShop,
     getRevenue,
+    getCancelReason,
 };

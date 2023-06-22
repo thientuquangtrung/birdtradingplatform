@@ -220,6 +220,18 @@ const deleteAccount = async (id, bannedId) => {
     }
 };
 
+const getBanReason = async (role) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const list = await pool.request().input('role', sql.VarChar, role).query(sqlQueries.getBanReason);
+
+        return list.recordset;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const createNewAccount = async ({ name, email, image, phone, password, address, role }) => {
     try {
         let pool = await sql.connect(config.sql);
@@ -240,14 +252,11 @@ const createNewAccount = async ({ name, email, image, phone, password, address, 
     }
 };
 
-const changePassword = async ({ id, oldPassword, newPassword, confirmPassword }) => {
+const changePassword = async ({ id, newPassword, confirmPassword, secretToken }) => {
     try {
         if (newPassword !== confirmPassword) throw createError[400]('Confirm password does not match the new password');
-
-        const account = await readAccountById(id, 'ALL');
-        if (!account) throw createError.BadRequest('Account not found');
-        const isValid = await compareHashing(account.password, oldPassword);
-        if (!isValid) throw createError.BadRequest('Incorrect password');
+        const isValid = await compareHashing(id, secretToken);
+        if (!isValid) throw createError.BadRequest('Invalid secret token');
 
         const newHashPassword = await hashing(newPassword);
         let pool = await sql.connect(config.sql);
@@ -258,6 +267,20 @@ const changePassword = async ({ id, oldPassword, newPassword, confirmPassword })
             .input('password', sql.Char, newHashPassword)
             .query(sqlQueries.changePassword);
         return 'OK';
+    } catch (error) {
+        throw error;
+    }
+};
+
+const verifyPassword = async ({ id, oldPassword }) => {
+    try {
+        const account = await readAccountById(id, 'ALL');
+        if (!account) throw createError.BadRequest('Account not found');
+        const isValid = await compareHashing(oldPassword, account.password);
+        if (!isValid) throw createError.Unauthorized('Incorrect password');
+
+        const secretToken = await hashing(id);
+        return secretToken;
     } catch (error) {
         throw error;
     }
@@ -316,4 +339,6 @@ module.exports = {
     changePassword,
     sendResetLinkMail,
     resetPassword,
+    getBanReason,
+    verifyPassword,
 };

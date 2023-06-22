@@ -12,9 +12,9 @@ const hashing = async (string) => {
     }
 };
 
-const compareHashing = async (string, compareString) => {
+const compareHashing = async (string, compareHashedString) => {
     try {
-        return await bcrypt.compare(string, compareString);
+        return await bcrypt.compare(string, compareHashedString);
     } catch (error) {
         throw createError(error);
     }

@@ -25,12 +25,15 @@ const {
     changePassword,
     sendResetLinkMail,
     resetPassword,
+    getBanReason,
+    verifyPassword,
 } = authController;
 
 router.get('/refresh_token', verifyRefreshToken, getNewAccessToken);
 router.get('/auth/me', verifyAccessToken, getCurrentUser);
 router.get('/auth/account', verifyAccessToken, getAccounts);
 router.get('/auth/account/:id', verifyAccessToken, getAccountById);
+router.get('/account/ban_reason', getBanReason);
 
 router.post('/auth/seller/login', sellerLogin);
 router.post('/auth/customer/login', customerLogin);
@@ -43,7 +46,8 @@ router.post('password/email', checkValidMail, checkExistingMail, sendResetLinkMa
 router.patch('/auth/seller/me', verifyAccessToken, uploadImg('profile').single('profile'), updateSeller);
 router.patch('/auth/customer/me', verifyAccessToken, uploadImg('profile').single('profile'), updateCustomer);
 router.patch('/auth/account', verifyAccessToken, updateAccountByAdmin);
-router.put('/auth/password', verifyAccessToken, changePassword);
+router.put('/auth/verify_password', verifyAccessToken, verifyPassword);
+router.put('/auth/change_password', verifyAccessToken, changePassword);
 router.put('password/reset', resetPassword);
 
 router.delete('/auth/account/:id', verifyAccessToken, deleteAccount);

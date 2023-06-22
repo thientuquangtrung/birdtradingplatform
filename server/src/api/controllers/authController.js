@@ -56,6 +56,20 @@ const deleteAccount = async (req, res, next) => {
     }
 };
 
+const getBanReason = async (req, res, next) => {
+    try {
+        const list = await authData.getBanReason(req.params.role);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: list,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const createNewAccount = async (req, res, next) => {
     try {
         const image = req.file ? req.file.filename : '';
@@ -316,6 +330,20 @@ const changePassword = async (req, res, next) => {
     }
 };
 
+const verifyPassword = async (req, res, next) => {
+    try {
+        const result = await authData.verifyPassword(req.body);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const sendResetLinkMail = async (req, res, next) => {
     try {
         if (!req.body.email) {
@@ -370,4 +398,6 @@ module.exports = {
     changePassword,
     sendResetLinkMail,
     resetPassword,
+    getBanReason,
+    verifyPassword,
 };
