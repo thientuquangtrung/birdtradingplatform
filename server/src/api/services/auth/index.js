@@ -3,6 +3,7 @@ const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { compareHashing, hashing } = require('../../utils/hash_utils');
+const { sendMail } = require('../mail');
 
 const getAccounts = async ({ name, role }) => {
     try {
@@ -147,11 +148,11 @@ const createCustomerAccount = async ({ name, phone, email, shipToAddress, passwo
 
 // helper methods
 
-const checkMail = async ({ email }) => {
+const checkExistingMail = async ({ email }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const count = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.checkMail);
+        const count = await pool.request().input('email', sql.VarChar, email).query(sqlQueries.checkExistingMail);
 
         return count.recordset[0].count === 0;
     } catch (error) {
@@ -203,13 +204,29 @@ const updateAccountByAdmin = async (data) => {
     }
 };
 
-const deleteAccount = async (id) => {
+const deleteAccount = async (id, bannedId) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
-        const account = await pool.request().input('id', sql.UniqueIdentifier, id).query(sqlQueries.deleteAccount);
+        const account = await pool
+            .request()
+            .input('id', sql.UniqueIdentifier, id)
+            .input('bannedId', sql.Int, bannedId)
+            .query(sqlQueries.deleteAccount);
 
         return account.recordset;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getBanReason = async (role) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        const list = await pool.request().input('role', sql.VarChar, role).query(sqlQueries.getBanReason);
+
+        return list.recordset;
     } catch (error) {
         throw error;
     }
@@ -235,14 +252,11 @@ const createNewAccount = async ({ name, email, image, phone, password, address, 
     }
 };
 
-const changePassword = async ({ id, oldPassword, newPassword, confirmPassword }) => {
+const changePassword = async ({ id, newPassword, confirmPassword, secretToken }) => {
     try {
         if (newPassword !== confirmPassword) throw createError[400]('Confirm password does not match the new password');
-
-        const account = await readAccountById(id, 'ALL');
-        if (!account) throw createError.BadRequest('Account not found');
-        const isValid = await compareHashing(account.password, oldPassword);
-        if (!isValid) throw createError.BadRequest('Incorrect password');
+        const isValid = await compareHashing(id, secretToken);
+        if (!isValid) throw createError.BadRequest('Invalid secret token');
 
         const newHashPassword = await hashing(newPassword);
         let pool = await sql.connect(config.sql);
@@ -258,8 +272,58 @@ const changePassword = async ({ id, oldPassword, newPassword, confirmPassword })
     }
 };
 
+const verifyPassword = async ({ id, oldPassword }) => {
+    try {
+        const account = await readAccountById(id, 'ALL');
+        if (!account) throw createError.BadRequest('Account not found');
+        const isValid = await compareHashing(oldPassword, account.password);
+        if (!isValid) throw createError.Unauthorized('Incorrect password');
+
+        const secretToken = await hashing(id);
+        return secretToken;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const sendResetLinkMail = async (email) => {
+    try {
+        const hashString = await hashing(email);
+        const html = `<a href="${process.env.CLIENT_HOST}/password/reset/${user.email}?token=${hashString}"> Reset Password </a>`;
+
+        const result = await sendMail({
+            to: email,
+            subject: 'Reset Password',
+            html,
+        });
+
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const resetPassword = async ({ email, token, password }) => {
+    try {
+        const isValid = await compareHashing(email, token);
+        if (!isValid) throw createError.BadRequest('Invalid secret key');
+
+        const newHashPassword = await hashing(password);
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('auth');
+        await pool
+            .request()
+            .input('email', sql.VarChar, email)
+            .input('password', sql.Char, newHashPassword)
+            .query(sqlQueries.resetPassword);
+        return 'Reset Password Success';
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
-    checkMail,
+    checkExistingMail,
     createSellerAccount,
     readOneAccount,
     readAccountById,
@@ -273,4 +337,8 @@ module.exports = {
     createNewAccount,
     getAccountById,
     changePassword,
+    sendResetLinkMail,
+    resetPassword,
+    getBanReason,
+    verifyPassword,
 };
