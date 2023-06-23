@@ -25,8 +25,10 @@ function SellerDetail() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [banReasons, setBanReasons] = useState([]);
 
     const [isUserActive, setIsUserActive] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(0);
 
     useEffect(function () {
         axiosClient
@@ -45,6 +47,20 @@ function SellerDetail() {
                 setIsUserActive(fetchUser.enabled);
             })
             .catch(function (error) {
+                console.log(error);
+            });
+
+        axiosClient
+            .get('account/ban_reason', {
+                params: {
+                    role: 'SELLER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setBanReasons(response.data.data);
+            })
+            .catch((error) => {
                 console.log(error);
             });
     }, []);
@@ -75,17 +91,11 @@ function SellerDetail() {
         border: 'none',
         boxShadow: 24,
         paddingBottom: 2,
-        paddingTop:2,
-        paddingRight:3,
-        paddingLeft:3,
+        paddingTop: 2,
+        paddingRight: 3,
+        paddingLeft: 3,
         borderRadius: 2,
     };
-
-    const [selectedValue, setSelectedValue] = useState('');
-    useEffect(() => {
-        // Auto select option "b" when the form is opened
-        setSelectedValue('a');
-    }, []);
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -93,7 +103,11 @@ function SellerDetail() {
 
     const handleDelete = () => {
         axiosClient
-            .delete(`auth/account/${location.state.id}`)
+            .delete(`auth/account/${location.state.id}`, {
+                params: {
+                    bannedId: selectedValue,
+                },
+            })
             .then(function (response) {
                 // handle success
                 enqueueSnackbar('Đã xóa thành công', {
@@ -299,37 +313,16 @@ function SellerDetail() {
                                     aria-labelledby="demo-radio-buttons-group-label"
                                     name="radio-buttons-group"
                                 >
-                                    <FormControlLabel
-                                        sx={{ paddingBottom: 2 }}
-                                        value="a"
-                                        control={<Radio />}
-                                        label="Sử dụng nhiều tài khoản khác nhau để đăng bán một sản phẩm giống nhau."
-                                    />
-
-                                    <FormControlLabel
-                                        value="b"
-                                        control={<Radio />}
-                                        sx={{ paddingBottom: 2 }}
-                                        label="Đăng một sản phẩm giống nhau nhiều lần với nhiều danh mục khác nhau."
-                                    />
-                                    <FormControlLabel
-                                        value="c"
-                                        control={<Radio />}
-                                        sx={{ paddingBottom: 2 }}
-                                        label="Chứa đường dẫn tới trang web có hình thức kinh doanh gần giống với Shopee(description)."
-                                    />
-                                    <FormControlLabel
-                                        value="d"
-                                        control={<Radio />}
-                                        sx={{ paddingBottom: 1 }}
-                                        label="Sử dụng ngôn từ, hình ảnh thô tục trong quá trình bán hàng cũng như khi giao tiếp trên Shopee."
-                                    />
-                                    <FormControlLabel
-                                        sx={{ paddingBottom: 1 }}
-                                        value="e"
-                                        control={<Radio />}
-                                        label="Đăng bán chim danh sách đỏ."
-                                    />
+                                    {banReasons.length > 0 &&
+                                        banReasons.map((reasonItem) => (
+                                            <FormControlLabel
+                                                key={reasonItem.id}
+                                                sx={{ paddingBottom: 2 }}
+                                                value={reasonItem.id}
+                                                control={<Radio />}
+                                                label={reasonItem.reason}
+                                            />
+                                        ))}
                                 </RadioGroup>
                             </FormControl>
                         </Stack>
@@ -339,7 +332,7 @@ function SellerDetail() {
                                 paddingRight: '10px',
                             }}
                         >
-                            <Button color="danger" onClick={handleDelete}>
+                            <Button disabled={selectedValue === 0} color="danger" onClick={handleDelete}>
                                 XÁC NHẬN
                             </Button>
                         </div>

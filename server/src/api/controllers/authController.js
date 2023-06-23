@@ -59,7 +59,7 @@ const deleteAccount = async (req, res, next) => {
 
 const getBanReason = async (req, res, next) => {
     try {
-        const list = await authData.getBanReason(req.params.role);
+        const list = await authData.getBanReason(req.query.role);
 
         return res.send({
             status: 200,

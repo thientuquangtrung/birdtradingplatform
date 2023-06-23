@@ -56,6 +56,25 @@ function CustomerOrderTab({ status }) {
     const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
     const [tableData, setTableData] = useState([]);
     const { currentUser } = useContext(AuthContext);
+    const [selectedValue, setSelectedValue] = useState(0);
+    const [cancelReasons, setCancelReasons] = useState([]);
+
+    useEffect(() => {
+        axiosClient
+            .get('order/cancel_reason', {
+                params: {
+                    role: 'CUSTOMER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setCancelReasons(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    },[]);
+
     useEffect(() => {
         axiosClient
             .get(`customer/order/${currentUser.id}`, {
@@ -74,11 +93,13 @@ function CustomerOrderTab({ status }) {
                 console.log(error);
             });
     }, [currentPage]);
+
     const cancelOrder = (id) => {
         axiosClient
             .delete(`order/cancel/${id}`, {
                 params: {
                     status: 'CANCELED',
+                    cancelId: selectedValue,
                 },
             })
             .then(function (response) {
@@ -98,13 +119,6 @@ function CustomerOrderTab({ status }) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const [selectedValue, setSelectedValue] = useState('');
-
-    useEffect(() => {
-        // Auto select option "address" when the form is opened
-        setSelectedValue('address');
-    }, []);
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -126,6 +140,11 @@ function CustomerOrderTab({ status }) {
         setOrderId(orderId);
         setCancelConfirmationOpen(true);
     };
+
+    const handleCancelConfirmationOpen1 = () => {
+        setCancelConfirmationOpen(false);
+    };
+
     const handleCancelConfirmationClose = (confirmed) => {
         if (confirmed) {
             const updatedTableData = tableData.map((item) => {
@@ -406,7 +425,7 @@ function CustomerOrderTab({ status }) {
                             >
                                 Chọn lý do hủy
                             </Typography>
-                            <IconButton onClick={handleCancelConfirmationClose}>
+                            <IconButton onClick={handleCancelConfirmationOpen1}>
                                 <CloseIcon />
                             </IconButton>
                         </Stack>
@@ -417,26 +436,15 @@ function CustomerOrderTab({ status }) {
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 name="radio-buttons-group"
                             >
-                                <FormControlLabel
-                                    value="address"
-                                    control={<Radio />}
-                                    label="Muốn thay đổi địa chỉ giao hàng"
-                                />
-                                <FormControlLabel
-                                    value="amount"
-                                    control={<Radio />}
-                                    label="Muốn thay đổi số lượng sản phẩm trong đơn hàng"
-                                />
-                                <FormControlLabel
-                                    value="another"
-                                    control={<Radio />}
-                                    label="Tìm thấy shop khác bán rẻ hơn"
-                                />
-                                <FormControlLabel
-                                    value="newshop"
-                                    control={<Radio />}
-                                    label="Đổi ý, không muốn mua nữa"
-                                />
+                                {cancelReasons.length > 0 &&
+                                    cancelReasons.map((reasonCancel) => (
+                                        <FormControlLabel
+                                            key={reasonCancel.id}
+                                            value={reasonCancel.id}
+                                            control={<Radio />}
+                                            label={reasonCancel.reason}
+                                        />
+                                    ))}
                             </RadioGroup>
                         </FormControl>
                     </Stack>
@@ -446,7 +454,12 @@ function CustomerOrderTab({ status }) {
                             paddingRight: '15px',
                         }}
                     >
-                        <Button variant="contained" color="error" onClick={handleCancelConfirmationClose}>
+                        <Button
+                            disabled={selectedValue === 0}
+                            variant="contained"
+                            color="error"
+                            onClick={handleCancelConfirmationClose}
+                        >
                             XÁC NHẬN
                         </Button>
                     </div>

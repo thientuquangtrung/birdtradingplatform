@@ -49,6 +49,9 @@ function OrderTab({ status }) {
     };
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [selectedValue, setSelectedValue] = useState(0);
+    const [cancelReasons, setCancelReasons] = useState([]);
+    const [orderId, setOrderId] = useState('');
 
     useEffect(() => {
         axiosClient
@@ -69,10 +72,20 @@ function OrderTab({ status }) {
             });
     }, [currentPage]);
 
-    const [selectedValue, setSelectedValue] = useState('');
     useEffect(() => {
-        // Auto select option "b" when the form is opened
-        setSelectedValue('a');
+        axiosClient
+            .get('order/cancel_reason', {
+                params: {
+                    role: 'SELLER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setCancelReasons(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     const handleChange = (event) => {
@@ -81,8 +94,11 @@ function OrderTab({ status }) {
 
     const changeOrderStatus = (id, status) => {
         axiosClient
-            .put(`order/change_status/${id}`, {
-                status,
+            .delete(`order/cancel/${id}`, {
+                params: {
+                    status: 'CANCELED',
+                    cancelId: selectedValue,
+                },
             })
             .then(function (response) {
                 console.log(response);
@@ -485,20 +501,15 @@ function OrderTab({ status }) {
                                 aria-labelledby="demo-radio-buttons-group-label"
                                 name="radio-buttons-group"
                             >
-                                <FormControlLabel value="a" control={<Radio />} label="Sản phẩm hiện đang hết hàng." />
-
-                                <FormControlLabel
-                                    value="b"
-                                    control={<Radio />}
-                                    label="Lỗi hệ thống, sự cố vận chuyển."
-                                />
-
-                                <FormControlLabel
-                                    sx={{ paddingBottom: 1 }}
-                                    value="c"
-                                    control={<Radio />}
-                                    label="Sai sót trong giá sản phẩm."
-                                />
+                                {cancelReasons.length > 0 &&
+                                    cancelReasons.map((reasonCancel) => (
+                                        <FormControlLabel
+                                            key={reasonCancel.id}
+                                            value={reasonCancel.id}
+                                            control={<Radio />}
+                                            label={reasonCancel.reason}
+                                        />
+                                    ))}
                             </RadioGroup>
                         </FormControl>
                     </Stack>
