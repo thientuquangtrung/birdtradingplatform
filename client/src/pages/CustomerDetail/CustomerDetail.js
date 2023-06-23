@@ -8,13 +8,13 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/joy';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
 import axiosClient from '../../api/axiosClient';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
+import { FormControl, FormControlLabel, IconButton, Modal, Radio, RadioGroup } from '@mui/material';
+import { Box } from '@mui/system';
+import CloseIcon from '@mui/icons-material/Close';
 
 function CustomerDetail() {
     const location = useLocation();
@@ -27,6 +27,10 @@ function CustomerDetail() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [banReasons, setBanReasons] = useState([]);
+
+    const [isUserActive, setIsUserActive] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(0);
 
     useEffect(function () {
         axiosClient
@@ -42,8 +46,23 @@ function CustomerDetail() {
                 setEmail(fetchUser.email);
                 setPhone(fetchUser.phone);
                 setAddress(fetchUser.shipToAddress);
+                setIsUserActive(fetchUser.enabled);
             })
             .catch(function (error) {
+                console.log(error);
+            });
+
+        axiosClient
+            .get('account/ban_reason', {
+                params: {
+                    role: 'CUSTOMER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setBanReasons(response.data.data);
+            })
+            .catch((error) => {
                 console.log(error);
             });
     }, []);
@@ -64,9 +83,17 @@ function CustomerDetail() {
         setIsHovered(false);
     };
 
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
     const handleDelete = () => {
         axiosClient
-            .delete(`auth/account/${location.state.id}`)
+            .delete(`auth/account/${location.state.id}`, {
+                params: {
+                    bannedId: selectedValue,
+                },
+            })
             .then(function (response) {
                 // handle success
                 enqueueSnackbar('Đã xóa thành công', {
@@ -80,24 +107,36 @@ function CustomerDetail() {
             });
     };
 
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        bgcolor: 'white', // Update the background color here
+        border: 'none',
+        boxShadow: 24,
+        p: 2,
+        borderRadius: 2,
+    };
+
     function handleUpdate() {
         axiosClient
-        .patch('auth/account', {
-            id: user.id,
-            email,
-            name,
-            phone,
-            address,
-            role : 'CUSTOMER',
-        })
-        .then((response) => {
-            enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-            navigate('/customer_management');
-        })
-        .catch((error) => {
-            console.log(error);
-        });;
-
+            .patch('auth/account', {
+                id: user.id,
+                email,
+                name,
+                phone,
+                address,
+                role: 'CUSTOMER',
+            })
+            .then((response) => {
+                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+                navigate('/customer_management');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -201,14 +240,27 @@ function CustomerDetail() {
                 <Typography variant="h6" gutterBottom>
                     Data Management
                 </Typography>
-                <Button color="danger" variant="outlined" sx={{ marginTop: 1 }} onClick={handleClickOpen} size="lg">
+                <Button
+                    color="danger"
+                    variant="outlined"
+                    sx={{
+                        marginTop: 1,
+                        '&:disabled': {
+                            bgcolor: '#eeeeee',
+                            color: 'grey',
+                        },
+                    }}
+                    onClick={handleClickOpen}
+                    size="lg"
+                    disabled={!isUserActive}
+                >
                     Delete Account
                 </Button>
                 <Typography variant="body2" marginTop={2} color="rgb(108, 115, 127)">
                     Remove this customer’s chart if he requested that, if not please be aware that what has been deleted
                     can never brought back
                 </Typography>
-                <Dialog
+                {/* <Dialog
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="alert-dialog-title"
@@ -225,7 +277,67 @@ function CustomerDetail() {
                             </Button>
                         </Stack>
                     </DialogActions>
-                </Dialog>
+                </Dialog> */}
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Stack direction="column" alignItems="center" spacing={2}>
+                            <Stack
+                                direction="row"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                width="100%"
+                                marginTop={1}
+                            >
+                                <Typography></Typography>
+                                <Typography
+                                    style={{ marginLeft: '50px' }}
+                                    id="modal-modal-title"
+                                    variant="h6"
+                                    component="h2"
+                                >
+                                    Khóa Tài Khoản
+                                </Typography>
+                                <IconButton onClick={handleClose}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Stack>
+                            <FormControl>
+                                <RadioGroup
+                                    value={selectedValue}
+                                    onChange={handleChange}
+                                    aria-labelledby="demo-radio-buttons-group-label"
+                                    name="radio-buttons-group"
+                                >
+                                    {banReasons.length > 0 &&
+                                        banReasons.map((reasonItem) => (
+                                            <FormControlLabel
+                                                key={reasonItem.id}
+                                                sx={{ paddingBottom: 2 }}
+                                                value={reasonItem.id}
+                                                control={<Radio />}
+                                                label={reasonItem.reason}
+                                            />
+                                        ))}
+                                </RadioGroup>
+                            </FormControl>
+                        </Stack>
+                        <div
+                            style={{
+                                textAlign: 'right',
+                                paddingRight: '10px',
+                            }}
+                        >
+                            <Button disabled={selectedValue === 0} color="danger" onClick={handleDelete}>
+                                XÁC NHẬN
+                            </Button>
+                        </div>
+                    </Box>
+                </Modal>
             </Paper>
         </Stack>
     );

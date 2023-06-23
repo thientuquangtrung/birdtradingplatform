@@ -7,10 +7,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormControlLabel,
     Grid,
+    IconButton,
     Modal,
     Pagination,
     Paper,
+    Radio,
+    RadioGroup,
     Stack,
     Typography,
 } from '@mui/material';
@@ -44,6 +49,9 @@ function OrderTab({ status }) {
     };
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [selectedValue, setSelectedValue] = useState(0);
+    const [cancelReasons, setCancelReasons] = useState([]);
+    const [orderId, setOrderId] = useState('');
 
     useEffect(() => {
         axiosClient
@@ -64,10 +72,33 @@ function OrderTab({ status }) {
             });
     }, [currentPage]);
 
+    useEffect(() => {
+        axiosClient
+            .get('order/cancel_reason', {
+                params: {
+                    role: 'SELLER',
+                },
+            })
+            .then((response) => {
+                // console.log(response);
+                setCancelReasons(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
     const changeOrderStatus = (id, status) => {
         axiosClient
-            .put(`order/change_status/${id}`, {
-                status,
+            .delete(`order/cancel/${id}`, {
+                params: {
+                    status: 'CANCELED',
+                    cancelId: selectedValue,
+                },
             })
             .then(function (response) {
                 console.log(response);
@@ -75,6 +106,19 @@ function OrderTab({ status }) {
             .catch(function (error) {
                 console.log(error);
             });
+    };
+
+    const style1 = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'white', // Update the background color here
+        border: 'none',
+        boxShadow: 24,
+        p: 2,
+        borderRadius: 2,
     };
 
     const paperStyle = { width: '100%', margin: '20px auto' };
@@ -142,6 +186,11 @@ function OrderTab({ status }) {
             enqueueSnackbar('Hủy đơn hàng thành công', { variant: 'success' });
         }
     };
+
+    const handleCancelConfirmationOpen = () => {
+        setCancelConfirmationOpen(false);
+    };
+
     const handleOpen = (item) => {
         setModalState(item);
         setOpen(true);
@@ -150,6 +199,7 @@ function OrderTab({ status }) {
     const handleClose = () => {
         setOpen(false);
     };
+
     const renderStatus = (status) => {
         if (status === 'PENDING') {
             return <Chip label="PENDING" icon={<PendingActionsIcon />} color="warning" />;
@@ -414,27 +464,67 @@ function OrderTab({ status }) {
                     <Stack marginTop="10px">{renderStatusOnCustomer(modalState.status)}</Stack>
                 </Box>
             </Modal>
-            <Dialog
+
+            <Modal
                 open={cancelConfirmationOpen}
                 onClose={() => handleCancelConfirmationClose(false)}
                 aria-labelledby="cancel-confirmation-dialog-title"
                 aria-describedby="cancel-confirmation-dialog-description"
             >
-                <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="cancel-confirmation-dialog-description">
-                        Bạn có chắn chắn muốn hủy đơn hàng
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                        Có
-                    </Button>
-                    <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                        Không
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                <Box sx={style1}>
+                    <Stack direction="column" alignItems="center" spacing={2}>
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            width="100%"
+                            marginTop={1}
+                        >
+                            <Typography></Typography>
+                            <Typography
+                                style={{ marginLeft: '50px' }}
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                            >
+                                Lý Do Hủy Đơn Hàng
+                            </Typography>
+                            <IconButton onClick={handleCancelConfirmationOpen}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Stack>
+
+                        <FormControl sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <RadioGroup
+                                value={selectedValue}
+                                onChange={handleChange}
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio-buttons-group"
+                            >
+                                {cancelReasons.length > 0 &&
+                                    cancelReasons.map((reasonCancel) => (
+                                        <FormControlLabel
+                                            key={reasonCancel.id}
+                                            value={reasonCancel.id}
+                                            control={<Radio />}
+                                            label={reasonCancel.reason}
+                                        />
+                                    ))}
+                            </RadioGroup>
+                        </FormControl>
+                    </Stack>
+                    <div
+                        style={{
+                            textAlign: 'right',
+                            paddingRight: '15px',
+                        }}
+                    >
+                        <Button variant="contained" color="error" onClick={handleCancelConfirmationClose}>
+                            XÁC NHẬN
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
             <Grid>
                 <Pagination
                     count={totalPage}
