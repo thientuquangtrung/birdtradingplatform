@@ -5,6 +5,7 @@ const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { compareHashing, hashing } = require('../../utils/hash_utils');
 const { sendMail } = require('../mail');
+const { uploadImage } = require('../firebase');
 const { redisClient } = require('../../config');
 
 const getAccounts = async ({ name, role }) => {
@@ -236,6 +237,8 @@ const getBanReason = async (role) => {
 
 const createNewAccount = async ({ name, email, image, phone, password, address, role }) => {
     try {
+        const imageLink = await uploadImage({ file: image, folder: 'profile', prefix: 'profile' });
+        
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
         const account = await pool
@@ -243,7 +246,7 @@ const createNewAccount = async ({ name, email, image, phone, password, address, 
             .input('name', sql.NVarChar, name)
             .input('email', sql.VarChar, email)
             .input('password', sql.Char, password)
-            .input('image', sql.VarChar, image)
+            .input('image', sql.VarChar, imageLink)
             .input('phone', sql.VarChar, phone)
             .input('address', sql.NVarChar, address)
             .input('role', sql.VarChar, role)

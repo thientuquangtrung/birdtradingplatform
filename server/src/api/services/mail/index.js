@@ -1,4 +1,5 @@
-const { transport, options } = require('../../config/init.mail');
+const { mailer } = require('../../config');
+const { transport, options } = mailer;
 
 const sendMail = async ({ to, subject, html, text = '' }) => {
     const mailOptions = {

@@ -1,26 +1,15 @@
-const createHttpError = require("http-errors");
-const multer = require("multer");
-const path = require("path");
+const { memoryStorage } = require('multer');
+const multer = require('multer');
 
-function uploadImg (prefix) {
-    const storage = multer.diskStorage({
-        destination: path.join(process.cwd(), `public/images/${prefix}`),
-        filename: (req, file, cb) => {
-            return cb(
-                null,
-                `${prefix}_${Date.now()}${path.extname(file.originalname)}`
-            );
-        },
-    });
-    
+function uploadImg() {
     const upload = multer({
-        storage: storage,
+        storage: memoryStorage(),
         limits: {
-            fileSize: 1000000,
+            fileSize: 10000000,
         },
     });
 
-    return upload
+    return upload;
 }
 
 module.exports = {

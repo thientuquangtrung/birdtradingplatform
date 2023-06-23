@@ -18,6 +18,8 @@ const options = {
 };
 
 module.exports = {
-    transport,
-    options,
+    mailer: {
+        transport,
+        options,
+    },
 };
