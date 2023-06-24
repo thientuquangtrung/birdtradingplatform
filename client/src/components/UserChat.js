@@ -7,7 +7,6 @@ import { useFetchRecipientUser } from '../hooks/useFetchRecipient';
     function UserChat({chat, user}) {
     const {recipientUser} = useFetchRecipientUser(chat, user)
 
-    console.log(recipientUser)
     return (
         <MenuItem>
             <Stack direction="row" gap={1} alignItems="center">

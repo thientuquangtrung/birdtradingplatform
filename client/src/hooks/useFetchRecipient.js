@@ -15,11 +15,9 @@ export const useFetchRecipientUser = (chat, user) => {
                 .get(`chat/${user.id}`)
                 .then((response) => {
                     setRecipientUser(response.data.data);
-                    
                 })
                 .catch((error) => {
                     setError(error);
-                   
                 });
         };
 

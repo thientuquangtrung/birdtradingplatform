@@ -13,8 +13,8 @@ import AuthContext from '../contexts/AuthContext';
 import UserChat from './UserChat';
 
 function ChatButton() {
-    const { currentUser, currentChat } = useContext(AuthContext);
-    const { userChats, isUserChatsLoading, updateCurrentChat } = useContext(ChatContext);
+    const { currentUser } = useContext(AuthContext);
+    const { userChats, isUserChatsLoading, updateCurrentChat, currentChat } = useContext(ChatContext);
     const [isChatOpen, setIsChatOpen] = useState(false);
 
     const handleChatToggle = () => {
@@ -77,23 +77,25 @@ function ChatButton() {
                                     );
                                 })}
                         </Stack>
-                        if(!currentChat) return (
-                        <Stack flex={1} direction="column" gap={1} alignItems="center" padding={4} height="80%">
-                            <img
-                                style={{ objectFit: 'contain' }}
-                                width="100%"
-                                height="100%"
-                                src="assets/images/Chat.png"
-                            />
-                            <Typography variant="poster" fontWeight={700} textAlign="center" color="#7b8593">
-                                Xin Chào!
-                            </Typography>
-                        </Stack>
-                        ) if(currentChat) return (
-                        <Stack flex={1} direction="column" height="85%">
-                            <ChatRoom />
-                        </Stack>
-                        )
+                        <Divider variant="fullWidth" orientation="vertical" flexItem />
+                        {!currentChat ? (
+                            <Stack flex={1} direction="column" gap={1} alignItems="center" padding={4} height="80%">
+                                <img
+                                    style={{ objectFit: 'contain' }}
+                                    width="100%"
+                                    height="100%"
+                                    src="assets/images/Chat.png"
+                                    alt=""
+                                />
+                                <Typography variant="poster" fontWeight={700} textAlign="center" color="#7b8593">
+                                    Xin Chào!
+                                </Typography>
+                            </Stack>
+                        ) : (
+                            <Stack flex={1} direction="column" height="85%">
+                                <ChatRoom />
+                            </Stack>
+                        )}
                     </Stack>
                 </div>
             )}

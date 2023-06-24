@@ -14,6 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 import AuthContext from '../contexts/AuthContext';
 import { ChatContext } from '../contexts/ChatContext';
 import { useFetchRecipientUser } from '../hooks/useFetchRecipient';
+import axiosClient from '../api/axiosClient';
 
 function ChatRoom() {
     const { currentUser } = useContext(AuthContext);
@@ -23,7 +24,7 @@ function ChatRoom() {
     const chatRoomRef = useRef(null);
 
     const [showPaper, setShowPaper] = useState(false);
-    const [message, setMessage] = useState('')
+    const [message, setMessage] = useState('');
 
     const [isButtonActive, setButtonActive] = useState(false);
 
@@ -60,10 +61,21 @@ function ChatRoom() {
     };
 
     const handleSendMessage = () => {
-        const newMessage = <Message own>{message}</Message>;
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        setMessage('');
-        setButtonActive(false);
+        const newMessage = {
+            chatId: currentChat.id,
+            senderId: currentUser.id,
+            text: message,
+        };
+        axiosClient
+            .post(`massage`, newMessage)
+            .then((response) => {
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                setMessage('');
+                setButtonActive(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     return (

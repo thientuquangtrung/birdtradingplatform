@@ -8,12 +8,11 @@ export const ChatContextProvider = ({ children }) => {
     const [userChats, setUserChats] = useState([]);
     const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
     const [userChatsError, setUserChatsError] = useState(null);
-    const [currentChat, setCurrentChat] = useState(null)
-    const [messages, setMessages] = useState([])
-    const [isMessagesLoading, setIsMessagesLoading] = useState(false)
+    const [currentChat, setCurrentChat] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [isMessagesLoading, setIsMessagesLoading] = useState(false);
     const [messagesError, setMessagesError] = useState(null);
 
-    console.log("currentChat", currentChat)
     useEffect(() => {
         const getUserChats = async () => {
             if (currentUser?.id) {
@@ -35,29 +34,28 @@ export const ChatContextProvider = ({ children }) => {
         getUserChats();
     }, [currentUser]);
 
-
     useEffect(() => {
         const getMessages = async () => {
-            setIsMessagesLoading(true)
+            if (!currentChat) return;
+            setIsMessagesLoading(true);
             setMessagesError(null);
-
             axiosClient
-                    .get(`message/${currentChat.id}`)
-                    .then((response) => {
-                        setMessages(response.data.data);
-                        setIsMessagesLoading(false);
-                    })
-                    .catch((error) => {
-                        setUserChatsError(error);
-                        setIsMessagesLoading(false);
-                    });
-        }
+                .get(`message/${currentChat.id}`)
+                .then((response) => {
+                    setMessages(response.data.data);
+                    setIsMessagesLoading(false);
+                })
+                .catch((error) => {
+                    setUserChatsError(error);
+                    setIsMessagesLoading(false);
+                });
+        };
         getMessages();
-    })
+    }, [currentChat]);
 
     const updateCurrentChat = useCallback((chat) => {
-        setCurrentChat(chat)
-    }, [])
+        setCurrentChat(chat);
+    }, []);
 
     const createChat = useCallback(async (firstId, secondId) => {
         axiosClient
@@ -69,20 +67,23 @@ export const ChatContextProvider = ({ children }) => {
                 setUserChats((prev) => [...prev, response]);
             })
             .catch((error) => {
-                return console.log('Error creating chat'.response);
+                return console.log(error);
             });
     }, []);
 
     return (
         <ChatContext.Provider
             value={{
+                messages,
                 userChats,
                 isUserChatsLoading,
                 userChatsError,
-                createChat,
                 currentChat,
                 isMessagesLoading,
-                messagesError
+                messagesError,
+                createChat,
+                updateCurrentChat,
+                setMessages,
             }}
         >
             {children}
