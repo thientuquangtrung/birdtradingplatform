@@ -64,7 +64,7 @@ const getOrdersByShop = async ({ id, status, page, perPage }) => {
     }
 };
 
-const changeOrderStatus = async ({ orderId, status }) => {
+const changeOrderStatus = async ({ orderId, status, cancelId = 0 }) => {
     try {
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('order');
@@ -72,6 +72,7 @@ const changeOrderStatus = async ({ orderId, status }) => {
             .request()
             .input('orderId', sql.UniqueIdentifier, orderId)
             .input('status', sql.VarChar, status)
+            .input('cancelId', sql.Int, cancelId)
             .query(sqlQueries.changeOrderStatus);
 
         return list.recordset;
@@ -97,9 +98,22 @@ const getRevenue = async ({ startDate, endDate, id }) => {
     }
 };
 
+const getCancelReason = async (role) => {
+    try {
+        let pool = await sql.connect(config.sql);
+        const sqlQueries = await loadSqlQueries('order');
+        const list = await pool.request().input('role', sql.VarChar, role).query(sqlQueries.getCancelReason);
+
+        return list.recordset;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     changeOrderStatus,
     getOrdersByShop,
     getRevenue,
+    getCancelReason,
 };

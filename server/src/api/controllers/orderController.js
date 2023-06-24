@@ -39,8 +39,9 @@ const cancelOrder = async (req, res, next) => {
     try {
         const orderId = req.params.orderId;
         if (!orderId) return createHttpError.BadRequest('Invalid request');
-        const status = req.query.status ? req.query.status : 'PENDING';
-        const data = await orderData.changeOrderStatus({ orderId, status });
+        const status = req.query.status ? req.query.status : 'CANCELED';
+        const cancelId = req.query.cancelId ? req.query.cancelId : 0;
+        const data = await orderData.changeOrderStatus({ orderId, status, cancelId });
 
         return res.send({
             status: 200,
@@ -81,10 +82,25 @@ const getRevenue = async (req, res, next) => {
     }
 };
 
+const getCancelReason = async (req, res, next) => {
+    try {
+        const list = await orderData.getCancelReason(req.query.role);
+
+        return res.send({
+            status: 200,
+            message: 'OK',
+            data: list,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getOrdersByCusId,
     changeOrderStatus,
     cancelOrder,
     getOrdersByShop,
     getRevenue,
+    getCancelReason,
 };

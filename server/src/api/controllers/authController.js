@@ -1,4 +1,3 @@
-const validate = require('deep-email-validator');
 const createError = require('http-errors');
 const fs = require('fs-extra');
 
@@ -6,70 +5,6 @@ const authData = require('../services/auth');
 const { hashing, compareHashing } = require('../utils/hash_utils');
 const { modifyUserInfo } = require('../utils/response_modifiers');
 const { signAccessToken } = require('../utils/jwt_utils');
-
-const getAccounts = async (req, res, next) => {
-    try {
-        const result = await authData.getAccounts(req.query);
-        if (result.length > 0) {
-            result.forEach((account) => {
-                account.image = `${process.env.HOST_URL}/profile/${account.image}`;
-            });
-        }
-        return res.send({
-            status: 200,
-            message: 'OK',
-            data: result,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const getAccountById = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        const account = await authData.getAccountById({ id, ...req.query });
-
-        const data = {
-            ...account,
-            image: account.image && `${process.env.HOST_URL}/profile/${account.image}`,
-        };
-        return res.send({
-            status: 200,
-            message: 'OK',
-            data,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const deleteAccount = async (req, res, next) => {
-    try {
-        await authData.deleteAccount(req.params.id);
-
-        res.send({
-            status: 200,
-            message: 'OK',
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const createNewAccount = async (req, res, next) => {
-    try {
-        const image = req.file ? req.file.filename : '';
-        req.body.password = await hashing(req.body.password);
-        await authData.createNewAccount({ ...req.body, image });
-        res.send({
-            status: 200,
-            message: 'OK',
-        });
-    } catch (error) {
-        next(error);
-    }
-};
 
 const getCurrentUser = async (req, res, next) => {
     try {
@@ -83,7 +18,7 @@ const getCurrentUser = async (req, res, next) => {
             image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
         });
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -96,7 +31,7 @@ const getNewAccessToken = async (req, res, next) => {
             accessToken,
         });
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -112,7 +47,7 @@ const createSellerAccount = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -123,10 +58,6 @@ const updateSeller = async (req, res, next) => {
             return next(createError.InternalServerError('Cannot get id'));
         }
 
-        if (req.body.profile || req.body.image) {
-            delete req.body?.profile;
-            delete req.body?.image;
-        }
         const seller = await authData.readAccountById(id, 'seller');
         const updatedSeller = Object.assign(seller, req.body);
 
@@ -147,7 +78,7 @@ const updateSeller = async (req, res, next) => {
             },
         });
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -175,7 +106,7 @@ const sellerLogin = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -203,35 +134,7 @@ const customerLogin = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(error);
-    }
-};
-
-const adminLogin = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-
-        const admin = await authData.readOneAccount(email, 'admin');
-        console.log(admin);
-        if (!admin) {
-            return next(createError.NotFound('Email address is not exist'));
-        }
-
-        const isPasswordValid = password === admin.password.trim();
-
-        if (!isPasswordValid) {
-            return next(createError.Unauthorized('Incorrect password'));
-        }
-
-        if (admin.image) {
-            admin.image = `${process.env.HOST_URL}/profile/${admin.image}`;
-        }
-
-        const response = await modifyUserInfo(admin);
-
-        return res.send(response);
-    } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -249,7 +152,7 @@ const createCustomerAccount = async (req, res, next) => {
 
         return res.send(response);
     } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -258,11 +161,6 @@ const updateCustomer = async (req, res, next) => {
         const id = req.payload.id;
         if (!id) {
             return next(createError.InternalServerError('Cannot get id'));
-        }
-
-        if (req.body.profile || req.body.image) {
-            delete req.body?.profile;
-            delete req.body?.image;
         }
 
         const customer = await authData.readAccountById(id, 'customer');
@@ -284,38 +182,7 @@ const updateCustomer = async (req, res, next) => {
             },
         });
     } catch (error) {
-        next(error);
-    }
-};
-
-const updateAccountByAdmin = async (req, res, next) => {
-    try {
-        const foundAccount = await authData.readAccountById(req.body.id, req.body.role);
-        if (!foundAccount) createError.BadRequest('Cannot find account');
-
-        const response = await authData.updateAccountByAdmin(req.body);
-
-        return res.send({
-            status: 200,
-            message: 'OK',
-            data: response,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const changePassword = async (req, res, next) => {
-    try {
-        const result = await changePassword(req.body);
-
-        return res.send({
-            status: 200,
-            message: 'OK',
-            data: result,
-        });
-    } catch (error) {
-        next(error);
+        next(createError(error.message));
     }
 };
 
@@ -329,11 +196,4 @@ module.exports = {
     sellerLogin,
     createCustomerAccount,
     updateCustomer,
-    adminLogin,
-    getAccounts,
-    updateAccountByAdmin,
-    deleteAccount,
-    createNewAccount,
-    getAccountById,
-    changePassword,
 };

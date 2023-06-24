@@ -54,9 +54,10 @@ const ManageOrder = () => {
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                         <Tab label="Tất cả" value="1" />
                         <Tab label="Chờ xác nhận" value="2" />
-                        <Tab label="Đang giao" value="3" />
-                        <Tab label="Giao thành công" value="4" />
-                        <Tab label="Đơn hủy" value="5" />
+                        <Tab label="Chờ lấy hàng" value="3" />
+                        <Tab label="Đang giao" value="4" />
+                        <Tab label="Hoàn thành" value="5" />
+                        <Tab label="Đã hủy" value="6" />
                     </TabList>
                 </Paper>
                 <Stack marginTop={5} height="50px" direction="row" alignItems="center">
@@ -91,19 +92,22 @@ const ManageOrder = () => {
                     </Button>
                 </Stack>
                 <TabPanel value="1">
-                    <OrderTab />
+                    <OrderTab></OrderTab>
                 </TabPanel>
                 <TabPanel value="2">
-                    <OrderTab status="PENDING" />
+                    <OrderTab status="PENDING"></OrderTab>
                 </TabPanel>
                 <TabPanel value="3">
-                    <OrderTab status="SHIPPING" />
+                    <OrderTab status="PICKUP"></OrderTab>
                 </TabPanel>
                 <TabPanel value="4">
-                    <OrderTab status="COMPLETED" />
+                    <OrderTab status="SHIPPING"></OrderTab>
                 </TabPanel>
                 <TabPanel value="5">
-                    <OrderTab status="CANCELED" />
+                    <OrderTab status="COMPLETED"></OrderTab>
+                </TabPanel>
+                <TabPanel value="6">
+                    <OrderTab status="CANCELED"></OrderTab>
                 </TabPanel>
             </TabContext>
         </Stack>
