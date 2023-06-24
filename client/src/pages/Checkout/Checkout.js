@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, Modal, Paper, Stack, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AuthContext from '../../contexts/AuthContext';
@@ -19,6 +19,9 @@ import VNPayButton from '../../components/VNPayButton';
 import { Button as JoyButton } from '@mui/joy';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import MoMoButton from '../../components/MoMoButton';
+import Alert from '@mui/material/Alert';
+import CloseIcon from '@mui/icons-material/Close';
+import Chip from '@mui/joy/Chip';
 
 function Checkout() {
     const location = useLocation();
@@ -34,8 +37,22 @@ function Checkout() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [selectedOption, setSelectedOption] = useState('');
 
-    const isChange = () => {
-        return !(currentUser.phone !== phone || currentUser.shipToAddress !== shipToAddress);
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const style = {
+        position: 'relative',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 550,
+        // height:500,
+        bgcolor: 'background.paper',
+        border: 'none',
+        boxShadow: 24,
+        p: 4,
+        borderRadius: 2,
     };
 
     const handlePlaceOrder = () => {
@@ -197,6 +214,89 @@ function Checkout() {
                         </Typography>
                     </div>
                 </div>
+
+                <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Alert severity="warning">
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ flex: 1 }}>
+                                Chính sách trả hàng hoặc hoàn tiền cho sản phẩm của Shop được quy định
+                            </span>
+                            <Button size="small" onClick={handleOpen}>
+                                tại đây
+                            </Button>
+                        </div>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <Stack direction="row" alignItems="center">
+                                    <Chip
+                                        variant="soft"
+                                        size="md"
+                                        sx={{ fontSize: 20, margin: '5px auto 30px', height: '36px' }}
+                                    >
+                                        Điều kiện yêu cầu trả hàng/ hoàn tiền
+                                    </Chip>
+                                </Stack>
+                                <IconButton
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 10,
+                                        top: 10,
+                                        bgcolor: '#eeeeee',
+                                        width: '30px',
+                                        height: '30px',
+                                    }}
+                                    size="xx-small"
+                                    onClick={handleClose}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+
+                                {/* <Typography variant="body1" display="block">
+                                    Mọi vấn đề thắc mắc trong việc đổi trả/ hoàn hàng thì liên hệ trực tiếp Shop thông
+                                    qua số điện thoại/ mục chat
+                                </Typography> */}
+
+                                <Typography variant="body1" display="block" gutterBottom paddingBottom={1}>
+                                    <div style={{ fontWeight: 'bold' }}>I/ CHIM CẢNH</div>
+                                    <ul style={{ paddingLeft: 30, listStyle: 'circle' }}>
+                                        <li>
+                                            Liên hệ số điện thoại trong mô tả của Shop mà bạn đã thực hiện giao dịch
+                                            trước đó.
+                                        </li>
+                                    </ul>
+                                </Typography>
+
+                                <Typography variant="body1" display="block" gutterBottom paddingBottom={1}>
+                                    <div style={{ fontWeight: 'bold' }}>II/ THỨC ĂN</div>
+
+                                    <ul style={{ paddingLeft: 30, listStyle: 'circle' }}>
+                                        <li>Sản phẩm phải còn nguyên đóng gói và chưa mở.</li>
+                                        <li>Hạn sử dụng của thức ăn phải còn thời gian hợp lệ.</li>
+                                        <li>
+                                            Yêu cầu trả hàng/hoàn tiền phải được gửi lại trong vòng một tuần kể từ ngày
+                                            mua.
+                                        </li>
+                                    </ul>
+                                </Typography>
+
+                                <Typography variant="body1" display="block" gutterBottom>
+                                    <div style={{ fontWeight: 'bold' }}>III/ PHỤ KIỆN</div>
+
+                                    <ul style={{ paddingLeft: 30, listStyle: 'circle' }}>
+                                        <li>
+                                            Yêu cầu trả hàng/hoàn tiền chỉ áp dụng cho lồng bị hư hỏng do lỗi sản xuất.
+                                        </li>
+                                    </ul>
+                                </Typography>
+                            </Box>
+                        </Modal>
+                    </Alert>
+                </Stack>
 
                 <div>
                     <Box align="center">
