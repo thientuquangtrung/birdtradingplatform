@@ -38,9 +38,7 @@ const getFeedbackOfProduct = async ({ productId, page, perPage }) => {
         for (const feedback of list.recordset) {
             total = feedback.total;
             delete feedback.total;
-            feedback.image = `${process.env.HOST_URL}/feedback/${feedback.image}`;
             const customer = await readAccountById(feedback.customerId, 'CUSTOMER');
-            customer.image = `${process.env.HOST_URL}/profile/${customer.image}`;
             feedback.customer = customer;
         }
 

@@ -37,7 +37,7 @@ function ProductDetail() {
             .get(`product/${location.state?.id}`)
             .then(function (response) {
                 // handle success
-                setProduct(response.data);
+                setProduct(response.data.data);
             })
             .catch(function (error) {
                 // handle error
@@ -127,8 +127,7 @@ function ProductDetail() {
                                             />
                                             <Stack direction="column">
                                                 <Typography variant="subtitle2" gutterBottom fontSize={16}>
-                                                    {/* {product.shop?.name} */}
-                                                    Wang ZiQi
+                                                    {product.shop?.name}
                                                 </Typography>
                                                 <Stack direction="row" gap={1}>
                                                     <ChatButtonShop />

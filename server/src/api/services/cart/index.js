@@ -77,7 +77,6 @@ const getUserCart = async ({ userId }) => {
 
         for (const itemKey of Object.keys(cartList)) {
             const product = await redisClient.json.get(itemKey);
-            product.image = `${process.env.HOST_URL}/product/${product.image}`;
             productList.push({ product, quantity: cartList[itemKey] });
         }
 

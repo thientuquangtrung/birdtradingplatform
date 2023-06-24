@@ -1,11 +1,10 @@
+const createError = require('http-errors');
 const sql = require('mssql');
 const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { pagination } = require('../../utils/pagination');
-const createError = require('http-errors');
 const { setProduct, getProduct, searchItems, addSuggestions } = require('./product.repo');
 const { redisClient } = require('../../config');
-const { readAccountById } = require('../auth');
 
 const getProducts = async (pageNo) => {
     try {
@@ -20,8 +19,8 @@ const getProducts = async (pageNo) => {
             .query(sqlQueries.productList);
 
         return list.recordset;
-    } catch (err) {
-        throw createError(error);
+    } catch (error) {
+        throw error;
     }
 };
 
@@ -35,14 +34,9 @@ const getProductById = async (id) => {
                 .recordset[0];
         }
 
-        const result = {
-            ...product,
-            image: `${process.env.HOST_URL}/product/${product.image}`,
-            shop: await readAccountById(product.shopId, 'SELLER'),
-        };
-        return result;
+        return product;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -60,7 +54,7 @@ const getProductByCategory = async (id, pageNo) => {
             .query(sqlQueries.getProductByCategory);
         return list.recordset;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -96,7 +90,7 @@ const searchProducts = async ({ sortBy, order, categoryId, q, page, shopId }) =>
         }
         return await searchItems('idx:products', query, option);
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -121,7 +115,7 @@ const suggestProducts = async (q) => {
 
         return sugList;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -157,7 +151,7 @@ const filterProducts = async (sortBy, order, categoryId, q, pageNo) => {
 
         return list.recordset;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -172,7 +166,7 @@ const getProductsOfSeller = async (shopId) => {
 
         return list.recordset;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -189,7 +183,7 @@ const searchSellerProducts = async (shopId, q, categoryId) => {
 
         return list.recordset;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -210,10 +204,10 @@ const createProduct = async ({ name, shopId, description, price, image, category
         const productId = result.recordset[0].id;
         const product = await getProductById(productId);
         product.sold = 0;
-        console.log(await setProduct(product));
+        await setProduct(product);
         return product;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -241,7 +235,7 @@ const updateProduct = async ({ id, name, shopId, description, price, image, cate
         await setProduct(product);
         return product;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
@@ -264,7 +258,7 @@ const deleteProduct = async (id, shopId) => {
         await setProduct(product);
         return product;
     } catch (error) {
-        throw createError(error);
+        throw error;
     }
 };
 
