@@ -238,7 +238,7 @@ const getBanReason = async (role) => {
 const createNewAccount = async ({ name, email, image, phone, password, address, role }) => {
     try {
         const imageLink = await uploadImage({ file: image, folder: 'profile', prefix: 'profile' });
-        
+
         let pool = await sql.connect(config.sql);
         const sqlQueries = await loadSqlQueries('auth');
         const account = await pool
@@ -331,14 +331,23 @@ const generateOtp = async (email) => {
     try {
         const OTP = OtpGenerator.generate(6, {
             digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
         });
 
         // send OTP email
-
+        await sendMail({
+            to: email,
+            subject: 'VERIFY OTP',
+            html: `<h1>Hello there</h1>
+        <p>Isn't NodeMailer useful?</p>
+    <p>${OTP}</p>`,
+        });
         // encrypt OTP
         const hashOtp = await hashing(OTP);
         // save OTP hashed to redis with expiration time
-        await redisClient.setEx(email, 60, hashOtp);
+        await redisClient.setEx(email, 600, hashOtp);
 
         return true;
     } catch (error) {

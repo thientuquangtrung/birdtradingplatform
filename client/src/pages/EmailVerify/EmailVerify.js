@@ -3,7 +3,7 @@ import { Stack } from '@mui/system';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
-
+import axiosClient from '../../api/axiosClient';
 const EmailVerify = () => {
     const paperStyle = {
         padding: 20,
@@ -38,7 +38,11 @@ const EmailVerify = () => {
 
     const handleSubmit = () => {
         // if (validateAll()) {
-        navigate('/otp/verify');
+        axiosClient
+            .post('otp/generate', { email })
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
+        // navigate('/otp/verify');
         // }
     };
 
