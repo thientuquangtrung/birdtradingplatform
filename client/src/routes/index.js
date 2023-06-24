@@ -32,6 +32,10 @@ import AdminLogin from '../pages/Login/AdminLogin';
 import SellerDetail from '../pages/SellerDetail/SellerDetail';
 import CustomerDetail from '../pages/CustomerDetail/CustomerDetail';
 import CustomerManagementAdmin from '../pages/CustomerManagementAdmin/CustomerManagementAdmin';
+import PasswordVerify from '../pages/PasswordVerify/PasswordVerify';
+import PasswordChange from '../pages/PasswordChange/PasswordChange';
+import EmailVerify from '../pages/EmailVerify/EmailVerify';
+import OtpVerify from '../pages/OtpVerify/OtpVerify';
 
 // Public routes
 const publicRoutes = [
@@ -45,6 +49,8 @@ const publicRoutes = [
     { path: '/signup', component: Signup, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: Login, layout: AuthLayout, subdomain: 'common' },
+    { path: '/email/verify', component: EmailVerify, layout: AuthLayout, subdomain: 'common' },
+    { path: '/otp/verify', component: OtpVerify, layout: AuthLayout, subdomain: 'common' },
     { path: '/login', component: AdminLogin, subdomain: 'admin' },
 ];
 
@@ -140,6 +146,20 @@ const privateRoutes = [
         layout: AdminLayout,
         role: ['ADMIN'],
         subdomain: 'admin',
+    },
+    {
+        path: '/password/verify',
+        component: PasswordVerify,
+        layout: AuthLayout,
+        role: ['CUSTOMER'],
+        subdomain: 'common',
+    },
+    {
+        path: '/password/change',
+        component: PasswordChange,
+        layout: DefaultLayout,
+        role: ['CUSTOMER'],
+        subdomain: 'common',
     },
 ];
 

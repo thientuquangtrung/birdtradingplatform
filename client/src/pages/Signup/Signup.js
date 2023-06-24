@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -9,11 +9,10 @@ import { enqueueSnackbar } from 'notistack';
 
 const Signup = ({ role = 'customer' }) => {
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
-    const avatarStyle = { backgroundColor: 'lightblue' };
+    const avatarStyle = { backgroundColor: 'lightblue', width: '50px', height: '50px' };
     const marginStyle = { margin: '10px 0' };
 
     const { setCurrentUser } = useContext(AuthContext);
-
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -21,74 +20,63 @@ const Signup = ({ role = 'customer' }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
-    const mailformat = /^[a-zA-Z0-9]+@+[a-zA-Z0-9]+.+[A-z]/;
-    const phoneformat = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
+    // const mailformat = /^[a-zA-Z0-9_.+-]+@(gmail\.com|fpt\.edu\.vn)$/;
+
+    const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
 
     const [validationMsg, setValidationMsg] = useState('');
-    const [messsage, setMessage] = useState('');
+    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        setIsButtonDisabled(
+            !name.trim() || !phone.trim() || !address.trim() || !password.trim() || !confirmPassword.trim(),
+        );
+    }, [name, phone, address, password, confirmPassword]);
 
     const handlePress = (event) => {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Ngăn chặn sự kiện mặc định của phím Enter
-            handleSubmit(); // Gọi hàm handleSubmit để thực hiện đăng nhập
+            event.preventDefault();
+            handleSubmit();
         }
     };
-
-    function isEmpty(str) {
-        return !str || str.length === 0;
-    }
+    const codeStyle = {
+        padding: '6px 4px',
+        borderRadius: '10px',
+        transition: 'background-color 0.3s ease',
+    };
 
     const validateAll = () => {
         const msg = {};
-        if (
-            isEmpty(name) ||
-            isEmpty(email) ||
-            isEmpty(phone) ||
-            isEmpty(address) ||
-            isEmpty(password) ||
-            isEmpty(confirmPassword)
-        ) {
-            msg.email = 'Vui lòng nhập đầy đủ thông tin !';
+        if (!name.trim()) {
+            msg.name = 'Vui lòng nhập họ và tên!';
+        }
+        // if (!email.trim()) {
+        //     msg.email = 'Vui lòng nhập email!';
+        // }
+        // } else if (!mailformat.test(email)) {
+        //     msg.email = 'Email không hợp lệ!';
+        // }
+        if (!phone.trim()) {
+            msg.phone = 'Vui lòng nhập số điện thoại!';
+        } else if (!phoneformat.test(phone)) {
+            msg.phone = 'Số điện thoại không hợp lệ!';
+        }
+        if (!address.trim()) {
+            msg.address = 'Vui lòng nhập địa chỉ!';
+        }
+        if (!password.trim()) {
+            msg.password = 'Vui lòng nhập mật khẩu!';
+        }
+        if (!confirmPassword.trim()) {
+            msg.confirmPassword = 'Vui lòng xác nhận mật khẩu!';
+        } else if (password !== confirmPassword) {
+            msg.confirmPassword = 'Mật khẩu không khớp!';
         }
         setValidationMsg(msg);
-        if (Object.keys(msg).length > 0) return false;
-        return true;
+        return Object.keys(msg).length === 0;
     };
-    const validateElement = () => {
-        const message = {};
-        if (!mailformat.test(email)) {
-            message.email = 'Nhập sai định dạng email';
-        }
-        if (!phoneformat.test(phone)) {
-            message.phone = 'Nhập sai định dạng số điện thoại';
-        }
-        if (password !== confirmPassword) {
-            message.confirmPassword = 'Mật khẩu không khớp';
-        }
-        setMessage(message);
-        if (Object.keys(message).length > 0) return false;
-        return true;
-    };
-
-    function handleChangeName(event) {
-        setName(event.target.value);
-    }
-    function handleChangeEmail(event) {
-        setEmail(event.target.value);
-    }
-    function handleChangePhone(event) {
-        setPhone(event.target.value);
-    }
-    function handleChangeAddress(event) {
-        setAddress(event.target.value);
-    }
-    function handleChangePassword(event) {
-        setPassword(event.target.value);
-    }
-    function handleChangeConfirmPassword(event) {
-        setConfirmPassword(event.target.value);
-    }
 
     const handleSubmit = () => {
         const payload = {
@@ -105,8 +93,8 @@ const Signup = ({ role = 'customer' }) => {
         }
 
         const isValidAll = validateAll();
-        const isValidElement = validateElement();
-        if (isValidAll && isValidElement) {
+
+        if (isValidAll) {
             axiosClient
                 .post(`auth/${role ? role : 'customer'}/register`, payload)
                 .then(function (response) {
@@ -123,97 +111,112 @@ const Signup = ({ role = 'customer' }) => {
         }
     };
 
-    const codeStyle = {
-        backgroundColor: '#00CED1',
-        padding: '6px 4px',
-        borderRadius: '10px',
-        transition: 'background-color 0.3s ease',
-        ':hover': {
-            backgroundColor: '##FF1493',
-        },
-    };
-
     return (
         <Grid>
             <Paper elevation={20} style={paperStyle}>
                 <Grid align="center">
                     <Avatar style={avatarStyle}>
-                        <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                        <AddCircleOutlineIcon />
                     </Avatar>
-                    <h1 style={{ margin: '0' }}>Đăng ký</h1>
+                    <h2 style={{ margin: '5px 0 0  0' }}>Thiết Lập Tài Khoản</h2>
                 </Grid>
-                <PersonIcon></PersonIcon>{' '}
+                <PersonIcon />
                 <TextField
                     required
                     value={name}
-                    onChange={handleChangeName}
+                    onChange={(e) => setName(e.target.value)}
                     style={{ marginBottom: '10px' }}
                     fullWidth
                     label="Họ & Tên"
                     onKeyDown={handlePress}
-                ></TextField>
-                <TextField
-                    required
-                    value={email}
-                    onChange={handleChangeEmail}
-                    style={marginStyle}
-                    fullWidth
-                    label="Email"
-                    type="email"
-                    onKeyDown={handlePress}
-                ></TextField>
-                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.email}</Typography>
+                    error={!!validationMsg.name}
+                />
+                {validationMsg.name && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.name}
+                    </Typography>
+                )}
+
                 <TextField
                     required
                     value={phone}
-                    onChange={handleChangePhone}
+                    onChange={(e) => setPhone(e.target.value)}
                     style={marginStyle}
                     fullWidth
                     label="Số điện thoại"
                     onKeyDown={handlePress}
-                ></TextField>
-                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{messsage.phone}</Typography>
+                    error={!!validationMsg.phone}
+                />
+                {validationMsg.phone && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.phone}
+                    </Typography>
+                )}
                 <TextField
                     required
                     value={address}
-                    onChange={handleChangeAddress}
+                    onChange={(e) => setAddress(e.target.value)}
                     style={marginStyle}
                     fullWidth
                     label="Địa chỉ"
                     onKeyDown={handlePress}
-                ></TextField>
+                    error={!!validationMsg.address}
+                />
+                {validationMsg.address && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.address}
+                    </Typography>
+                )}
                 <TextField
                     required
                     value={password}
-                    onChange={handleChangePassword}
+                    onChange={(e) => setPassword(e.target.value)}
                     style={marginStyle}
                     name="psw1"
                     fullWidth
                     label="Mật khẩu"
                     type="password"
                     onKeyDown={handlePress}
-                ></TextField>
+                    error={!!validationMsg.password}
+                />
+                {validationMsg.password && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.password}
+                    </Typography>
+                )}
                 <TextField
                     required
                     value={confirmPassword}
-                    onChange={handleChangeConfirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     style={marginStyle}
                     name="psw2"
                     fullWidth
                     label="Nhập lại mật khẩu"
                     type="password"
                     onKeyDown={handlePress}
-                ></TextField>
-                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
-                    {messsage.confirmPassword}
-                </Typography>
-                <Button style={codeStyle} fullWidth type="submit" variant="contained" onClick={handleSubmit}>
+                    error={!!validationMsg.confirmPassword}
+                />
+                {validationMsg.confirmPassword && (
+                    <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
+                        {validationMsg.confirmPassword}
+                    </Typography>
+                )}
+                <Button
+                    disabled={isButtonDisabled}
+                    sx={{
+                        '&:disabled': {
+                            backgroundColor: isButtonDisabled ? 'lightblue' : 'blue',
+                        },
+                    }}
+                    style={codeStyle}
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmit}
+                >
                     Đăng ký
                 </Button>
-                <Typography style={{ color: 'red', fontSize: '13px', margin: '5px 0 0 10px' }}>
-                    {validationMsg.email}
-                </Typography>
-                <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
+                <Typography style={{ color: 'red', fontSize: '13px', margin: '5px 0 10px 0' }}>{error}</Typography>
                 <Typography style={marginStyle}>
                     Đã có tài khoản?{' '}
                     <Link style={{ color: 'blue' }} to="/login">
