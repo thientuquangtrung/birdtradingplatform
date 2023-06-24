@@ -5,6 +5,7 @@ const authData = require('../services/auth');
 const { hashing, compareHashing } = require('../utils/hash_utils');
 const { modifyUserInfo } = require('../utils/response_modifiers');
 const { signAccessToken } = require('../utils/jwt_utils');
+const { deleteImage, uploadImage } = require('../services/firebase');
 
 const getAccounts = async (req, res, next) => {
     try {
@@ -72,9 +73,8 @@ const getBanReason = async (req, res, next) => {
 
 const createNewAccount = async (req, res, next) => {
     try {
-        const image = req.file ? req.file.filename : '';
         req.body.password = await hashing(req.body.password);
-        await authData.createNewAccount({ ...req.body, image });
+        await authData.createNewAccount({ ...req.body, image: req.file });
         res.send({
             status: 200,
             message: 'OK',
@@ -268,31 +268,25 @@ const updateCustomer = async (req, res, next) => {
     try {
         const id = req.payload.id;
         if (!id) {
-            return next(createError.InternalServerError('Cannot get id'));
-        }
-
-        if (req.body.profile || req.body.image) {
-            delete req.body?.profile;
-            delete req.body?.image;
+            return next(createError.BadRequest('Id not found'));
         }
 
         const customer = await authData.readAccountById(id, 'customer');
-        const updatedCustomer = Object.assign(customer, req.body);
-
         if (req.file) {
             if (customer.image) {
-                await fs.remove(`${process.cwd()}/public/images/profile/${customer.image}`);
+                await deleteImage(customer.image);
             }
-
-            updatedCustomer.image = req.file.filename;
+            req.body.image = await uploadImage({ file: req.file, folder: 'profile', prefix: 'profile' });
+        } else {
+            delete req.body.image;
+            delete req.body.profile;
         }
+
+        const updatedCustomer = Object.assign(customer, req.body);
         const response = await authData.updateCustomer(updatedCustomer);
 
         return res.send({
-            data: {
-                ...response,
-                image: `${process.env.HOST_URL}/profile/${response.image}`,
-            },
+            data: response,
         });
     } catch (error) {
         next(error);
@@ -379,6 +373,35 @@ const resetPassword = async (req, res, next) => {
     }
 };
 
+const generateOtp = async (req, res, next) => {
+    try {
+        const email = req.body.email;
+        const result = await authData.generateOtp(email);
+
+        res.send({
+            status: 200,
+            message: 'OTP has been sent via email',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const verifyOtp = async (req, res, next) => {
+    try {
+        const result = await authData.verifyOtp(req.body);
+
+        res.send({
+            status: 200,
+            message: 'Verified OTP successfully',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createSellerAccount,
     customerLogin,
@@ -400,4 +423,6 @@ module.exports = {
     resetPassword,
     getBanReason,
     verifyPassword,
+    generateOtp,
+    verifyOtp,
 };
