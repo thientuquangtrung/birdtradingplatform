@@ -15,7 +15,7 @@ function CustomerSidebar() {
                     <ListItemText primary="Tài khoản của tôi " />
                 </ListItemButton>
             </Link>
-            <Link to="/product/list/all">
+            <Link to="/password/verify">
                 <ListItemButton>
                     <ListItemIcon>
                         <Lock></Lock>

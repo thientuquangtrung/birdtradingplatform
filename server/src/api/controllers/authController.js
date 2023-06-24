@@ -239,7 +239,7 @@ const createCustomerAccount = async (req, res, next) => {
     try {
         const data = req.body;
         const mailCheck = await validate.validate(data.email);
-        if (!mailCheck.valid) next(createError.Unauthorized('Mail is invalid'));
+        if (!mailCheck.valid) return next(createError.Unauthorized('Mail is invalid'));
 
         data.password = await hashing(data.password);
 

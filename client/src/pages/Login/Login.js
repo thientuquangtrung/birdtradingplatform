@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Avatar, Button, Checkbox, FormControlLabel, Paper, TextField, Typography } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -13,7 +13,7 @@ const Login = ({ role }) => {
     // Destructure the handleChange prop
 
     const paperStyle = { padding: 20, width: 600, margin: '20px auto' };
-    const avatarStyle = { backgroundColor: 'lightblue' };
+    const avatarStyle = { backgroundColor: 'lightblue', width: '50px', height: '50px' };
     const marginStyle = { margin: '10px 0' };
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ const Login = ({ role }) => {
     const [validationMsg, setValidationMsg] = useState('');
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState('');
-
+    const [errorCheck, setErrorCheck] = useState(false);
     function handleChangeEmail(event) {
         setEmail(event.target.value);
     }
@@ -33,10 +33,17 @@ const Login = ({ role }) => {
     function isEmpty(str) {
         return !str || str.length === 0;
     }
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+    useEffect(() => {
+        setIsButtonDisabled(isEmpty(email) || isEmpty(password));
+    }, [email, password]);
+
     const validateAll = () => {
         const msg = {};
         if (isEmpty(email) || isEmpty(password)) {
             msg.email = 'Vui lòng nhập lại tài khoản hoặc mật khẩu !';
+            setErrorCheck(true);
         }
 
         setValidationMsg(msg);
@@ -71,6 +78,7 @@ const Login = ({ role }) => {
                     }
                 })
                 .catch(function (error) {
+                    setErrorCheck(true);
                     setError('Đăng nhập thất bại ! Vui lòng kiểm tra lại thông tin.');
                     console.log(error);
                 });
@@ -96,6 +104,7 @@ const Login = ({ role }) => {
                         fullWidth
                         required
                         onKeyDown={handlePress}
+                        error={errorCheck}
                     />
                     <TextField
                         value={password}
@@ -106,6 +115,7 @@ const Login = ({ role }) => {
                         fullWidth
                         required
                         onKeyDown={handlePress}
+                        error={errorCheck}
                     />
                     <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>
                         {validationMsg.email}
@@ -117,12 +127,25 @@ const Login = ({ role }) => {
                             <Link href="#">Quên mật khẩu ?</Link>
                         </Typography>
                     </Grid>
-                    <Button id="btn" variant="contained" type="button" color="primary" fullWidth onClick={handleSubmit}>
+                    <Button
+                        disabled={isButtonDisabled}
+                        id="btn"
+                        variant="contained"
+                        type="button"
+                        color="primary"
+                        fullWidth
+                        onClick={handleSubmit}
+                        sx={{
+                            '&:disabled': {
+                                backgroundColor: isButtonDisabled ? 'lightblue' : 'blue',
+                            },
+                        }}
+                    >
                         Đăng nhập
                     </Button>
                     <Typography style={marginStyle}>
                         Bạn đã có tài khoản ?{' '}
-                        <Link style={{ color: 'blue' }} to="/signup">
+                        <Link style={{ color: 'blue' }} to="/email/verify">
                             Đăng ký
                         </Link>
                     </Typography>
