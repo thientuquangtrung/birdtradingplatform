@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
+import AuthContext from '../../contexts/AuthContext';
+import { enqueueSnackbar } from 'notistack';
 
 const PasswordVerify = () => {
+    const navigate = useNavigate();
+    const { currentUser } = useContext(AuthContext);
     const avatarStyle = { backgroundColor: '#1E90FF' };
     const [password, setPassword] = useState('');
     const handleChangePassword = (event) => {
         setPassword(event.target.value);
+    };
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSubmit();
+        }
+    };
+    const handleSubmit = () => {
+        axiosClient
+            .put('/auth/verify_password', {
+                id: currentUser.id,
+                oldPassword: password,
+            })
+            .then((response) => {
+                // Handle the API response if needed
+                const secretToken = response.data.data;
+                navigate('/password/change', {
+                    state: {
+                        secretToken,
+                    },
+                });
+                enqueueSnackbar('Xác minh mật khẩu thành công', { variant: 'success' });
+            })
+            .catch((error) => {
+                // Handle the API error if needed
+                console.log(error);
+            });
     };
 
     return (
@@ -35,6 +67,7 @@ const PasswordVerify = () => {
                         Nhập mật khẩu BTP
                     </Typography>
                     <TextField
+                        onKeyDown={handlePress}
                         onChange={handleChangePassword}
                         value={password}
                         variant="outlined"
@@ -42,10 +75,8 @@ const PasswordVerify = () => {
                         type="password"
                         sx={{ width: '400px' }}
                     />
-                    <Button variant="contained">
-                        <Link to="/password/change" variant="contained">
-                            Xác nhận
-                        </Link>
+                    <Button variant="contained" onClick={handleSubmit}>
+                        Xác nhận
                     </Button>
                 </Stack>
             </Paper>

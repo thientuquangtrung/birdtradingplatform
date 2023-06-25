@@ -258,6 +258,7 @@ const changePassword = async ({ id, newPassword, confirmPassword, secretToken })
     try {
         if (newPassword !== confirmPassword) throw createError[400]('Confirm password does not match the new password');
         const isValid = await compareHashing(id, secretToken);
+
         if (!isValid) throw createError.BadRequest('Invalid secret token');
 
         const newHashPassword = await hashing(newPassword);
@@ -280,7 +281,6 @@ const verifyPassword = async ({ id, oldPassword }) => {
         if (!account) throw createError.BadRequest('Account not found');
         const isValid = await compareHashing(oldPassword, account.password);
         if (!isValid) throw createError.Unauthorized('Incorrect password');
-
         const secretToken = await hashing(id);
         return secretToken;
     } catch (error) {

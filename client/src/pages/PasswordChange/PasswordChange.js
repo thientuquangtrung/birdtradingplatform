@@ -1,9 +1,40 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import SubCustomerLayout from '../../layouts/SubCustomerLayout/SubCustomerLayout';
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
+import axiosClient from '../../api/axiosClient';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import AuthContext from '../../contexts/AuthContext';
+import { enqueueSnackbar } from 'notistack';
 
 const PasswordChange = () => {
+    const location = useLocation();
+    const secretToken = location.state.secretToken;
+    const { currentUser } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSubmit();
+        }
+    };
+    const handleSubmit = () => {
+        axiosClient
+            .put('/auth/change_password', {
+                id: currentUser.id,
+                secretToken: secretToken,
+                newPassword: password,
+                confirmPassword: confirmPassword,
+            })
+            .then((response) => {
+                navigate('/profile');
+                enqueueSnackbar('Đổi mật khẩu thành công', { variant: 'success' });
+            })
+            .catch((error) => console.log(error));
+    };
+
     return (
         <SubCustomerLayout>
             <Paper sx={{ height: '680px', width: '100%' }}>
@@ -28,17 +59,29 @@ const PasswordChange = () => {
                         <Typography variant="h6" width="210px" fontWeight="400">
                             Mật khẩu mới :
                         </Typography>
-                        <TextField size="small" type="password"></TextField>
+                        <TextField
+                            onKeyDown={handlePress}
+                            size="small"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Typography variant="h6" width="210px" fontWeight="400">
                             Xác nhận mật khẩu :
                         </Typography>
-                        <TextField size="small" type="password"></TextField>
+                        <TextField
+                            onKeyDown={handlePress}
+                            size="small"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                     </div>
                 </Stack>
                 <Grid align="center">
-                    <Button sx={{ width: '110px', height: '36px' }} variant="contained">
+                    <Button sx={{ width: '110px', height: '36px' }} variant="contained" onClick={handleSubmit}>
                         Xác nhận
                     </Button>
                 </Grid>
@@ -46,4 +89,5 @@ const PasswordChange = () => {
         </SubCustomerLayout>
     );
 };
+
 export default PasswordChange;

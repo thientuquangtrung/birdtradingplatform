@@ -1,9 +1,13 @@
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import React, { useState, useRef } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import axiosClient from '../../api/axiosClient';
+import { enqueueSnackbar } from 'notistack';
 
 const OtpVerify = () => {
+    const location = useLocation();
+    const email = location.state.email;
     const paperStyle = {
         padding: 20,
         width: 600,
@@ -36,6 +40,9 @@ const OtpVerify = () => {
                     previousInput.focus();
                 }
             }
+        } else if (event.key === 'Enter') {
+            // Handle Enter key for the last digit
+            handleSubmit();
         } else if (event.key >= '0' && event.key <= '9' && index < 6) {
             const newOtp = [...otp];
             newOtp[index] = event.key;
@@ -59,16 +66,30 @@ const OtpVerify = () => {
             }
         }
     };
-    const navigate = useNavigate();
-    const handleSubmit = () => {
-        const otpValue = otp.join('');
-        if (otpValue.length === 6) {
-            // Perform validation and submit logic with the OTP value
-            navigate('/signup');
-        } else {
-            setValidationMsg({ otp: 'Please enter a valid OTP.' });
+    const handlePress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSubmit();
         }
     };
+    const navigate = useNavigate();
+    const handleSubmit = () => {
+        const enteredOtp = otp.join('');
+
+        axiosClient
+            .post('otp/verify', { email, otp: enteredOtp })
+            .then((response) => {
+                console.log(response);
+
+                navigate('/signup', { state: { email } });
+                enqueueSnackbar('Xác minh OTP thành công', { variant: 'success' });
+            })
+            .catch((error) => {
+                console.log(error);
+                setValidationMsg({ otp: 'Invalid OTP.' });
+            });
+    };
+
     return (
         <Paper elevation={20} style={paperStyle}>
             <Stack direction="column" gap="5px">
@@ -107,7 +128,7 @@ const OtpVerify = () => {
                     </Typography>
                 )}
                 <Button
-                    disabled={!otp.every((digit) => digit !== '') || validationMsg.otp}
+                    disabled={!otp.every((digit) => digit !== '')}
                     sx={{
                         marginTop: '20px',
                         '&:disabled': {
