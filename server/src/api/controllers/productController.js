@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const productData = require('../services/product');
 const { modifyPagination } = require('../utils/response_modifiers');
 const fs = require('fs-extra');
+const { deleteImage, uploadImage } = require('../services/firebase');
 
 const getProducts = async (req, res, next) => {
     try {
@@ -138,14 +139,11 @@ const createProduct = async (req, res, next) => {
         const data = {
             ...req.body,
             shopId: req.payload.id,
-            image: req.file.filename,
         };
+        data.image = await uploadImage({ file: req.file, folder: 'product', prefix: 'product' });
         const created = await productData.createProduct(data);
 
-        return res.send({
-            ...created,
-            image: `${process.env.HOST_URL}/product/${req.file.filename}`,
-        });
+        return res.send(created);
     } catch (error) {
         next(createError(error.message));
     }

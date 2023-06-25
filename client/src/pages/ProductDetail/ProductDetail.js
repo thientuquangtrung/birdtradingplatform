@@ -19,6 +19,7 @@ import { Grid, Avatar, ImageList, ImageListItem, ButtonGroup } from '@mui/materi
 import dayjs from 'dayjs';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Link } from 'react-router-dom';
+import ChatButtonShop from '../../components/ChatButtonShop';
 
 function ProductDetail() {
     const navigate = useNavigate();
@@ -91,9 +92,14 @@ function ProductDetail() {
         <div>
             <Paper>
                 <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <Stack direction="column" gap={4} padding={3} justifyContent='flex-start'>
+                    <Stack direction="column" gap={4} padding={3} justifyContent="flex-start">
                         <img
-                            style={{ width: '500px', height: '600px', objectFit: 'contain', objectPosition: 'top center' }}
+                            style={{
+                                width: '500px',
+                                height: '600px',
+                                objectFit: 'contain',
+                                objectPosition: 'top center',
+                            }}
                             src={product.image}
                             alt="Bird"
                         />
@@ -105,12 +111,15 @@ function ProductDetail() {
                                     {product.name}
                                 </Typography>
 
-                                <Paper elevation={0} sx={{ padding: '7px' , backgroundColor: '#f4f4f4', width: '70%', borderRadius: 3 }}>
-                                    <Stack direction="row" gap={6} alignItems="center">
-                                        <Typography variant="body2" gutterBottom marginLeft={2}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{ padding: '7px', backgroundColor: '#f4f4f4', width: '80%', borderRadius: 3 }}
+                                >
+                                    <Stack direction="row" gap={3} alignItems="center">
+                                        <Typography variant="body2" gutterBottom marginLeft={1}>
                                             Được bán bởi
                                         </Typography>
-                                        <Stack direction="row" gap={2} alignItems='center'>
+                                        <Stack direction="row" gap={2} alignItems="center">
                                             <Avatar
                                                 alt="Remy Sharp"
                                                 src={product.shop?.image}
@@ -118,21 +127,26 @@ function ProductDetail() {
                                             />
                                             <Stack direction="column">
                                                 <Typography variant="subtitle2" gutterBottom fontSize={16}>
-                                                    {product.shop?.name}
+                                                    {/* {product.shop?.name} */}
+                                                    Wang ZiQi
                                                 </Typography>
-                                                <JoyButton
-                                                    color="neutral"
-                                                    size="sm"
-                                                    variant="outlined"
-                                                    component={Link}
-                                                    state={{
-                                                        shopId: product.shopId,
-                                                    }}
-                                                    to={`/shop/${product.shop?.name}`}
-                                                    startDecorator={<StorefrontIcon fontSize="small" />}
-                                                >
-                                                    Xem Shop
-                                                </JoyButton>
+                                                <Stack direction="row" gap={1}>
+                                                    <ChatButtonShop />
+                                                    <JoyButton
+                                                        sx={{ padding: '0px 6px' }}
+                                                        color="neutral"
+                                                        size="sm"
+                                                        variant="outlined"
+                                                        component={Link}
+                                                        state={{
+                                                            shopId: product.shopId,
+                                                        }}
+                                                        to={`/shop/${product.shop?.name}`}
+                                                        startDecorator={<StorefrontIcon fontSize="small" />}
+                                                    >
+                                                        Xem Shop
+                                                    </JoyButton>
+                                                </Stack>
                                             </Stack>
                                         </Stack>
                                     </Stack>

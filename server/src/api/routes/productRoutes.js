@@ -31,7 +31,7 @@ router.post('/init_product', setAllProductToRedis);
 
 router.get('/seller/product', verifyAccessToken, getProductsOfSeller);
 router.get('/seller/product/search', verifyAccessToken, searchSellerProducts);
-router.post('/seller/product', verifyAccessToken, uploadImg('product').single('image'), createProduct);
+router.post('/seller/product', verifyAccessToken, uploadImg().single('image'), createProduct);
 router.patch('/seller/product', verifyAccessToken, uploadImg('product').single('image'), updateProduct);
 router.delete('/seller/product/:id', verifyAccessToken, deleteProduct);
 

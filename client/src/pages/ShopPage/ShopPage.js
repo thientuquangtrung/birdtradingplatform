@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
+import ChatButtonShop from '../../components/ChatButtonShop';
 
 const priceOption = [
     {
@@ -88,26 +89,22 @@ function ShopPage() {
 
     return (
         <Box>
-            {shopInfo && (
-                <Paper elevation={0} square sx={{ alignItems: 'center', backgroundColor: '#d2e1f8' }}>
+            {true && (
+                <Paper elevation={0} sx={{ alignItems: 'center', backgroundColor: '#f5f5f5' }}>
                     <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
                         <Grid item xs={1}>
                             <Avatar
-                                sx={{ width: 70, height: 70, border: '2px solid #bec0d8' }}
+                                sx={{ width: 70, height: 70, border: '2px solid #1976d242' }}
                                 alt=""
-                                src={shopInfo.image}
+                                src={shopInfo?.image}
                             />
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant="h6" gutterBottom sx={{ color: '#791f1f' }} fontWeight={'bold'}>
-                                {shopInfo.name}
+                            <Typography variant="h6" gutterBottom sx={{ color: '#1976d2' }} fontWeight={'bold'}>
+                                {/* {shopInfo?.name} */}
+                                Wang ZiQi
                             </Typography>
-                            <Stack direction="row" gap={1}>
-                                <StorefrontIcon />
-                                <Typography variant="subtitle1" gutterBottom>
-                                    Sản phẩm: <span style={{ color: '#791f1f' }}>74</span>
-                                </Typography>
-                            </Stack>
+                            <ChatButtonShop/>
                         </Grid>
                         <Grid item xs={9}>
                             <Stack direction="row" gap={1}>
@@ -119,7 +116,7 @@ function ShopPage() {
                                     fontWeight="inherit"
                                     marginLeft="30px"
                                 >
-                                    {shopInfo.description}
+                                    {shopInfo?.description}
                                 </Typography>
 
                                 <FormatQuoteIcon fontSize="large" sx={{ width: '5%' }} />
