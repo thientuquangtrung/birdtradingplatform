@@ -33,7 +33,9 @@ const deleteImage = async (imageUrl) => {
         const desertRef = ref(storage, imageUrl);
 
         // Delete the file
-        await deleteObject(desertRef);
+        deleteObject(desertRef)
+            .then((value) => console.log(value))
+            .catch((error) => console.log(error));
     } catch (error) {
         throw error;
     }

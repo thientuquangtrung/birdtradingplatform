@@ -1,14 +1,14 @@
 const createHttpError = require('http-errors');
 const feedbackData = require('../services/feedback');
+const { uploadImage } = require('../services/firebase');
 
 const createFeedback = async (req, res, next) => {
     try {
-        const payload = {
-            ...req.body,
-            image: req.file?.filename,
-        };
+        if (!req.file) createHttpError.BadRequest('Feedback must have image file');
 
-        await feedbackData.createFeedback(payload);
+        const imgUrl = await uploadImage({ file: req.file, folder: 'feedback', prefix: 'feedback' });
+        req.body.image = imgUrl;
+        await feedbackData.createFeedback(req.body);
 
         return res.send({
             status: 200,

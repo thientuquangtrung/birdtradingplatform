@@ -80,7 +80,7 @@ function ShopPage() {
             .catch((error) => {
                 console.log(error);
             });
-    }, [sortBy, order, categoryId, q, page]);
+    }, [sortBy, order, categoryId, q, page, location.state]);
 
     function handleFilter(option, order = 'asc') {
         setSortBy(option);
@@ -89,7 +89,7 @@ function ShopPage() {
 
     return (
         <Box>
-            {true && (
+            {shopInfo && (
                 <Paper elevation={0} sx={{ alignItems: 'center', backgroundColor: '#f5f5f5' }}>
                     <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
                         <Grid item xs={1}>
@@ -101,10 +101,9 @@ function ShopPage() {
                         </Grid>
                         <Grid item xs={2}>
                             <Typography variant="h6" gutterBottom sx={{ color: '#1976d2' }} fontWeight={'bold'}>
-                                {/* {shopInfo?.name} */}
-                                Wang ZiQi
+                                {shopInfo?.name}
                             </Typography>
-                            <ChatButtonShop/>
+                            <ChatButtonShop />
                         </Grid>
                         <Grid item xs={9}>
                             <Stack direction="row" gap={1}>

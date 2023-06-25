@@ -83,8 +83,6 @@ const modifyOrder = async (list) => {
             const product = await getProduct(element.productId);
             products.push({
                 ...product,
-
-                image: `${process.env.HOST_URL}/product/${product.image}`,
                 price: element.price,
                 quantity: element.quantity,
             });

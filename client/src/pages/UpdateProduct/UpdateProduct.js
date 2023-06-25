@@ -31,7 +31,7 @@ function UpdateProduct() {
         axiosClient
             .get(`product/${id}`)
             .then((response) => {
-                const productData = response.data;
+                const productData = response.data.data;
                 setProduct(productData);
                 setCategoryId(productData.categoryId);
                 setName(productData.name);

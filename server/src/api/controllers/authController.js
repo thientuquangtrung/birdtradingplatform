@@ -10,11 +10,7 @@ const { deleteImage, uploadImage } = require('../services/firebase');
 const getAccounts = async (req, res, next) => {
     try {
         const result = await authData.getAccounts(req.query);
-        if (result.length > 0) {
-            result.forEach((account) => {
-                account.image = `${process.env.HOST_URL}/profile/${account.image}`;
-            });
-        }
+
         return res.send({
             status: 200,
             message: 'OK',
@@ -30,14 +26,10 @@ const getAccountById = async (req, res, next) => {
         const id = req.params.id;
         const account = await authData.getAccountById({ id, ...req.query });
 
-        const data = {
-            ...account,
-            image: account.image && `${process.env.HOST_URL}/profile/${account.image}`,
-        };
         return res.send({
             status: 200,
             message: 'OK',
-            data,
+            data: account,
         });
     } catch (error) {
         next(error);
@@ -74,7 +66,8 @@ const getBanReason = async (req, res, next) => {
 const createNewAccount = async (req, res, next) => {
     try {
         req.body.password = await hashing(req.body.password);
-        await authData.createNewAccount({ ...req.body, image: req.file });
+        req.body.image = await uploadImage({ file: req.file, folder: 'profile', prefix: 'profile' });
+        await authData.createNewAccount(req.body);
         res.send({
             status: 200,
             message: 'OK',
@@ -91,10 +84,7 @@ const getCurrentUser = async (req, res, next) => {
 
         delete currentUser.password;
 
-        return res.send({
-            ...currentUser,
-            image: currentUser.image && `${process.env.HOST_URL}/profile/${currentUser.image}`,
-        });
+        return res.send(currentUser);
     } catch (error) {
         next(error);
     }
@@ -136,28 +126,19 @@ const updateSeller = async (req, res, next) => {
             return next(createError.InternalServerError('Cannot get id'));
         }
 
-        if (req.body.profile || req.body.image) {
-            delete req.body?.profile;
-            delete req.body?.image;
-        }
         const seller = await authData.readAccountById(id, 'seller');
-        const updatedSeller = Object.assign(seller, req.body);
-
         if (req.file) {
             if (seller.image) {
-                await fs.remove(`${process.cwd()}/public/images/profile/${seller.image}`);
+                await deleteImage(seller.image);
             }
-
-            updatedSeller.image = req.file.filename;
+            req.body.image = await uploadImage({ file: req.file, folder: 'profile', prefix: 'profile' });
         }
 
+        const updatedSeller = Object.assign(seller, req.body);
         const response = await authData.updateSeller(updatedSeller);
 
         return res.send({
-            data: {
-                ...response,
-                image: `${process.env.HOST_URL}/profile/${response.image}`,
-            },
+            data: response,
         });
     } catch (error) {
         next(error);
@@ -178,10 +159,6 @@ const sellerLogin = async (req, res, next) => {
 
         if (!isPasswordValid) {
             return next(createError.Unauthorized('Incorrect password'));
-        }
-
-        if (seller.image) {
-            seller.image = `${process.env.HOST_URL}/profile/${seller.image}`;
         }
 
         const response = await modifyUserInfo(seller);
@@ -208,10 +185,6 @@ const customerLogin = async (req, res, next) => {
             return next(createError.Unauthorized('Incorrect password'));
         }
 
-        if (customer.image) {
-            customer.image = `${process.env.HOST_URL}/profile/${customer.image}`;
-        }
-
         const response = await modifyUserInfo(customer);
 
         return res.send(response);
@@ -234,10 +207,6 @@ const adminLogin = async (req, res, next) => {
 
         if (!isPasswordValid) {
             return next(createError.Unauthorized('Incorrect password'));
-        }
-
-        if (admin.image) {
-            admin.image = `${process.env.HOST_URL}/profile/${admin.image}`;
         }
 
         const response = await modifyUserInfo(admin);
@@ -277,9 +246,6 @@ const updateCustomer = async (req, res, next) => {
                 await deleteImage(customer.image);
             }
             req.body.image = await uploadImage({ file: req.file, folder: 'profile', prefix: 'profile' });
-        } else {
-            delete req.body.image;
-            delete req.body.profile;
         }
 
         const updatedCustomer = Object.assign(customer, req.body);
