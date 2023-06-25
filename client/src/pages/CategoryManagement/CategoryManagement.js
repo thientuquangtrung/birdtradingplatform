@@ -3,39 +3,84 @@ import { CardContent, Grid } from '@mui/material';
 import InteractiveCard from '../../components/InteractiveCard';
 import CategoryTwoToneIcon from '@mui/icons-material/CategoryTwoTone';
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useState } from 'react';
+import axiosClient from '../../api/axiosClient';
+import CreateCategory from '../../components/CreateCategory';
+import { Stack } from '@mui/system';
+import Input from '@mui/joy/Input';
+import Box from '@mui/joy/Box';
+import CheckIcon from '@mui/icons-material/Check';
+import Button from '@mui/joy/Button';
 
 function CategoryManagement() {
+    const [getCategories, setGetCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState('');
+
+    useEffect(function () {
+        axiosClient
+            .get('category')
+            .then((response) => {
+                // console.log(response);
+                setGetCategories(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        axiosClient
+            .post('category', {
+                params: {
+                    role: 'ADMIN',
+                    categoryId,
+                },
+            })
+            .then((response) => {
+                console.log(response);
+                // setGetCategories(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     return (
-        <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-            <Grid item xs={4}>
-                <InteractiveCard />
-            </Grid>
-            <Grid item xs={4}>
-                <InteractiveCard />
-            </Grid>
-            <Grid item xs={4}>
-                <InteractiveCard />
-            </Grid>
+        <Grid container spacing={5} sx={{ flexGrow: 1 }}>
+            {getCategories.length > 0 &&
+                getCategories.map((category) => (
+                    <Grid item xs={4} key={category.id}>
+                        <InteractiveCard data={category} />
+                    </Grid>
+                ))}
+
             <Grid item xs={4}>
                 <Card
                     variant="outlined"
                     orientation="horizontal"
                     sx={{
-                        width: 320,
-                        '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+                        '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder', padding: 0 },
+                        padding: 0,
                     }}
                 >
+                    {/* <Stack direction="row" gap={2} alignItems="center" sx={{ margin: '15px 0px 15px 15px ' }}> */}
                     <AspectRatio ratio="1" sx={{ width: 90 }}>
                         <CategoryTwoToneIcon color="info" />
                     </AspectRatio>
-                    <CardContent sx={{ textAlign: 'center' }}>
-                        <Typography level="h2" fontSize="lg" mb={0.5}>
-                            Add new category
-                        </Typography>
-                        <IconButton variant="outlined">
-                            <AddIcon />
-                        </IconButton>
-                    </CardContent>
+                    <Stack direction="column" alignItems="center" gap={2} sx={{ flex: 1 }}>
+                        <Stack direction="row" gap={1}>
+                            <Input color="neutral" placeholder="Nhap Category" />
+
+                            <IconButton color="success" variant="outlined">
+                                <CheckIcon fontSize="small" />
+                            </IconButton>
+                        </Stack>
+
+                        <Button fullWidth variant="soft" color="neutral">
+                            Close
+                        </Button>
+                    </Stack>
+
+                    {/* <CreateCategory /> */}
+                    {/* </Stack> */}
                 </Card>
             </Grid>
         </Grid>

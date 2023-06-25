@@ -1,18 +1,45 @@
 import * as React from 'react';
-import AspectRatio from '@mui/joy/AspectRatio';
-import Link from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';
 import Typography from '@mui/joy/Typography';
+import { Stack } from '@mui/system';
+import { AspectRatio, Link } from '@mui/joy';
+import EditIcon from '@mui/icons-material/Edit';
+import Box from '@mui/joy/Box';
+import IconButton from '@mui/joy/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 
-export default function InteractiveCard() {
+export default function InteractiveCard({ data }) {
     return (
+        // <Card
+
+        //     variant="outlined"
+        //     orientation="horizontal"
+        //     sx={{
+        //         '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+        //     }}
+        // >
+        //     <Stack  direction='row' alignItems='center' margin='0 auto'>
+        //         {/* <Typography level="h2" fontSize="sm" id="card-description" mb={0.5}>
+        //             {data.id}
+        //         </Typography> */}
+        //         {/* <Typography fontSize="sm" aria-describedby="card-description" mb={1}>
+        //             <Link overlay underline="none" href="#interactive-card" sx={{ color: 'text.tertiary' }}>
+        //                 California, USA
+        //             </Link>
+        //         </Typography> */}
+        //         <Chip variant="soft" size="lg" sx={{ pointerEvents: 'none', margin: '0 auto' }}>
+        //             {data.id}. {data.name}
+        //         </Chip>
+        //     </Stack>
+        // </Card>
+
         <Card
             variant="outlined"
             orientation="horizontal"
             sx={{
-                width: 320,
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
             }}
         >
@@ -25,17 +52,27 @@ export default function InteractiveCard() {
                 />
             </AspectRatio>
             <CardContent>
-                <Typography level="h2" fontSize="lg" id="card-description" mb={0.5}>
-                    Yosemite Park
-                </Typography>
-                <Typography fontSize="sm" aria-describedby="card-description" mb={1}>
+                {/* <Typography level="h2" fontSize="40px" id="card-description" mb={0.5}>
+                    {data.id}
+                </Typography> */}
+                {/* <Typography fontSize="sm" aria-describedby="card-description" mb={1}>
                     <Link overlay underline="none" href="#interactive-card" sx={{ color: 'text.tertiary' }}>
                         California, USA
                     </Link>
-                </Typography>
-                <Chip variant="outlined" color="primary" size="sm" sx={{ pointerEvents: 'none' }}>
-                    Cool weather all day long
-                </Chip>
+                </Typography> */}
+                <Stack direction="column" gap={2} alignItems="center">
+                    <Chip variant="soft" color="neutral" size="lg" sx={{ pointerEvents: 'none' }}>
+                        {data.name}
+                    </Chip>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <IconButton color="neutral" variant="outlined" size="sm">
+                            <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton color="neutral" variant="outlined" size="sm">
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    </Box>
+                </Stack>
             </CardContent>
         </Card>
     );
