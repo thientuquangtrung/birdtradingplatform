@@ -279,7 +279,7 @@ const updateAccountByAdmin = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
     try {
         const result = await authData.changePassword(req.body);
-
+        console.log(req.body);
         return res.send({
             status: 200,
             message: 'OK',

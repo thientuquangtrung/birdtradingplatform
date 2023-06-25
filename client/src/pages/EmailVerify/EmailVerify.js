@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import axiosClient from '../../api/axiosClient';
+import { enqueueSnackbar } from 'notistack';
 const EmailVerify = () => {
     const paperStyle = {
         padding: 20,
@@ -16,7 +17,7 @@ const EmailVerify = () => {
         justifyContent: 'center',
         fontWeight: '450',
     };
-
+    const mailformat = /^[a-zA-Z0-9_.+-]+@(gmail\.com|fpt\.edu\.vn)$/;
     const [email, setEmail] = useState('');
     const [validationMsg, setValidationMsg] = useState('');
 
@@ -29,24 +30,29 @@ const EmailVerify = () => {
 
     const validateAll = () => {
         const msg = {};
-        if (!email.trim()) {
-            msg.email = 'Vui lòng nhập email!';
-            setValidationMsg(msg);
-            return Object.keys(msg).length === 0;
+        if (!mailformat.test(email)) {
+            msg.email = 'Email không hợp lệ!';
         }
+        setValidationMsg(msg);
+        return Object.keys(msg).length === 0;
     };
 
     const handleSubmit = () => {
-        // if (validateAll()) {
-        axiosClient
-            .post('otp/generate', { email })
-            .then((response) => console.log(response))
-            .catch((error) => console.log(error));
-        // navigate('/otp/verify');
-        // }
+        if (validateAll()) {
+            axiosClient
+                .post('otp/generate', { email })
+                .then((response) => {
+                    enqueueSnackbar('OTP đã được gửi vui lòng kiểm tra email', { variant: 'info' });
+                    navigate('/otp/verify', { state: { email } });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setValidationMsg('Email không khả dụng');
+                });
+        }
     };
 
-    const isButtonDisabled = !email.trim() || validationMsg.email;
+    const isButtonDisabled = !email.trim();
     const navigate = useNavigate();
     return (
         <Paper elevation={20} style={paperStyle}>

@@ -123,13 +123,13 @@ function Header() {
                                         </Box>
                                     )}
                                 >
-                                    <Stack direction='row' alignItems="center" gap={1} ref={notificationRef}>
+                                    <Stack direction="row" alignItems="center" gap={1} ref={notificationRef}>
                                         <IconButton aria-label={notificationsLabel(100)}>
                                             <Badge badgeContent={100} color="success">
                                                 <NotificationsIcon sx={{ color: 'white' }} />
                                             </Badge>
                                         </IconButton>
-                                        <Typography fontSize={14} sx={{cursor: 'pointer'}}>
+                                        <Typography fontSize={14} sx={{ cursor: 'pointer' }}>
                                             Thông báo
                                         </Typography>
                                     </Stack>
@@ -144,7 +144,7 @@ function Header() {
                                     </Link>
                                 </Typography>
                                 <Typography variant="body2" sx={{ color: 'white' }}>
-                                    <Link style={{ color: 'inherit' }} to="/signup">
+                                    <Link style={{ color: 'inherit' }} to="/email/verify">
                                         Signup
                                     </Link>
                                 </Typography>

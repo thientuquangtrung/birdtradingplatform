@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
@@ -14,13 +14,14 @@ const Signup = ({ role = 'customer' }) => {
 
     const { setCurrentUser } = useContext(AuthContext);
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const location = useLocation();
+    const email = location.state?.email;
+
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
-    // const mailformat = /^[a-zA-Z0-9_.+-]+@(gmail\.com|fpt\.edu\.vn)$/;
 
     const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
 
@@ -28,6 +29,11 @@ const Signup = ({ role = 'customer' }) => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    useEffect(() => {
+        if (!email) {
+            navigate('/email/verify');
+        }
+    }, [email, navigate]);
 
     useEffect(() => {
         setIsButtonDisabled(
