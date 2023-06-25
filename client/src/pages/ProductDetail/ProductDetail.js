@@ -130,7 +130,7 @@ function ProductDetail() {
                                                     {product.shop?.name}
                                                 </Typography>
                                                 <Stack direction="row" gap={1}>
-                                                    <ChatButtonShop />
+                                                    <ChatButtonShop shopId={product.shop?.id} />
                                                     <JoyButton
                                                         sx={{ padding: '0px 6px' }}
                                                         color="neutral"

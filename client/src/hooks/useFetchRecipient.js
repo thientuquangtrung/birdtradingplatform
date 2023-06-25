@@ -12,7 +12,11 @@ export const useFetchRecipientUser = (chat, user) => {
             if (!recipientId) return null;
 
             axiosClient
-                .get(`chat/${user.id}`)
+                .get(`auth/account/${recipientId}`, {
+                    params: {
+                        role: 'ALL',
+                    },
+                })
                 .then((response) => {
                     setRecipientUser(response.data.data);
                 })

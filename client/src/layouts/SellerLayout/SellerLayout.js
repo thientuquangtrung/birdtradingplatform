@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import AvaText from '../../components/AvaText';
 import AuthContext from '../../contexts/AuthContext';
 import SellerSidebar from '../layoutComponents/SellerSidebar/SellerSidebar';
+import ChatButton from '../../components/ChatButton';
 
 function SellerLayout({ children }) {
     const { currentUser } = useContext(AuthContext);
@@ -30,6 +31,7 @@ function SellerLayout({ children }) {
                     {children}
                 </Box>
             </Stack>
+            <ChatButton />
         </>
     );
 }

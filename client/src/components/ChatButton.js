@@ -71,8 +71,8 @@ function ChatButton() {
                             {userChats.length > 0 &&
                                 userChats.map((chat, index) => {
                                     return (
-                                        <div key={index} onClick={() => updateCurrentChat()}>
-                                            <UserChat chat={chat} user={currentUser} />;
+                                        <div key={index} onClick={() => updateCurrentChat(chat)}>
+                                            <UserChat chat={chat} user={currentUser} />
                                         </div>
                                     );
                                 })}

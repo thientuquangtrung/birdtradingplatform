@@ -90,7 +90,7 @@ function ShopPage() {
     return (
         <Box>
             {shopInfo && (
-                <Paper elevation={0} sx={{ alignItems: 'center', backgroundColor: '#f5f5f5' }}>
+                <Paper elevation={0} sx={{ alignItems: 'center', backgroundColor: '#f5f5f5', padding: '3px' }}>
                     <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
                         <Grid item xs={1}>
                             <Avatar
