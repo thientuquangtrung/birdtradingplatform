@@ -18,7 +18,7 @@ import axiosClient from '../api/axiosClient';
 
 function ChatRoom() {
     const { currentUser } = useContext(AuthContext);
-    const { currentChat, messages, isMessagesLoading, setMessages } = useContext(ChatContext);
+    const { currentChat, messages, isMessagesLoading, setMessages, socket } = useContext(ChatContext);
     const { recipientUser } = useFetchRecipientUser(currentChat, currentUser);
     const paperRef = useRef(null);
     const chatRoomRef = useRef(null);
@@ -77,6 +77,7 @@ function ChatRoom() {
                 setMessages((prevMessages) => [...prevMessages, response.data.data]);
                 setMessage('');
                 setButtonActive(false);
+                socket.emit('sendMessage', { ...response.data.data, to: recipientUser.id });
             })
             .catch((error) => {
                 console.log(error);

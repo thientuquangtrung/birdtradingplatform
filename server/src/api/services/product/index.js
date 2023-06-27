@@ -204,7 +204,6 @@ const createProduct = async ({ name, shopId, description, price, image, category
         const productId = result.recordset[0].id;
         const product = await getProductById(productId);
         product.sold = 0;
-        console.log(product);
         await setProduct(product);
         return product;
     } catch (error) {

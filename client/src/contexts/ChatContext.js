@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import AuthContext from './AuthContext';
 import axiosClient from '../api/axiosClient';
+import { io } from 'socket.io-client';
 
 export const ChatContext = createContext();
 export const ChatContextProvider = ({ children }) => {
@@ -12,6 +13,48 @@ export const ChatContextProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
     const [isMessagesLoading, setIsMessagesLoading] = useState(false);
     const [messagesError, setMessagesError] = useState(null);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [socket, setSocket] = useState(null);
+
+    // init socket
+    useEffect(() => {
+        const newSocket = io('http://localhost:5000');
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect();
+        };
+    }, [currentUser]);
+
+    // add online user
+    useEffect(() => {
+        if (!socket) return;
+        socket.emit('addNewUser', currentUser?.id);
+
+        socket.on('getOnlineUsers', (res) => {
+            setOnlineUsers(res);
+        });
+
+        return () => {
+            socket.off('getOnlineUsers');
+        };
+    }, [socket]);
+
+    // get realtime message
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('getMessage', (res) => {
+            console.log(res);   
+            if (!res.roomId.split(':').includes(currentUser?.id)) return;
+            setMessages((prev) => [...prev, res]);
+        });
+
+        return () => {
+            socket.off('getMessage');
+        };
+    }, [socket, currentChat]);
 
     useEffect(() => {
         const getUserChats = async () => {
@@ -58,13 +101,14 @@ export const ChatContextProvider = ({ children }) => {
     }, []);
 
     const createChat = useCallback(async (firstId, secondId) => {
+        if (!firstId || !secondId) return;
         axiosClient
             .post(`chat`, {
                 firstId,
                 secondId,
             })
             .then((response) => {
-                setUserChats((prev) => [...prev, response]);
+                setUserChats((prev) => [response.data.data, ...prev]);
             })
             .catch((error) => {
                 return console.log(error);
@@ -74,6 +118,7 @@ export const ChatContextProvider = ({ children }) => {
     return (
         <ChatContext.Provider
             value={{
+                socket,
                 messages,
                 userChats,
                 isUserChatsLoading,
@@ -81,9 +126,12 @@ export const ChatContextProvider = ({ children }) => {
                 currentChat,
                 isMessagesLoading,
                 messagesError,
+                isChatOpen,
+                setIsChatOpen,
                 createChat,
                 updateCurrentChat,
                 setMessages,
+                onlineUsers,
             }}
         >
             {children}

@@ -14,8 +14,8 @@ import UserChat from './UserChat';
 
 function ChatButton() {
     const { currentUser } = useContext(AuthContext);
-    const { userChats, isUserChatsLoading, updateCurrentChat, currentChat } = useContext(ChatContext);
-    const [isChatOpen, setIsChatOpen] = useState(false);
+    const { userChats, isUserChatsLoading, updateCurrentChat, currentChat, isChatOpen, setIsChatOpen } =
+        useContext(ChatContext);
 
     const handleChatToggle = () => {
         setIsChatOpen(!isChatOpen);
@@ -84,7 +84,7 @@ function ChatButton() {
                                     style={{ objectFit: 'contain' }}
                                     width="100%"
                                     height="100%"
-                                    src="assets/images/Chat.png"
+                                    src="/assets/images/Chat.png"
                                     alt=""
                                 />
                                 <Typography variant="poster" fontWeight={700} textAlign="center" color="#7b8593">

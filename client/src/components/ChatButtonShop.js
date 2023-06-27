@@ -3,22 +3,17 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import { Link } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
 import { useContext } from 'react';
-import axiosClient from '../api/axiosClient';
+import { ChatContext } from '../contexts/ChatContext';
 
 function ChatButtonShop({ shopId }) {
     const { currentUser } = useContext(AuthContext);
+    const { createChat, setIsChatOpen, userChats } = useContext(ChatContext);
 
-    axiosClient
-        .post(`chat`, {
-            firstId: currentUser.id,
-            secondId: shopId,
-        })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    const handleClick = () => {
+        const isExist = userChats.some((chat) => chat.member.includes(shopId));
+        if (!isExist) createChat(currentUser.id, shopId);
+        setIsChatOpen(true);
+    };
 
     return (
         <JoyButton
@@ -26,9 +21,8 @@ function ChatButtonShop({ shopId }) {
             color="neutral"
             size="sm"
             variant="outlined"
-            component={Link}
-            // to={`/shop/${product.shop?.name}`}
             startDecorator={<QuestionAnswerIcon fontSize="small" />}
+            onClick={handleClick}
         >
             Chat Ngay
         </JoyButton>

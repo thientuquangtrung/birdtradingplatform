@@ -5,6 +5,11 @@ const createChat = async ({ firstId, secondId }) => {
         const roomId = sortId(firstId, secondId);
         await redisClient.sAdd(`user:${firstId}:rooms`, roomId);
         await redisClient.sAdd(`user:${secondId}:rooms`, roomId);
+
+        return {
+            id: roomId,
+            member: roomId.split(':'),
+        };
     } catch (error) {
         throw error;
     }
@@ -36,7 +41,6 @@ const getOneChat = async ({ firstId, secondId }) => {
 };
 
 const sortId = (firstId, secondId) => {
-    console.log(firstId);
     const value = firstId.localeCompare(secondId);
 
     if (value === 1) return `${secondId}:${firstId}`;
