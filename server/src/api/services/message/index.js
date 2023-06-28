@@ -8,11 +8,12 @@ const createMessage = async ({ chatId, senderId, text }) => {
             message: text,
             roomId: chatId,
         };
-        const result = await redisClient.zAdd(`room:${chatId}`, JSON.stringify(message), {
+        const result = await redisClient.zAdd(`room:${chatId}`, {
             score: timestamp,
+            value: JSON.stringify(message),
         });
 
-        return result;
+        return message;
     } catch (error) {
         throw error;
     }
@@ -22,9 +23,9 @@ const getAllMessages = async (chatId) => {
     try {
         const list = await redisClient.zRange(`room:${chatId}`, 0, -1);
 
-        list.forEach((item) => JSON.parse(item));
+        const messages = list.map((item) => JSON.parse(item));
 
-        return list;
+        return messages;
     } catch (error) {
         throw error;
     }
