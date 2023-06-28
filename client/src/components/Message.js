@@ -1,6 +1,5 @@
 import Paper from '@mui/material/Paper';
 
-
 function Message({ own, data }) {
     const style = {
         backgroundColor: '#f5f5f5',
@@ -22,7 +21,7 @@ function Message({ own, data }) {
                 ...style,
             }}
         >
-            Helloooooooooooooooooo
+            {data.message}
         </Paper>
     );
 }

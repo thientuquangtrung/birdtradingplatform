@@ -1,3 +1,4 @@
+const config = require('./src/api/config');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,10 +7,13 @@ const createError = require('http-errors');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: [config.clientHost, 'http://seller.localhost:3000'],
+    },
+});
 global._io = io;
 
-const config = require('./src/api/config');
 const productRoutes = require('./src/api/routes/productRoutes');
 const authRoutes = require('./src/api/routes/authRoutes');
 const categoryRoutes = require('./src/api/routes/categoryRoutes');
@@ -54,4 +58,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(config.port, () => console.log(`Server started on port ${config.port}`));
+server.listen(config.port, () => console.log(`Server started on port ${config.port}`));
