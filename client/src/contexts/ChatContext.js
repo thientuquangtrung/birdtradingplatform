@@ -16,6 +16,7 @@ export const ChatContextProvider = ({ children }) => {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
+    const [noti, setNoti] = useState([]);
 
     // init socket
     useEffect(() => {
@@ -33,6 +34,7 @@ export const ChatContextProvider = ({ children }) => {
         socket.emit('addNewUser', currentUser?.id);
 
         socket.on('getOnlineUsers', (res) => {
+            console.log(res);
             setOnlineUsers(res);
         });
 
@@ -41,18 +43,24 @@ export const ChatContextProvider = ({ children }) => {
         };
     }, [socket]);
 
+    console.log(noti);
     // get realtime message
     useEffect(() => {
         if (!socket) return;
 
         socket.on('getMessage', (res) => {
-            console.log(res);   
+            console.log(res);
             if (!res.roomId.split(':').includes(currentUser?.id)) return;
             setMessages((prev) => [...prev, res]);
         });
 
+        socket.on('getNoti', (res) => {
+            setNoti((prev) => [res, ...prev]);
+        });
+
         return () => {
             socket.off('getMessage');
+            socket.off('getNoti');
         };
     }, [socket, currentChat]);
 

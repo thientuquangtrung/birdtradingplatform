@@ -4,7 +4,7 @@ const connection = (socket) => {
     socket.on('disconnect', async () => {
         const onlineUsers = await getOnlineUsers();
         const user = onlineUsers.find((user) => user.socketId === socket.id);
-        await redisClient.sRem('online_users', `${user?.userId}:${socket.id}`);
+        await redisClient.hDel('online_users', user.userId);
 
         _io.emit('getOnlineUsers', await getOnlineUsers());
     });
@@ -13,32 +13,37 @@ const connection = (socket) => {
 
     // receive message
     socket.on('sendMessage', async (message) => {
-        await redisClient.sAdd('online_users', `${message.from}:${socket.id}`);
+        await redisClient.hSet('online_users', message.from, socket.id);
         const onlineUsers = await getOnlineUsers();
         const user = onlineUsers.find((user) => user.userId === message.to);
-        console.log(user);
         if (user) {
             _io.to(user.socketId).emit('getMessage', message);
+            _io.to(user.socketId).emit('getNoti', {
+                from: message.from,
+                isRead: false,
+                date: new Date(),
+            });
         }
     });
 
     // listen to a connection
     socket.on('addNewUser', async (userId) => {
         if (!userId) return;
-        redisClient.sAdd('online_users', `${userId}:${socket.id}`);
+        await redisClient.hSet('online_users', userId, socket.id);
 
         _io.emit('getOnlineUsers', await getOnlineUsers());
     });
 };
 
 const getOnlineUsers = async () => {
-    const list = await redisClient.sMembers('online_users');
+    const list = await redisClient.hGetAll('online_users');
 
-    const onlineUsers = list.map((item) => {
-        return {
-            userId: item.split(':')[0],
-            socketId: item.split(':')[1],
-        };
+    let onlineUsers = [];
+    Object.keys(list).forEach((userId) => {
+        onlineUsers.push({
+            userId,
+            socketId: list[userId],
+        });
     });
 
     return onlineUsers;
