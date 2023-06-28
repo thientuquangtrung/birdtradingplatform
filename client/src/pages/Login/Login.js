@@ -119,7 +119,9 @@ const Login = ({ role }) => {
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
                         <Typography style={marginStyle}>
-                            <Link href="#">Quên mật khẩu ?</Link>
+                            <Link to="/password/forget">
+                                <Button>Quên mật khẩu ?</Button>
+                            </Link>
                         </Typography>
                     </Grid>
                     <Button

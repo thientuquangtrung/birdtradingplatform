@@ -37,7 +37,12 @@ const PasswordChange = () => {
 
     return (
         <SubCustomerLayout>
-            <Paper sx={{ height: '680px', width: '100%' }}>
+            <Paper
+                sx={{
+                    minHeight: '700px',
+                    width: '100%',
+                }}
+            >
                 <Stack borderBottom="1px solid " marginBottom="30px" sx={{ margin: '30px' }}>
                     <Typography variant="h4" fontWeight="400">
                         Đổi mật khẩu

@@ -47,7 +47,7 @@ const PasswordVerify = () => {
     return (
         <Paper
             sx={{
-                minHeight: '680px',
+                minHeight: '700px',
                 typography: 'body1',
                 display: 'flex',
                 flexDirection: 'column',

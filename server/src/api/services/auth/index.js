@@ -291,8 +291,7 @@ const verifyPassword = async ({ id, oldPassword }) => {
 const sendResetLinkMail = async (email) => {
     try {
         const hashString = await hashing(email);
-        const html = `<a href="${process.env.CLIENT_HOST}/password/reset/${user.email}?token=${hashString}"> Reset Password </a>`;
-
+        const html = `<a href="${process.env.CLIENT_HOST}/password/reset/${email}?token=${hashString}"> Reset Password </a>`;
         const result = await sendMail({
             to: email,
             subject: 'Reset Password',
