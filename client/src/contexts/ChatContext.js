@@ -1,11 +1,12 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import AuthContext from './AuthContext';
 import axiosClient from '../api/axiosClient';
-import { io } from 'socket.io-client';
+import { SocketContext } from './SocketContext';
 
 export const ChatContext = createContext();
 export const ChatContextProvider = ({ children }) => {
     const { currentUser } = useContext(AuthContext);
+    const { socket } = useContext(SocketContext);
     const [userChats, setUserChats] = useState([]);
     const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
     const [userChatsError, setUserChatsError] = useState(null);
@@ -15,18 +16,6 @@ export const ChatContextProvider = ({ children }) => {
     const [messagesError, setMessagesError] = useState(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const [socket, setSocket] = useState(null);
-    const [noti, setNoti] = useState([]);
-
-    // init socket
-    useEffect(() => {
-        const newSocket = io('http://localhost:5000');
-        setSocket(newSocket);
-
-        return () => {
-            newSocket.disconnect();
-        };
-    }, [currentUser]);
 
     // add online user
     useEffect(() => {
@@ -43,7 +32,6 @@ export const ChatContextProvider = ({ children }) => {
         };
     }, [socket]);
 
-    console.log(noti);
     // get realtime message
     useEffect(() => {
         if (!socket) return;
@@ -54,13 +42,8 @@ export const ChatContextProvider = ({ children }) => {
             setMessages((prev) => [...prev, res]);
         });
 
-        socket.on('getNoti', (res) => {
-            setNoti((prev) => [res, ...prev]);
-        });
-
         return () => {
             socket.off('getMessage');
-            socket.off('getNoti');
         };
     }, [socket, currentChat]);
 
