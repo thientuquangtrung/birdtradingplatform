@@ -15,6 +15,9 @@ const PasswordReset = () => {
             handleSubmit();
         }
     };
+    const isDisabled = () => {
+        return !email;
+    };
     const handleSubmit = (email) => {
         axiosClient
             .post('password/email', { email })
@@ -60,6 +63,7 @@ const PasswordReset = () => {
                         sx={{ width: '400px' }}
                     />
                     <Button
+                        disabled={isDisabled()}
                         variant="contained"
                         onClick={() => {
                             handleSubmit(email);

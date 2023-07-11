@@ -335,10 +335,10 @@ const generateOtp = async (email) => {
         // send OTP email
         await sendMail({
             to: email,
-            subject: 'VERIFY OTP',
-            html: `<h1>Hello there</h1>
-        <p>Isn't NodeMailer useful?</p>
-    <p>${OTP}</p>`,
+            subject: 'Verify Your Account',
+            html: `<h3>From: Bird Trading Platform (BTP)</h3>
+        <p>We hope this email finds you well. We are reaching out to you to verify the OTP associated with your account. As part of our commitment to ensuring the security of your information, we kindly request your cooperation in completing this verification process.\n\n<h3>OTP: ${OTP}</h3>
+        </p>`,
         });
         // encrypt OTP
         const hashOtp = await hashing(OTP);

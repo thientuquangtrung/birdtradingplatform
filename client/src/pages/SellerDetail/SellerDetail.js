@@ -20,15 +20,38 @@ function SellerDetail() {
     const [open, setOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [user, setUser] = useState(null);
-
+    const [errorMsg, setErrorMsg] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const [banReasons, setBanReasons] = useState([]);
-
+    const [error, setError] = useState('');
     const [isUserActive, setIsUserActive] = useState(false);
     const [selectedValue, setSelectedValue] = useState(0);
+    const phoneformat = /^0[3|5|7|8|9]\d{8}$/;
+    const validate = (value) => {
+        let isValid = true;
+        let msg = '';
+        let msgR = '';
+        if (name === '' || email === '' || phone === '' || address === '') {
+            isValid = false;
+            msgR = 'Vui lòng nhập đủ thông tin';
+        } else if (!phoneformat.test(value)) {
+            isValid = false;
+            msg = 'Số điện thoại không hợp lệ!';
+        }
+        setError(msgR);
+        setErrorMsg(msg);
+        return isValid;
+    };
+    const handlePhoneBlur = () => {
+        if (phone !== '' && !phoneformat.test(phone)) {
+            setErrorMsg('Số điện thoại không hợp lệ!');
+        } else {
+            setErrorMsg('');
+        }
+    };
 
     useEffect(function () {
         axiosClient
@@ -121,24 +144,28 @@ function SellerDetail() {
             });
     };
     function handleUpdate() {
-        axiosClient
-            .patch('auth/account', {
-                id: user.id,
-                email,
-                name,
-                phone,
-                address,
-                role: 'SELLER',
-            })
-            .then((response) => {
-                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-                navigate('/seller_management');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        if (validate()) {
+            axiosClient
+                .patch('auth/account', {
+                    id: user.id,
+                    email,
+                    name,
+                    phone,
+                    address,
+                    role: 'SELLER',
+                })
+                .then((response) => {
+                    enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+                    navigate('/seller_management');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }
-
+    const isDisabled = () => {
+        return name === user?.name && email === user?.email && phone === user?.phone && address === user?.pickUpAddress;
+    };
     return (
         <Stack gap={7} marginLeft={25} marginRight={25} marginTop={5} marginBottom={5} width="90%">
             <Stack direction="row" gap={2} sx={{ cursor: 'pointer' }}>
@@ -210,7 +237,12 @@ function SellerDetail() {
                                 size="small"
                                 type="tel"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                error={!!errorMsg}
+                                helperText={errorMsg}
+                                onChange={(e) => {
+                                    setPhone(e.target.value);
+                                }}
+                                onBlur={handlePhoneBlur}
                             />
                             <TextField
                                 required
@@ -221,9 +253,12 @@ function SellerDetail() {
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                             />
+                            <Typography color="error" fontSize="13px">
+                                {error}
+                            </Typography>
                         </Stack>
                         <Stack direction="row" gap={2} alignItems="center" marginTop={5}>
-                            <Button variant="soft" size="lg" onClick={handleUpdate}>
+                            <Button variant="soft" size="lg" onClick={handleUpdate} disabled={isDisabled()}>
                                 Update
                             </Button>
                             <Link to="/seller_management">

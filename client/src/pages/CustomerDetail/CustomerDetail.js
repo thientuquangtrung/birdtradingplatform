@@ -28,10 +28,17 @@ function CustomerDetail() {
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const [banReasons, setBanReasons] = useState([]);
-
+    const [errorMsg, setErrorMsg] = useState('');
     const [isUserActive, setIsUserActive] = useState(false);
     const [selectedValue, setSelectedValue] = useState(0);
-
+    const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
+    const validate = () => {
+        let msg = '';
+        if (!phoneformat.test(phone)) {
+            msg = 'Số điện thoại không hợp lệ!';
+        }
+        setErrorMsg(msg);
+    };
     useEffect(function () {
         axiosClient
             .get(`auth/account/${location.state.id}`, {
@@ -121,24 +128,28 @@ function CustomerDetail() {
     };
 
     function handleUpdate() {
-        axiosClient
-            .patch('auth/account', {
-                id: user.id,
-                email,
-                name,
-                phone,
-                address,
-                role: 'CUSTOMER',
-            })
-            .then((response) => {
-                enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-                navigate('/customer_management');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        if (validate()) {
+            axiosClient
+                .patch('auth/account', {
+                    id: user.id,
+                    email,
+                    name,
+                    phone,
+                    address,
+                    role: 'CUSTOMER',
+                })
+                .then((response) => {
+                    enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+                    navigate('/customer_management');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }
-
+    const isDisabled = () => {
+        return name === user?.name && email === user?.email && phone === user?.phone && address === user?.shipToAddress;
+    };
     return (
         <Stack gap={7} marginLeft={25} marginRight={25} marginTop={5} marginBottom={5} width="90%">
             <Stack direction="row" gap={2} sx={{ cursor: 'pointer' }}>
@@ -210,6 +221,8 @@ function CustomerDetail() {
                                 size="small"
                                 type="tel"
                                 value={phone}
+                                error={!!errorMsg}
+                                helperText={errorMsg}
                                 onChange={(e) => setPhone(e.target.value)}
                             />
                             <TextField
@@ -223,7 +236,7 @@ function CustomerDetail() {
                             />
                         </Stack>
                         <Stack direction="row" gap={2} alignItems="center" marginTop={5}>
-                            <Button variant="soft" size="lg" onClick={handleUpdate}>
+                            <Button variant="soft" size="lg" onClick={handleUpdate} disabled={isDisabled()}>
                                 Update
                             </Button>
                             <Link to="/customer_management">
