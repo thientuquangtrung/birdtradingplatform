@@ -52,7 +52,9 @@ const publicRoutes = [
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: Login, layout: AuthLayout, subdomain: 'common' },
     { path: '/email/verify', component: EmailVerify, layout: AuthLayout, subdomain: 'common' },
+    { path: '/email/verify', component: EmailVerify, layout: AuthLayout, subdomain: 'seller' },
     { path: '/otp/verify', component: OtpVerify, layout: AuthLayout, subdomain: 'common' },
+    { path: '/otp/verify', component: OtpVerify, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: AdminLogin, subdomain: 'admin' },
     { path: '/password/reset/:email', component: PasswordReset, layout: AuthLayout, subdomain: 'common' },
     {

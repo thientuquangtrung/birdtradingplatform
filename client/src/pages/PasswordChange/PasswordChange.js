@@ -20,6 +20,9 @@ const PasswordChange = () => {
             handleSubmit();
         }
     };
+    const isDisabled = () => {
+        return !password || !confirmPassword;
+    };
     const handleSubmit = () => {
         axiosClient
             .put('/auth/change_password', {
@@ -86,7 +89,12 @@ const PasswordChange = () => {
                     </div>
                 </Stack>
                 <Grid align="center">
-                    <Button sx={{ width: '110px', height: '36px' }} variant="contained" onClick={handleSubmit}>
+                    <Button
+                        sx={{ width: '110px', height: '36px' }}
+                        variant="contained"
+                        onClick={handleSubmit}
+                        disabled={isDisabled()}
+                    >
                         Xác nhận
                     </Button>
                 </Grid>
