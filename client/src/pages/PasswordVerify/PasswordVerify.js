@@ -16,6 +16,9 @@ const PasswordVerify = () => {
     const handleChangePassword = (event) => {
         setPassword(event.target.value);
     };
+    const isDisabled = () => {
+        return password === '';
+    };
     const handlePress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -75,7 +78,7 @@ const PasswordVerify = () => {
                         type="password"
                         sx={{ width: '400px' }}
                     />
-                    <Button variant="contained" onClick={handleSubmit}>
+                    <Button variant="contained" onClick={handleSubmit} disabled={isDisabled()}>
                         Xác nhận
                     </Button>
                 </Stack>

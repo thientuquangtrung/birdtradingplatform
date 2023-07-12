@@ -20,7 +20,7 @@ const EmailVerify = () => {
     const mailformat = /^[a-zA-Z0-9_.+-]+@(gmail\.com|fpt\.edu\.vn)$/;
     const [email, setEmail] = useState('');
     const [validationMsg, setValidationMsg] = useState('');
-
+    const [error, setError] = useState('');
     const handlePress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -47,7 +47,7 @@ const EmailVerify = () => {
                 })
                 .catch((error) => {
                     console.log(error);
-                    setValidationMsg('Email không khả dụng');
+                    setError('Email đã được sử dụng');
                 });
         }
     };
@@ -72,18 +72,20 @@ const EmailVerify = () => {
                         type="email"
                         onKeyDown={handlePress}
                         error={!!validationMsg.email}
+                        helperText={validationMsg.email} // Show validation error message
                     />
-                    {validationMsg.email && (
-                        <Typography
-                            style={{
-                                color: 'red',
-                                fontSize: '13px',
-                                marginLeft: '10px',
-                            }}
-                        >
-                            {validationMsg.email}
-                        </Typography>
-                    )}
+                    {error &&
+                        !validationMsg.email && ( // Show error message when email is already used
+                            <Typography
+                                style={{
+                                    color: 'red',
+                                    fontSize: '13px',
+                                    marginLeft: '10px',
+                                }}
+                            >
+                                {error}
+                            </Typography>
+                        )}
                     <Button
                         disabled={isButtonDisabled}
                         sx={{

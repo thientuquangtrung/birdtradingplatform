@@ -84,7 +84,7 @@ export default function UpdateCustomer() {
             >
                 <Box marginBottom={2} marginRight={2} marginTop={2}>
                     <Typography marginLeft={2} variant="h4" gutterBottom>
-                        Hồ Sơ Shop
+                        Hồ Sơ Của Tôi
                     </Typography>
                 </Box>
                 <Stack direction="column" gap={3} width="50%">

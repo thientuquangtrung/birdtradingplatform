@@ -18,7 +18,6 @@ const Login = ({ role }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
     const { setCurrentUser } = useContext(AuthContext);
     const [validationMsg, setValidationMsg] = useState('');
     const { enqueueSnackbar } = useSnackbar();

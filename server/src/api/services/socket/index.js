@@ -4,8 +4,9 @@ const connection = (socket) => {
     socket.on('disconnect', async () => {
         const onlineUsers = await getOnlineUsers();
         const user = onlineUsers.find((user) => user.socketId === socket.id);
-        if (user?.userId) await redisClient.hDel('online_users', user.userId);
-
+        if (user?.userId) {
+            await redisClient.hDel('online_users', user.userId);
+        }
         _io.emit('getOnlineUsers', await getOnlineUsers());
     });
 
@@ -18,7 +19,7 @@ const connection = (socket) => {
         const user = onlineUsers.find((user) => user.userId === message.to);
         if (user) {
             _io.to(user.socketId).emit('getMessage', message);
-            _io.to(user.socketId).emit('getNoti', {
+            _io.to(user.socketId).emit('getNotification', {
                 from: message.from,
                 isRead: false,
                 date: new Date(),
