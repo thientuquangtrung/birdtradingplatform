@@ -24,6 +24,7 @@ const feedbackRoutes = require('./src/api/routes/feedbackRoutes');
 const paymentRoutes = require('./src/api/routes/paymentRoutes');
 const chatRoutes = require('./src/api/routes/chatRoutes');
 const messageRoutes = require('./src/api/routes/messageRoutes');
+const notificationRoutes = require('./src/api/routes/notificationRoutes');
 const { connection } = require('./src/api/services/socket');
 
 app.use(cors());
@@ -43,6 +44,7 @@ app.use('/api', feedbackRoutes.routes);
 app.use('/api', paymentRoutes.routes);
 app.use('/api', chatRoutes.routes);
 app.use('/api', messageRoutes.routes);
+app.use('/api', notificationRoutes.routes);
 
 io.on('connection', connection);
 

@@ -215,7 +215,6 @@ function ProductDetail() {
                                                 {feedback.customer.name}
                                             </Typography>
                                             <Typography
-                                                fontSize={'25px'}
                                                 fontStyle={'italic'}
                                                 variant="caption"
                                                 display="block"
