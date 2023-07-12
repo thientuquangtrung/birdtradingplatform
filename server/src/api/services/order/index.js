@@ -3,6 +3,8 @@ const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const createError = require('http-errors');
 const { modifyOrder } = require('../../utils/response_modifiers');
+const { createNotification } = require('../notification');
+const { getOnlineUsers } = require('../socket');
 
 const getOrdersByCusId = async ({ id, status, page, perPage }) => {
     try {
@@ -75,6 +77,21 @@ const changeOrderStatus = async ({ orderId, status, cancelId = 0 }) => {
             .input('cancelId', sql.Int, cancelId)
             .query(sqlQueries.changeOrderStatus);
 
+        if (!cancelId.toString().startsWith('1')) {
+            const userId = (
+                await pool.request().input('orderId', sql.UniqueIdentifier, orderId).query(sqlQueries.getCusIdOfOrder)
+            ).recordset[0]?.customerId;
+            const noti = await createNotification({
+                userId,
+                content: `Your order has been ${status}`,
+                title: 'Update order state!!!',
+            });
+            const onlineUsers = await getOnlineUsers();
+            const user = onlineUsers.find((user) => user.userId === userId);
+            if (user) {
+                _io.to(user.socketId).emit('getNotification', noti);
+            }
+        }
         return list.recordset;
     } catch (error) {
         throw error;

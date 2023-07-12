@@ -18,7 +18,7 @@ const getAllNotification = async (req, res, next) => {
     try {
         // get chatId from params
         // get all messages
-        const list = await notificationData.getAllNotification(req.params.chatId);
+        const list = await notificationData.getAllNotification(req.params.userId);
 
         return res.send({
             status: 200,

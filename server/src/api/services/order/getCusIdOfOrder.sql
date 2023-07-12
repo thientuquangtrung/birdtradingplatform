@@ -1,0 +1,1 @@
+select [customerId] from OrderHeader where [id] = @orderId

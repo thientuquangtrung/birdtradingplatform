@@ -19,11 +19,6 @@ const connection = (socket) => {
         const user = onlineUsers.find((user) => user.userId === message.to);
         if (user) {
             _io.to(user.socketId).emit('getMessage', message);
-            _io.to(user.socketId).emit('getNotification', {
-                from: message.from,
-                isRead: false,
-                date: new Date(),
-            });
         }
     });
 
@@ -52,4 +47,5 @@ const getOnlineUsers = async () => {
 
 module.exports = {
     connection,
+    getOnlineUsers,
 };

@@ -29,6 +29,7 @@ const createVNPayUrl = async (req, res, next) => {
             req.connection.remoteAddress ||
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
+
         const vnpUrl = await vnpay.createVNPayUrl({ ...req.body, ipAddr });
         return res.send({
             status: 200,

@@ -1,29 +1,34 @@
 import { MenuItem, Typography, Stack } from '@mui/material';
+import dayjs from 'dayjs';
 
-function NotificationItem({ isRead = false }) {
+function NotificationItem({ data }) {
     return (
         <MenuItem
             sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                backgroundColor: isRead ? '#fff' : '#e3f2fd',
+                backgroundColor: data.isRead ? '#fff' : '#e3f2fd',
                 // height: '60px',
             }}
         >
             <Stack direction="column" gap={0.5}>
-                <Typography
-                    maxWidth={400}
-                    noWrap
-                    textOverflow={'ellipsis'}
-                    textAlign={'start'}
-                    flex={1}
-                    fontSize={16}
-                    variant="subtitle2"
-                    component="p"
-                >
-                    {/* {data.name} */}
-                    Chim cảnh
-                </Typography>
+                <Stack direction="row" alignItems={'center'} justifyContent="space-between">
+                    <Typography
+                        maxWidth={400}
+                        noWrap
+                        textOverflow={'ellipsis'}
+                        textAlign={'start'}
+                        flex={1}
+                        fontSize={16}
+                        variant="subtitle2"
+                        component="p"
+                    >
+                        {data.title}
+                    </Typography>
+                    <Typography variant="body1" component="span" color="#bdbdbd" fontSize={12} fontStyle="italic">
+                        {dayjs(data.date).format('DD/MM/YYYY H:mm A')}
+                    </Typography>
+                </Stack>
                 <Typography
                     maxWidth={300}
                     noWrap
@@ -33,12 +38,7 @@ function NotificationItem({ isRead = false }) {
                     // variant="subtitle2"
                     component="p"
                 >
-                    {/* {data.name} */}
-                    Là loài chim đẹp nhất Việt Nam
-                </Typography>
-                <Typography variant="body1" component="span" color="#bdbdbd" fontSize={12} fontStyle="italic">
-                    {/* {data.price} */}
-                    11:14
+                    {data.content}
                 </Typography>
             </Stack>
         </MenuItem>

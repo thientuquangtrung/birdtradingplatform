@@ -38,7 +38,7 @@ import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 
-function OrderTab({ status }) {
+function OrderTab({ status = 'ALL' }) {
     const [tableData, setTableData] = useState([]);
     const [open, setOpen] = useState(false);
     const [modalState, setModalState] = useState({});

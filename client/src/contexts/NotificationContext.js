@@ -1,19 +1,23 @@
 import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import AuthContext from './AuthContext';
 import axiosClient from '../api/axiosClient';
+import { SocketContext } from './SocketContext';
 
 export const NotificationContext = createContext();
 export const NotificationContextProvider = ({ children }) => {
     const { currentUser } = useContext(AuthContext);
-    const [notification, setNotification] = useState([]);
+    const { socket } = useContext(SocketContext);
+    const [notificationList, setNotificationList] = useState([]);
     const [notiLoading, setNotiLoading] = useState(false);
+    const [notificationLength, setNotificationLength] = useState(0);
 
     useEffect(() => {
         setNotiLoading(true);
         axiosClient
             .get(`notification/${currentUser?.id}`)
             .then((response) => {
-                setNotification(response.data.data);
+                setNotificationList(response.data.data);
+                setNotificationLength(response.data.data.length);
                 setNotiLoading(false);
             })
             .catch((error) => {
@@ -22,12 +26,26 @@ export const NotificationContextProvider = ({ children }) => {
             });
     }, [currentUser]);
 
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on('getNotification', (res) => {
+            console.log(res);
+            setNotificationList((prev) => [res, ...prev]);
+        });
+
+        return () => {
+            socket.off('getNotification');
+        };
+    }, [socket]);
+
     return (
         <NotificationContext.Provider
             value={{
                 notiLoading,
-                notification,
-                setNotification,
+                notificationList,
+                notificationLength,
+                setNotificationList,
             }}
         >
             {children}

@@ -22,7 +22,6 @@ const createVNPayUrl = async (payload) => {
         var ipAddr = payload.ipAddr;
 
         var currCode = 'VND';
-        var orderInfo = `Thanh toan Bird Trading Platform. So tien: ${amount} ${currCode}`;
         // var orderType = payload.orderType;
         var locale = payload.language;
         if (!locale) {
@@ -36,8 +35,8 @@ const createVNPayUrl = async (payload) => {
         vnp_Params['vnp_Locale'] = locale;
         vnp_Params['vnp_CurrCode'] = currCode;
         vnp_Params['vnp_TxnRef'] = orderId;
-        vnp_Params['vnp_OrderInfo'] = orderInfo;
-        // vnp_Params['vnp_OrderType'] = orderType;
+        vnp_Params['vnp_OrderInfo'] = 'Thanh toan cho ma GD:' + orderId;
+        vnp_Params['vnp_OrderType'] = 'other';
         vnp_Params['vnp_Amount'] = amount * 100;
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
         vnp_Params['vnp_IpAddr'] = ipAddr;
@@ -54,6 +53,7 @@ const createVNPayUrl = async (payload) => {
         vnp_Params['vnp_SecureHash'] = signed;
         vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
+        console.log(vnpUrl);
         return vnpUrl;
     } catch (error) {
         throw error;

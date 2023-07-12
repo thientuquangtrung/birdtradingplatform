@@ -25,6 +25,7 @@ import axiosClient from '../../../api/axiosClient';
 import SuggestionList from '../../../components/SuggestionList';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Notification from '../../../components/Notification';
+import { NotificationContext } from '../../../contexts/NotificationContext';
 
 function Header() {
     const navigate = useNavigate();
@@ -35,6 +36,7 @@ function Header() {
 
     const { currentUser } = useContext(AuthContext);
     const { cartLength } = useContext(CartContext);
+    const { notificationLength } = useContext(NotificationContext);
     const [productName, setProductName] = useState('');
     const [suggestData, setSuggestData] = useState([]);
     function handlePress(event) {
@@ -123,9 +125,9 @@ function Header() {
                                         </Box>
                                     )}
                                 >
-                                    <Stack direction="row" alignItems="center" gap={1} ref={notificationRef}>
-                                        <IconButton aria-label={notificationsLabel(100)}>
-                                            <Badge badgeContent={100} color="success">
+                                    <Stack direction="row" alignItems="center" ref={notificationRef}>
+                                        <IconButton aria-label={notificationsLabel(notificationLength)}>
+                                            <Badge badgeContent={notificationLength} color="success">
                                                 <NotificationsIcon sx={{ color: 'white' }} />
                                             </Badge>
                                         </IconButton>

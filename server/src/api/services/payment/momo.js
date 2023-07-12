@@ -6,7 +6,7 @@ const createMomoPayUrl = async (payload) => {
     try {
         //https://developers.momo.vn/#/docs/en/aiov2/?id=payment-method
         //parameters
-        const { checkoutOrder } = await checkoutReview(payload);
+        const { checkoutOrder } = await placeOrder(payload);
         var partnerCode = process.env.MOMO_PARTNER_CODE || 'MOMO';
         var accessKey = process.env.MOMO_ACCESS_KEY || 'F8BBA842ECF85';
         var secretkey = process.env.MOMO_SECRET_KEY || 'K951B6PE1waDMi640xX08PD3vg6EkVlz';

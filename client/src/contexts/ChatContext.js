@@ -15,22 +15,6 @@ export const ChatContextProvider = ({ children }) => {
     const [isMessagesLoading, setIsMessagesLoading] = useState(false);
     const [messagesError, setMessagesError] = useState(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
-    const [onlineUsers, setOnlineUsers] = useState([]);
-
-    // add online user
-    useEffect(() => {
-        if (!socket) return;
-        socket.emit('addNewUser', currentUser?.id);
-
-        socket.on('getOnlineUsers', (res) => {
-            console.log(res);
-            setOnlineUsers(res);
-        });
-
-        return () => {
-            socket.off('getOnlineUsers');
-        };
-    }, [socket]);
 
     // get realtime message
     useEffect(() => {
@@ -122,7 +106,6 @@ export const ChatContextProvider = ({ children }) => {
                 createChat,
                 updateCurrentChat,
                 setMessages,
-                onlineUsers,
             }}
         >
             {children}
