@@ -82,8 +82,10 @@ const Actions = ({ data }) => {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Không</Button>
-                        <Button onClick={handleDelete} autoFocus>
+                        <Button sx={{ color: '#43a99c' }} onClick={handleClose}>
+                            Không
+                        </Button>
+                        <Button sx={{ color: '#43a99c' }} onClick={handleDelete} autoFocus>
                             Có
                         </Button>
                     </DialogActions>
@@ -118,7 +120,7 @@ export default function ProductTable({ rows = [] }) {
                 if (rowData.value === true) {
                     return (
                         <Chip
-                            icon={<DoneIcon color='#328379'/>}
+                            icon={<DoneIcon color="#328379" />}
                             label="active"
                             variant="outlined"
                             size="small"
@@ -128,7 +130,7 @@ export default function ProductTable({ rows = [] }) {
                 } else {
                     return (
                         <Chip
-                            icon={<CloseIcon color='#328379'/>}
+                            icon={<CloseIcon color="#328379" />}
                             label="inactive"
                             variant="outlined"
                             size="small"

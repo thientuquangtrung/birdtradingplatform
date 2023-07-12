@@ -78,7 +78,17 @@ const PasswordVerify = () => {
                         type="password"
                         sx={{ width: '400px' }}
                     />
-                    <Button variant="contained" onClick={handleSubmit} disabled={isDisabled()}>
+                    <Button
+                        sx={{
+                            backgroundColor: '#43a99c',
+                            '&:hover': { backgroundColor: '#43a99c' },
+                            '&:disabled': { backgroundColor: 'rgb(58 152 140 / 45%)' },
+                            color:'white'
+                        }}
+                        variant="contained"
+                        onClick={handleSubmit}
+                        disabled={isDisabled()}
+                    >
                         Xác nhận
                     </Button>
                 </Stack>

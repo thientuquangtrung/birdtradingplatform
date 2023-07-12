@@ -211,8 +211,10 @@ const Signup = ({ role = 'customer' }) => {
                     disabled={isButtonDisabled}
                     sx={{
                         '&:disabled': {
-                            backgroundColor: isButtonDisabled ? 'lightblue' : 'blue',
+                            backgroundColor: isButtonDisabled ? 'rgb(58 152 140 / 45%)' : '#43a99c',
                         },
+                        backgroundColor: '#43a99c',
+                        '&:hover': { backgroundColor: '#43a99c' },
                     }}
                     style={codeStyle}
                     fullWidth
@@ -225,7 +227,7 @@ const Signup = ({ role = 'customer' }) => {
                 <Typography style={{ color: 'red', fontSize: '13px', margin: '5px 0 10px 0' }}>{error}</Typography>
                 <Typography style={marginStyle}>
                     Đã có tài khoản?{' '}
-                    <Link style={{ color: 'blue' }} to="/login">
+                    <Link style={{ color: 'rgb(3 143 125)' }} to="/login">
                         Đăng nhập
                     </Link>
                 </Typography>

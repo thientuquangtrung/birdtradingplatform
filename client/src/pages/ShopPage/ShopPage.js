@@ -94,7 +94,7 @@ function ShopPage() {
                     <Grid container spacing={2} padding={3} sx={{ alignItems: 'center' }}>
                         <Grid item xs={1}>
                             <Avatar
-                                sx={{ width: 70, height: 70, border: '2px solid #1976d242' }}
+                                sx={{ width: 70, height: 70, border: '1px solid #ccc' }}
                                 alt=""
                                 src={shopInfo?.image}
                             />
@@ -141,29 +141,17 @@ function ShopPage() {
                                     Sắp xếp theo:
                                 </Typography>
 
-                                <Button
-                                    sx={{
-                                        color: '#43a99c',
-                                        borderColor: '#43a99c',
-                                        '&:hover': {
-                                            borderColor: '#43a99c',
-                                        },
-                                    }}
+                                <Button   
                                     startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'name' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('name')}
+                                    color='success'
                                 >
                                     Mới Nhất
                                 </Button>
 
                                 <Button
-                                    sx={{
-                                        color: '#43a99c',
-                                        borderColor: '#43a99c',
-                                        '&:hover': {
-                                            borderColor: '#43a99c',
-                                        },
-                                    }}
+                                    color='success'
                                     startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'sold' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('sold', 'desc')}
@@ -216,11 +204,7 @@ function ShopPage() {
                             style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
                             sx={{
                                 '& .Mui-selected': {
-                                    backgroundColor: '#43a99c',
-                                    color: 'white',
-                                },
-                                '& .Mui-selected:hover': {
-                                    backgroundColor: '#43a99c',
+                                    color: 'black',
                                 },
                             }}
                         />
