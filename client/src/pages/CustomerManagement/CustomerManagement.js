@@ -10,6 +10,15 @@ function CustomerManagement() {
     const [data, setData] = useState([]);
     const [name, setName] = useState('');
 
+    const styles = {
+        button: {
+            backgroundColor: '#43a99c47',
+            '&:hover': {
+                backgroundColor: '#43a99c73',
+            },
+        },
+    };
+
     useEffect(() => {
         axiosClient
             .get(`auth/account`, {
@@ -36,10 +45,11 @@ function CustomerManagement() {
                 </Typography>
                 <Button
                     variant="soft"
-                    color="primary"
+                    color="success"
                     startDecorator={<Add />}
                     component={Link}
                     to="/customer_management/add_customer"
+                    sx={styles.button}
                 >
                     Add
                 </Button>

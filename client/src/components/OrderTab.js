@@ -480,11 +480,15 @@ function OrderTab({ status }) {
             <Grid>
                 <Pagination
                     count={totalPage}
-                    color="primary"
                     shape="rounded"
                     page={currentPage}
                     onChange={handleChangePage}
                     style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                    sx={{
+                        '& .Mui-selected': {
+                            color: 'black',
+                        },
+                    }}
                 />
             </Grid>
         </>

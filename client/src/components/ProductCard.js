@@ -89,7 +89,7 @@ const ProductCard = ({ data }) => {
                             id: data.id,
                         }}
                     >
-                        <Button size="small">Chi tiết</Button>
+                        <Button size="small" sx={{color: '#238f78',}}>Chi tiết</Button>
                     </Link>
                 </CardActions>
             </Box>

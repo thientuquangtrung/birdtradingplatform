@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function AuthLayout({ children }) {
     return (
         <Stack direction="column">
-            <AppBar position="sticky">
+            <AppBar position="sticky" sx={{backgroundColor: '#43a99c'}}>
                 <Toolbar sx={{ paddingTop: 1, paddingBottom: 1, justifyContent: 'space-between' }}>
                     <Stack direction="row" alignItems="center" gap={3}>
                         <Link to="/">

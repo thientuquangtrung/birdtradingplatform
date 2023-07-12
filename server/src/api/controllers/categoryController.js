@@ -12,8 +12,7 @@ const getCategories = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
     try {
-        const id = req.params.id;
-        const result = await categoryData.createCategory(id);
+        const result = await categoryData.createCategory(req.body.name);
         return res.send({
             status: 200,
             message: 'OK',

@@ -172,7 +172,13 @@ function ProductDetail() {
                                     onClick={handleAddToCart}
                                     variant="contained"
                                     startIcon={<AddShoppingCartIcon />}
-                                    sx={{ color: '#fff', backgroundColor: '#1976d2' }}
+                                    sx={{
+                                        color: '#fff',
+                                        backgroundColor: '#3a988c',
+                                        '&:hover': {
+                                            backgroundColor: '#3a988c',
+                                        },
+                                    }}
                                 >
                                     Thêm vào giỏ hàng
                                 </Button>
@@ -261,12 +267,19 @@ function ProductDetail() {
                         variant="outlined"
                         aria-label="outlined button group"
                         size="small"
-                        sx={{ marginBottom: '15px' }}
+                        sx={{ marginBottom: '15px', color: '#43a99c' }}
                     >
                         <Button
                             disabled={currentPage === 1}
                             onClick={() => {
                                 setCurrentPage((prev) => prev - 1);
+                            }}
+                            sx={{
+                                color: '#43a99c',
+                                borderColor: '#43a99c',
+                                '&:hover': {
+                                    borderColor: '#43a99c',
+                                },
                             }}
                         >
                             <ChevronLeftSharpIcon />
@@ -275,6 +288,13 @@ function ProductDetail() {
                             disabled={currentPage === totalPage}
                             onClick={() => {
                                 setCurrentPage((prev) => prev + 1);
+                            }}
+                            sx={{
+                                color: '#43a99c',
+                                borderColor: '#43a99c',
+                                '&:hover': {
+                                    borderColor: '#43a99c',
+                                },
                             }}
                         >
                             <ChevronRightSharpIcon />

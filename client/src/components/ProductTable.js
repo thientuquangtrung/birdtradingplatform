@@ -55,11 +55,17 @@ const Actions = ({ data }) => {
                         pathname: `/product/update/${data.value}`,
                     }}
                 >
-                    <IconButton color="primary" aria-label="edit">
+                    <IconButton aria-label="edit" sx={{ color: '#41a296' }}>
                         <EditIcon />
                     </IconButton>
                 </Link>
-                <IconButton disabled={!enabled} color="primary" aria-label="delete" onClick={handleClickOpen}>
+                <IconButton
+                    disabled={!enabled}
+                    color="primary"
+                    aria-label="delete"
+                    onClick={handleClickOpen}
+                    sx={{ color: '#41a296' }}
+                >
                     <VisibilityOffIcon />
                 </IconButton>
 
@@ -76,8 +82,10 @@ const Actions = ({ data }) => {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Không</Button>
-                        <Button onClick={handleDelete} autoFocus>
+                        <Button sx={{ color: '#43a99c' }} onClick={handleClose}>
+                            Không
+                        </Button>
+                        <Button sx={{ color: '#43a99c' }} onClick={handleDelete} autoFocus>
                             Có
                         </Button>
                     </DialogActions>
@@ -110,9 +118,25 @@ export default function ProductTable({ rows = [] }) {
             align: 'center',
             renderCell: (rowData) => {
                 if (rowData.value === true) {
-                    return <Chip icon={<DoneIcon />} label="active" variant="outlined" size="small" color="primary" />;
+                    return (
+                        <Chip
+                            icon={<DoneIcon color="#328379" />}
+                            label="active"
+                            variant="outlined"
+                            size="small"
+                            sx={{ color: '#328379' }}
+                        />
+                    );
                 } else {
-                    return <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" />;
+                    return (
+                        <Chip
+                            icon={<CloseIcon color="#328379" />}
+                            label="inactive"
+                            variant="outlined"
+                            size="small"
+                            sx={{ color: '#328379' }}
+                        />
+                    );
                 }
             },
         },

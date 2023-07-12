@@ -11,6 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 
+const styles = {
+    chip: {
+        borderColor: '#43a99c',
+        color: '#037869'
+    },
+};
+
 const Name = ({ data }) => {
     return (
         <Stack direction="row" gap={2} alignItems="center">
@@ -34,7 +41,7 @@ const Actions = ({ data }) => {
                 <Link
                     to={`/customer_detail/${data.row.name}`}
                     state={{
-                        id: data.value
+                        id: data.value,
                     }}
                 >
                     <IconButton color="primary" aria-label="edit" sx={{ color: '#000' }}>
@@ -75,9 +82,20 @@ export default function CustomerTable({ data }) {
             width: 200,
             renderCell: (rowData) => {
                 if (rowData.value === true) {
-                    return <Chip icon={<DoneIcon />} label="active" variant="outlined" size="small" color="primary" />;
+                    return (
+                        <Chip
+                            icon={<DoneIcon />}
+                            label="active"
+                            variant="outlined"
+                            size="small"
+                            color="primary"
+                            sx={styles.chip}
+                        />
+                    );
                 } else {
-                    return <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" />;
+                    return (
+                        <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" sx={styles.chip} />
+                    );
                 }
             },
         },

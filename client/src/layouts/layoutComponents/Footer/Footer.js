@@ -12,12 +12,13 @@ function Footer() {
         <Box>
             <Paper
                 elevation={3}
+                square
                 sx={{
                     backgroundImage: 'linear-gradient(110deg, #2fa362, #20b2aa)',
                 }}
             >
                 <Container>
-                    <Grid container spacing={5} p={3} mt={0} alignItems="flex-start">
+                    <Grid container spacing={5} pb={2} mt={0} alignItems="flex-start">
                         <Grid item xs={2}>
                             <img style={{ maxWidth: '100px' }} src="/assets/images/logo.png" alt="logo" />
                         </Grid>

@@ -20,7 +20,7 @@ function UploadImage({ inputName, rounded, reverse, vertical, title, uploadFile,
         direction = 'column';
     }
 
-    if(reverse) {
+    if (reverse) {
         direction += '-reverse';
     }
 
@@ -44,7 +44,18 @@ function UploadImage({ inputName, rounded, reverse, vertical, title, uploadFile,
                     <img src={link} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 )}
             </Stack>
-            <Button variant="outlined" component="label" color="primary" startIcon={<FileUpload />}>
+            <Button
+                variant="outlined"
+                component="label"
+                startIcon={<FileUpload sx={{ color: '#43a99c' }} />}
+                sx={{
+                    color: '#43a99c',
+                    borderColor: '#43a99c',
+                    '&:hover': {
+                        borderColor: '#43a99c',
+                    },
+                }}
+            >
                 {title ? title : 'Upload a file'}
                 <input type="file" name={inputName} hidden accept="image/*" onChange={handleSelectFile} />
             </Button>

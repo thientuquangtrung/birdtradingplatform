@@ -100,7 +100,7 @@ function ShopPage() {
                             />
                         </Grid>
                         <Grid item xs={2}>
-                            <Typography variant="h6" gutterBottom sx={{ color: '#1976d2' }} fontWeight={'bold'}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#43a99c' }} fontWeight={'bold'}>
                                 {shopInfo?.name}
                             </Typography>
                             <ChatButtonShop />
@@ -142,6 +142,13 @@ function ShopPage() {
                                 </Typography>
 
                                 <Button
+                                    sx={{
+                                        color: '#43a99c',
+                                        borderColor: '#43a99c',
+                                        '&:hover': {
+                                            borderColor: '#43a99c',
+                                        },
+                                    }}
                                     startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'name' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('name')}
@@ -150,6 +157,13 @@ function ShopPage() {
                                 </Button>
 
                                 <Button
+                                    sx={{
+                                        color: '#43a99c',
+                                        borderColor: '#43a99c',
+                                        '&:hover': {
+                                            borderColor: '#43a99c',
+                                        },
+                                    }}
                                     startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'sold' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('sold', 'desc')}
@@ -196,11 +210,15 @@ function ShopPage() {
                     {totalPage > 0 && (
                         <Pagination
                             count={totalPage}
-                            color="primary"
                             shape="rounded"
                             page={page}
                             onChange={handleChange}
                             style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                            sx={{
+                                '& .Mui-selected': {
+                                    color: 'black',
+                                },
+                            }}
                         />
                     )}
                 </Grid>

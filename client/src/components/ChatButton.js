@@ -31,7 +31,15 @@ function ChatButton() {
                 <Button
                     variant="contained"
                     startIcon={<ForumIcon />}
-                    sx={{ position: 'fixed', right: 7, bottom: 7 }}
+                    sx={{
+                        position: 'fixed',
+                        right: 7,
+                        bottom: 7,
+                        backgroundColor: '#43a99c',
+                        '&:hover': {
+                            backgroundColor: '#43a99c',
+                        },
+                    }}
                     onClick={handleChatToggle}
                 >
                     Chat
@@ -52,7 +60,7 @@ function ChatButton() {
                 >
                     {/* Content of the chat component */}
                     <Stack direction="row" justifyContent="space-between" alignItems="center" padding={1}>
-                        <Typography variant="h6" color="#1976d2" paddingLeft="8px">
+                        <Typography variant="h6" color="#43a99c" paddingLeft="8px">
                             Chat
                         </Typography>
 

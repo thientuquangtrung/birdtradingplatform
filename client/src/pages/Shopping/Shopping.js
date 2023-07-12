@@ -30,9 +30,12 @@ function Shopping() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
+        //kiểm tra xem location.state?.q và location.state?.categoryId có tồn tại hay không. 
+        //Nếu tồn tại, chúng ta cập nhật giá trị của q và categoryId bằng cách gọi setQ(location.state.q) 
+        //và setCategoryId(location.state.categoryId) tương ứng.
         if (location.state?.q) setQ(location.state.q);
         if (location.state?.categoryId) setCategoryId(location.state.categoryId);
-    }, [location.state]);
+    }, [location.state]); //hàm useEffect sẽ được gọi lại mỗi khi giá trị của location.state thay đổi.
 
     useEffect(() => {
         axiosClient
@@ -47,14 +50,19 @@ function Shopping() {
             })
             .then((response) => {
                 const list = response.data.data.flatMap((document) => document.value);
+                // tạo một danh sách (list) từ dữ liệu nhận được từ API 
+                //bằng cách sử dụng phương thức flatMap để nối các giá trị từ mảng response.data.data. 
                 setListProduct((prev) => [...list]);
+                //cập nhật giá trị của biến state listProduct 
+                //bằng cách thêm list vào cuối danh sách hiện tại (prev) bằng cách sử dụng toán tử spread [...list]. 
                 setTotalPage(response.data.meta.totalPages);
                 setPage(response.data.meta.currentPage);
+                //cập nhật giá trị của totalPage và page từ thông tin meta của response.data.
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [sortBy, order, categoryId, q, page]);
+    }, [sortBy, order, categoryId, q, page]);// gọi lại khi các biến này thay đổi
 
     const clearAllFilters = () => {
         setCategoryId(0);
@@ -94,6 +102,13 @@ function Shopping() {
                                     </Typography>
 
                                     <Button
+                                        sx={{
+                                            color: '#3a988c',
+                                            borderColor: '#43a99c',
+                                            '&:hover': {
+                                                borderColor: '#43a99c',
+                                            },
+                                        }}
                                         startIcon={sortBy === 'timestamp' ? <CheckIcon /> : ''}
                                         variant={sortBy === 'timestamp' ? 'contained' : 'outlined'}
                                         onClick={() => handleFilter('timestamp')}
@@ -102,6 +117,13 @@ function Shopping() {
                                     </Button>
 
                                     <Button
+                                        sx={{
+                                            color: '#43a99c',
+                                            borderColor: '#43a99c',
+                                            '&:hover': {
+                                                borderColor: '#43a99c',
+                                            },
+                                        }}
                                         startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
                                         variant={sortBy === 'sold' ? 'contained' : 'outlined'}
                                         onClick={() => handleFilter('sold', 'desc')}
@@ -141,11 +163,15 @@ function Shopping() {
                 {totalPage > 0 && (
                     <Pagination
                         count={totalPage}
-                        color="primary"
                         shape="rounded"
                         page={page}
                         onChange={handleChange}
                         style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                        sx={{
+                            '& .Mui-selected': {
+                                color: 'black',
+                            },
+                        }}
                     />
                 )}
             </Grid>

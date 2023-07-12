@@ -28,7 +28,16 @@ function Cart() {
                         </MenuList>
                         <Stack direction={'row'} justifyContent={'flex-end'}>
                             <Link to="/cart">
-                                <Button variant="contained" color="primary">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{
+                                        backgroundColor: '#43a99c',
+                                        '&:hover': {
+                                            backgroundColor: '#43a99c',
+                                        },
+                                    }}
+                                >
                                     Xem giỏ hàng
                                 </Button>
                             </Link>

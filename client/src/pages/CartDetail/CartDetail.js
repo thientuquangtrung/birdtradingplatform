@@ -55,7 +55,7 @@ const Actions = ({ data }) => {
         <Stack direction="row" spacing={0.5}>
             <React.Fragment>
                 <IconButton color="primary" aria-label="delete" onClick={handleClickOpen}>
-                    <DeleteIcon />
+                    <DeleteIcon sx={{ color: '#43a99c' }} />
                 </IconButton>
                 <Dialog
                     open={open}
@@ -70,7 +70,7 @@ const Actions = ({ data }) => {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={handleClose} sx={{ color: '#43a99c' }}>
                             Không
                         </Button>
                         <Button onClick={handleDelete} autoFocus color="error">
@@ -270,11 +270,30 @@ export default function CartDetail() {
                 <Divider sx={{ margin: '10px 0' }} />
                 <Stack direction={'row'} justifyContent="space-between" alignItems="center">
                     <Link to={'/shopping'}>
-                        <Button variant="outlined" color="secondary">
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                color: '#43a99c',
+                                borderColor: '#43a99c',
+                                '&:hover': {
+                                    borderColor: '#43a99c',
+                                },
+                            }}
+                        >
                             Tiếp tục mua hàng
                         </Button>
                     </Link>
-                    <Button variant="contained" disabled={rowSelectionModel.length <= 0} onClick={handleCheckout}>
+                    <Button
+                        variant="contained"
+                        disabled={rowSelectionModel.length <= 0}
+                        onClick={handleCheckout}
+                        sx={{
+                            backgroundColor: '#43a99c',
+                            '&:hover': {
+                                backgroundColor: '#43a99c',
+                            },
+                        }}
+                    >
                         Tiến hành đặt hàng
                     </Button>
                 </Stack>
