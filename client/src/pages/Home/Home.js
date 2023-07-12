@@ -62,7 +62,17 @@ function Home() {
                     }}
                 >
                     <Link to={'/shopping'}>
-                        <Button variant="outlined" sx={{ marginTop: 1 }}>
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                marginTop: 1,
+                                color: '#43a99c',
+                                borderColor: '#43a99c',
+                                '&:hover': {
+                                    borderColor: '#43a99c',
+                                },
+                            }}
+                        >
                             Xem Thêm
                         </Button>
                     </Link>

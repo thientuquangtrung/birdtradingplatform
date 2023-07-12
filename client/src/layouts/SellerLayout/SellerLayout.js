@@ -10,7 +10,7 @@ function SellerLayout({ children }) {
 
     return (
         <>
-            <AppBar position="sticky">
+            <AppBar position="sticky" sx={{backgroundColor: '#43a99c'}}>
                 <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Stack direction="row" alignItems="center" gap={3}>
                         <img width="50px" src="/assets/images/logo.png" alt="logo" />

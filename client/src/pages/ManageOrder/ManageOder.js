@@ -51,7 +51,12 @@ const ManageOrder = () => {
         <Stack>
             <TabContext value={value}>
                 <Paper sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <TabList
+                        onChange={handleChange}
+                        aria-label="lab API tabs example"
+                        textColor="secondary"
+                        indicatorColor="secondary"
+                    >
                         <Tab label="Tất cả" value="1" />
                         <Tab label="Chờ xác nhận" value="2" />
                         <Tab label="Chờ lấy hàng" value="3" />
@@ -87,7 +92,11 @@ const ManageOrder = () => {
                             <Search />
                         </IconButton>
                     </Stack>
-                    <Button sx={{ height: '100%' }} variant="contained" onClick={handleSearch}>
+                    <Button
+                        sx={{ height: '100%', backgroundColor: '#43a99c' }}
+                        variant="contained"
+                        onClick={handleSearch}
+                    >
                         Tìm kiếm
                     </Button>
                 </Stack>
