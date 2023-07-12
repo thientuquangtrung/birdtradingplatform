@@ -88,10 +88,12 @@ const EmailVerify = () => {
                         )}
                     <Button
                         disabled={isButtonDisabled}
+                        style={{
+                            color:'white',
+                            backgroundColor: isButtonDisabled ? 'rgb(58 152 140 / 45%)' : '#43a99c',
+                        }}
                         sx={{
-                            '&:disabled': {
-                                backgroundColor: isButtonDisabled ? 'lightblue' : 'blue',
-                            },
+                            
                             marginTop: '10px',
                         }}
                         variant="contained"
@@ -103,7 +105,7 @@ const EmailVerify = () => {
                 </Stack>
                 <Typography style={{ margin: '20px 0 0 0', textAlign: 'center' }}>
                     Đã có tài khoản?{' '}
-                    <Link style={{ color: 'blue' }} to="/login">
+                    <Link style={{ color: 'rgb(3 143 125)' }} to="/login">
                         Đăng nhập
                     </Link>
                 </Typography>
