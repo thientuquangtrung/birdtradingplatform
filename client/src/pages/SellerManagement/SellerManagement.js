@@ -10,6 +10,15 @@ function SellerManagement() {
     const [data, setData] = useState([]);
     const [name, setName] = useState('');
 
+    const styles = {
+        button: {
+            backgroundColor: '#43a99c47',
+            '&:hover': {
+                backgroundColor: '#43a99c73',
+            },
+        },
+    };
+
     useEffect(() => {
         axiosClient
             .get(`auth/account`, {
@@ -36,10 +45,11 @@ function SellerManagement() {
                 </Typography>
                 <Button
                     variant="soft"
-                    color="primary"
+                    color="success"
                     startDecorator={<Add />}
                     component={Link}
                     to="/seller_management/add_seller"
+                    sx={styles.button}
                 >
                     Add
                 </Button>

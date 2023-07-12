@@ -1,1 +1,1 @@
-select * from category
+select * from category where [enabled] = '1'
