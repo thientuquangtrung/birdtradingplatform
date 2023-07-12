@@ -36,6 +36,8 @@ import PasswordVerify from '../pages/PasswordVerify/PasswordVerify';
 import PasswordChange from '../pages/PasswordChange/PasswordChange';
 import EmailVerify from '../pages/EmailVerify/EmailVerify';
 import OtpVerify from '../pages/OtpVerify/OtpVerify';
+import PasswordForget from '../pages/PasswordForget/PasswordForget';
+import PasswordReset from '../pages/PasswordReset/PasswordReset';
 
 // Public routes
 const publicRoutes = [
@@ -50,8 +52,17 @@ const publicRoutes = [
     { path: '/login', component: SellerLogin, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: Login, layout: AuthLayout, subdomain: 'common' },
     { path: '/email/verify', component: EmailVerify, layout: AuthLayout, subdomain: 'common' },
+    { path: '/email/verify', component: EmailVerify, layout: AuthLayout, subdomain: 'seller' },
     { path: '/otp/verify', component: OtpVerify, layout: AuthLayout, subdomain: 'common' },
+    { path: '/otp/verify', component: OtpVerify, layout: AuthLayout, subdomain: 'seller' },
     { path: '/login', component: AdminLogin, subdomain: 'admin' },
+    { path: '/password/reset/:email', component: PasswordReset, layout: AuthLayout, subdomain: 'common' },
+    {
+        path: '/password/forget',
+        component: PasswordForget,
+        layout: AuthLayout,
+        subdomain: 'common',
+    },
 ];
 
 const privateRoutes = [

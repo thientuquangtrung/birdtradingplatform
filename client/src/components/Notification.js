@@ -14,7 +14,7 @@ function Notification() {
                         {notificationList.length > 0 ? 'Thông báo' : 'Chưa có thông báo'}
                     </Typography>
                 </Box>
-                { notificationList.length > 0 ? (
+                {notificationList.length > 0 ? (
                     <>
                         <MenuList mb={1}>
                             {/* {notificationList.slice(0, 5).map((item) => {
