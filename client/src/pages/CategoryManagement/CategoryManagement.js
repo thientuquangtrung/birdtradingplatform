@@ -31,10 +31,11 @@ function CategoryManagement() {
             .post('category', {
                 name,
             })
+            //category name mới
             .then(() => {
-                // Clear the name input field
+                
                 setName('');
-                // Fetch the updated list of categories from the server
+                //đặt về rỗng, tạo ô nhập category mới
                 axiosClient
                     .get('category')
                     .then((response) => {

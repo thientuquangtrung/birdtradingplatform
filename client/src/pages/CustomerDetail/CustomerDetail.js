@@ -54,6 +54,7 @@ function CustomerDetail() {
     useEffect(function () {
         axiosClient
             .get(`auth/account/${location.state.id}`, {
+                //user có ID tương ứng
                 params: {
                     role: 'CUSTOMER',
                 },
@@ -176,6 +177,7 @@ function CustomerDetail() {
     const isDisabled = () => {
         return name === user?.name && email === user?.email && phone === user?.phone && address === user?.shipToAddress;
     };
+    //thông tin kh thay đổi thì disabled
     return (
         <Stack gap={7} marginLeft={25} marginRight={25} marginTop={5} marginBottom={5} width="90%">
             <Stack direction="row" gap={2} sx={{ cursor: 'pointer' }}>

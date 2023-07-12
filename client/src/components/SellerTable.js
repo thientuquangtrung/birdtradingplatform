@@ -94,7 +94,7 @@ export default function SellerTable({ data }) {
                     );
                 } else {
                     return (
-                        <Chip icon={<CloseIcon />} label="inactive" variant="outlined" size="small" sx={styles.chip} />
+                        <Chip icon={<CloseIcon color='#43a99c'/>}  label="inactive" variant="outlined" size="small" sx={styles.chip} />
                     );
                 }
             },
@@ -104,6 +104,9 @@ export default function SellerTable({ data }) {
             headerName: 'Action',
             width: 110,
             renderCell: (rowAction) => <Actions data={rowAction} />,
+            //một hàm gọi khi mỗi ô trong cột được hiển thị
+            //Đối số của hàm là rowData hoặc rowLocation 
+            //và được sử dụng để truyền dữ liệu tương ứng vào thành phần.
         },
     ];
 
@@ -123,6 +126,11 @@ export default function SellerTable({ data }) {
                 checkboxSelection
                 disableRowSelectionOnClick
             />
+            {/* initialState để thiết lập trạng thái ban đầu của bảng 
+            (đã được cấu hình với tranginationModel có pageSize là 5), 
+            pageSizeOptions để hiển thị tùy chọn kích thước trang (trong trường hợp này là 5), 
+            checkboxSelection để cho phép lựa chọn hàng bằng checkbox, 
+            và disableRowSelectionOnClick để vô hiệu hóa lựa chọn hàng khi người dùng nhấp vào hàng. */}
         </Box>
     );
 }
