@@ -114,7 +114,15 @@ const PasswordReset = () => {
             </Stack>
             <Grid align="center">
                 <Button
-                    sx={{ width: '110px', height: '36px' }}
+                    sx={{
+                        width: '110px',
+                        height: '36px',
+                        '&:disabled': {
+                            backgroundColor: 'rgb(58 152 140 / 45%)',
+                        },
+                        backgroundColor: '#43a99c',
+                        '&:hover': { backgroundColor: '#43a99c' },
+                    }}
                     variant="contained"
                     onClick={handleSubmit}
                     disabled={isDisabled()}

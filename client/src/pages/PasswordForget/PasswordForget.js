@@ -64,6 +64,13 @@ const PasswordReset = () => {
                     />
                     <Button
                         disabled={isDisabled()}
+                        sx={{
+                            '&:disabled': {
+                                backgroundColor: 'rgb(58 152 140 / 45%)',
+                            },
+                            backgroundColor: '#43a99c',
+                            '&:hover': { backgroundColor: '#43a99c' },
+                        }}
                         variant="contained"
                         onClick={() => {
                             handleSubmit(email);
