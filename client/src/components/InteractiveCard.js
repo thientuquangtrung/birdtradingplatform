@@ -36,6 +36,9 @@ export default function InteractiveCard({ initialData }) {
                 // handle success
                 setChange(true);
                 setOpen(false);
+                //setChange(true) được gọi để cập nhật trạng thái change thành true, 
+                //chỉ ra rằng dữ liệu đã thay đổi.
+                //setOpen(false) được gọi để đóng hộp thoại xác nhận xóa.
             })
             .catch(function (error) {
                 // handle error
@@ -45,16 +48,20 @@ export default function InteractiveCard({ initialData }) {
 
     const handleSave = () => {
         if (textFieldValue !== name) {
-            setName(textFieldValue);
+            setName(textFieldValue); 
+            //được gọi để cập nhật tên của thẻ thành giá trị trong trường văn bản.
             axiosClient
                 .put(`category/${data.id}`, { name: textFieldValue })
                 .then((response) => {
                     console.log(response);
                     setName(textFieldValue);
+                    //được gọi để cập nhật tên của thẻ thành giá trị trong trường văn bản.
                     setChange(false);
+                    // được gọi để cập nhật trạng thái change thành false, chỉ ra rằng dữ liệu không thay đổi.
                     setData((prevData) => ({
                         ...prevData,
                         enabled: true,
+                    //được sử dụng để cập nhật dữ liệu của thẻ với trạng thái enabled là true.    
                     }));
                 })
                 .catch((error) => {
@@ -66,6 +73,8 @@ export default function InteractiveCard({ initialData }) {
 
     const handleTextFieldChange = (e) => {
         setTextFieldValue(e.target.value);
+        //e.target.value truy cập giá trị mới 
+        //=> cập nhật giá trị của textFieldValue vào 
     };
 
     const cardColor = change || data.enabled === false ? '#e0e0e0' : undefined;
@@ -108,23 +117,28 @@ export default function InteractiveCard({ initialData }) {
                                 size="small"
                                 autoFocus
                             />
+                        //editMode là true, sẽ hiển thị TextField để cho phép người dùng chỉnh sửa giá trị    
                         ) : (
                             <Chip variant="soft" color="neutral" size="lg" sx={{ pointerEvents: 'none' }}>
                                 {name}
                             </Chip>
                         )}
+                        {/* editMode là false, sẽ hiển thị Chip để hiển thị giá trị tĩnh. */}
                         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
                             {editMode ? (
+                                //editMode là true => nút "Lưu" sẽ được hiển thị.
                                 <IconButton
                                     color="neutral"
                                     variant="outlined"
                                     size="sm"
                                     disabled={textFieldValue === name}
+                                    //Nếu giá trị textFieldValue trùng với name, nút sẽ bị vô hiệu hóa.
                                     onClick={handleSave}
                                 >
                                     <DoneIcon fontSize="small" />
                                 </IconButton>
                             ) : (
+                                //editMode là true => nút "Chỉnh sửa" sẽ được hiển thị.
                                 <IconButton
                                     color="neutral"
                                     variant="outlined"
@@ -135,11 +149,13 @@ export default function InteractiveCard({ initialData }) {
                                 </IconButton>
                             )}
                             {editMode ? (
+                                //editMode là true => nút "Đóng" sẽ được hiển thị.
                                 <IconButton
                                     color="neutral"
                                     variant="outlined"
                                     size="sm"
                                     onClick={() => setEditMode(false)}
+                                    //cho phép người dùng thoát khỏi chế độ chỉnh sửa.
                                 >
                                     <CloseIcon fontSize="small" />
                                 </IconButton>

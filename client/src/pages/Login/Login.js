@@ -116,10 +116,13 @@ const Login = ({ role }) => {
                     </Typography>
                     <Typography style={{ color: 'red', fontSize: '13px', marginLeft: '10px' }}>{error}</Typography>
                     <Grid style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Nhớ mật khẩu" />
+                        <FormControlLabel
+                            control={<Checkbox defaultChecked style={{ color: '#43a99c' }} />}
+                            label="Nhớ mật khẩu"
+                        />
                         <Typography style={marginStyle}>
                             <Link to="/password/forget">
-                                <Button>Quên mật khẩu ?</Button>
+                                <Button sx={{ color: 'rgb(3 143 125)' }}>Quên mật khẩu ?</Button>
                             </Link>
                         </Typography>
                     </Grid>
@@ -128,20 +131,18 @@ const Login = ({ role }) => {
                         id="btn"
                         variant="contained"
                         type="button"
-                        color="primary"
                         fullWidth
                         onClick={handleSubmit}
-                        sx={{
-                            '&:disabled': {
-                                backgroundColor: isButtonDisabled ? 'lightblue' : 'blue',
-                            },
+                        style={{
+                            color:'white',
+                            backgroundColor: isButtonDisabled ? 'rgb(58 152 140 / 45%)' : '#43a99c',
                         }}
                     >
                         Đăng nhập
                     </Button>
                     <Typography style={marginStyle}>
                         Bạn đã có tài khoản ?{' '}
-                        <Link style={{ color: 'blue' }} to="/email/verify">
+                        <Link style={{ color: 'rgb(3 143 125)' }} to="/email/verify">
                             Đăng ký
                         </Link>
                     </Typography>
