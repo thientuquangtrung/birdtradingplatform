@@ -136,7 +136,10 @@ function SellerManagementAdmin() {
                                 </Grid>
                             </Grid>
                             <Box display={'flex'} justifyContent={'flex-end'} marginTop={1.5}>
-                                <Button color="neutral" onClick={handleCreate}>
+                                <Button
+                                    onClick={handleCreate}
+                                    sx={{ backgroundColor: '#43a99c', '&:hover': { backgroundColor: '#43a99c' } }}
+                                >
                                     Tạo Seller Mới
                                 </Button>
                             </Box>

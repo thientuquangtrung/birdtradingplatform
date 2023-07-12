@@ -1,27 +1,95 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';
-import Typography from '@mui/joy/Typography';
-import { Stack } from '@mui/system';
-import { AspectRatio, Link } from '@mui/joy';
+import { Stack, TextField } from '@mui/material';
+import { AspectRatio, IconButton } from '@mui/joy';
 import EditIcon from '@mui/icons-material/Edit';
 import Box from '@mui/joy/Box';
-import IconButton from '@mui/joy/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Paper from '@mui/material/Paper';
+import { Dialog, DialogActions, DialogTitle, Button } from '@mui/material';
+import axiosClient from '../api/axiosClient';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 
-export default function InteractiveCard({ data }) {
+export default function InteractiveCard({ initialData }) {
+    const [editMode, setEditMode] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [change, setChange] = useState(false);
+    const [data, setData] = useState(initialData);
+    const [name, setName] = useState(data.name);
+    const [textFieldValue, setTextFieldValue] = useState(data.name);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleDelete = () => {
+        axiosClient
+            .delete(`category/${data.id}`)
+            .then(function (response) {
+                // handle success
+                setChange(true);
+                setOpen(false);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    };
+
+    const handleSave = () => {
+        if (textFieldValue !== name) {
+            setName(textFieldValue);
+            axiosClient
+                .put(`category/${data.id}`, { name: textFieldValue })
+                .then((response) => {
+                    console.log(response);
+                    setName(textFieldValue);
+                    setChange(false);
+                    setData((prevData) => ({
+                        ...prevData,
+                        enabled: true,
+                    }));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+        setEditMode(false);
+    };
+
+    const handleTextFieldChange = (e) => {
+        setTextFieldValue(e.target.value);
+    };
+
+    const cardColor = change || data.enabled === false ? '#e0e0e0' : undefined;
+    const tagChange =
+        change || data.enabled === false ? (
+            <IconButton disabled size="sm" color="neutral">
+                <VisibilityOffIcon />
+            </IconButton>
+        ) : (
+            <IconButton color="neutral" variant="outlined" size="sm" onClick={handleClickOpen}>
+                <DeleteIcon fontSize="small" />
+            </IconButton>
+        );
+
     return (
         <Card
             variant="outlined"
             orientation="horizontal"
             sx={{
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+                backgroundColor: cardColor,
             }}
         >
-            <Stack direction='row' justifyContent='space-between' justifyItems='center' gap={2} >
+            <Stack direction="row" justifyContent="space-between" justifyItems="center" gap={2}>
                 <AspectRatio ratio="1" sx={{ width: 90, height: 90 }}>
                     <img
                         src="https://images.unsplash.com/photo-1507833423370-a126b89d394b?auto=format&fit=crop&w=90"
@@ -32,16 +100,68 @@ export default function InteractiveCard({ data }) {
                 </AspectRatio>
                 <CardContent>
                     <Stack direction="column" gap={2} alignItems="center">
-                        <Chip variant="soft" color="neutral" size="lg" sx={{ pointerEvents: 'none' }}>
-                            {data.name}
-                        </Chip>
+                        {editMode ? (
+                            <TextField
+                                value={textFieldValue}
+                                onChange={handleTextFieldChange}
+                                variant="outlined"
+                                size="small"
+                                autoFocus
+                            />
+                        ) : (
+                            <Chip variant="soft" color="neutral" size="lg" sx={{ pointerEvents: 'none' }}>
+                                {name}
+                            </Chip>
+                        )}
                         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
-                            <IconButton color="neutral" variant="outlined" size="sm">
-                                <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton color="neutral" variant="outlined" size="sm">
-                                <DeleteIcon fontSize="small" />
-                            </IconButton>
+                            {editMode ? (
+                                <IconButton
+                                    color="neutral"
+                                    variant="outlined"
+                                    size="sm"
+                                    disabled={textFieldValue === name}
+                                    onClick={handleSave}
+                                >
+                                    <DoneIcon fontSize="small" />
+                                </IconButton>
+                            ) : (
+                                <IconButton
+                                    color="neutral"
+                                    variant="outlined"
+                                    size="sm"
+                                    onClick={() => setEditMode(true)}
+                                >
+                                    <EditIcon fontSize="small" />
+                                </IconButton>
+                            )}
+                            {editMode ? (
+                                <IconButton
+                                    color="neutral"
+                                    variant="outlined"
+                                    size="sm"
+                                    onClick={() => setEditMode(false)}
+                                >
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            ) : (
+                                tagChange
+                            )}
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                    {'Bạn có chắc chắn muốn xóa staff không?'}
+                                </DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Không</Button>
+                                    <Button autoFocus onClick={handleDelete}>
+                                        Có
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
                         </Box>
                     </Stack>
                 </CardContent>

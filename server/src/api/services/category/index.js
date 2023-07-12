@@ -21,7 +21,7 @@ const createCategory = async (name) => {
         const sqlQueries = await loadSqlQueries('category');
         const list = await pool.request().input('name', sql.NVarChar, name).query(sqlQueries.createCategory);
 
-        return list.recordset;
+        return list.recordset[0];
     } catch (err) {
         throw createError(err);
     }
@@ -37,7 +37,7 @@ const updateCategory = async (id, name) => {
             .input('name', sql.NVarChar, name)
             .query(sqlQueries.updateCategory);
 
-        return list.recordset;
+        return list.recordset[0];
     } catch (err) {
         throw createError(err);
     }
@@ -49,7 +49,7 @@ const deleteCategory = async (id) => {
         const sqlQueries = await loadSqlQueries('category');
         const list = await pool.request().input('id', sql.Int, id).query(sqlQueries.deleteCategory);
 
-        return list.recordset;
+        return list.recordset[0];
     } catch (err) {
         throw createError(err);
     }

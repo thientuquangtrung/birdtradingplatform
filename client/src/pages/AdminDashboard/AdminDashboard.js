@@ -10,7 +10,7 @@ import { useState } from 'react';
 function AdminDashboard() {
     return (
         <Box>
-            <Typography variant="h4" fontWeight={600} fontSize={'x-large'} sx={{ p: 3 }}>
+            <Typography variant="h4" fontWeight={600} fontSize={'x-large'} sx={{ p: 3, color: '#035e52' }}>
                 Hi, Welcome back
             </Typography>
 
@@ -23,7 +23,7 @@ function AdminDashboard() {
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    backgroundColor: 'rgb(208, 242, 255)',
+                                    backgroundColor: '#43a99c36',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -40,19 +40,19 @@ function AdminDashboard() {
                                         width: '70px',
                                         height: '70px',
                                         padding: 1.5,
-                                        color: 'rgb(12, 83, 183)',
+                                        color: '#037869',
                                         backgroundImage:
-                                            'linear-gradient(135deg, rgba(12, 83, 183, 0) 0%, rgba(12, 83, 183, 0.24) 100%)',
+                                            'linear-gradient(135deg, rgb(98 209 9 / 0%) 0%, rgb(12 183 12 / 36%) 100%)',
                                     }}
                                 >
                                     <AccessibilityIcon sx={{ fontSize: 40 }} />
                                 </Icon>
-                                <Typography sx={{ fontSize: '1.875rem', fontWeight: 700, color: '#04297A' }}>
+                                <Typography sx={{ fontSize: '1.875rem', fontWeight: 700, color: '#037869' }}>
                                     100K
                                 </Typography>
                                 <Typography
                                     variant="h6"
-                                    sx={{ fontWeight: 300, opacity: 0.72, fontSize: '0.875rem', color: '#04297A' }}
+                                    sx={{ fontWeight: 300, opacity: 0.72, fontSize: '0.875rem', color: '#037869' }}
                                 >
                                     Total Customers
                                 </Typography>

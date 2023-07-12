@@ -104,6 +104,20 @@ function SellerDetail() {
         setIsHovered(false);
     };
 
+    const styles = {
+        button: {
+            color: '#43a99c',
+            backgroundColor: '#43a99c47',
+            '&:hover': {
+                backgroundColor: '#43a99c73',
+            },
+            '&:disabled': {
+                bgcolor: '#eeeeee',
+                color: 'grey',
+            },
+        },
+    };
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -258,11 +272,17 @@ function SellerDetail() {
                             </Typography>
                         </Stack>
                         <Stack direction="row" gap={2} alignItems="center" marginTop={5}>
-                            <Button variant="soft" size="lg" onClick={handleUpdate} disabled={isDisabled()}>
+                            <Button
+                                variant="soft"
+                                size="lg"
+                                onClick={handleUpdate}
+                                disabled={isDisabled()}
+                                sx={styles.button}
+                            >
                                 Update
                             </Button>
                             <Link to="/seller_management">
-                                <Button variant="plain" size="lg">
+                                <Button variant="plain" color="success" size="lg" sx={{ color: '#43a99c' }}>
                                     Cancel
                                 </Button>
                             </Link>
