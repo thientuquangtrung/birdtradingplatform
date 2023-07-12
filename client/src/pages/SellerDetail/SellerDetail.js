@@ -29,28 +29,22 @@ function SellerDetail() {
     const [error, setError] = useState('');
     const [isUserActive, setIsUserActive] = useState(false);
     const [selectedValue, setSelectedValue] = useState(0);
-    const phoneformat = /^0[3|5|7|8|9]\d{8}$/;
-    const validate = (value) => {
+    const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
+    const validate = () => {
         let isValid = true;
         let msg = '';
         let msgR = '';
         if (name === '' || email === '' || phone === '' || address === '') {
             isValid = false;
             msgR = 'Vui lòng nhập đủ thông tin';
-        } else if (!phoneformat.test(value)) {
+        }
+        if (!phoneformat.test(phone)) {
             isValid = false;
             msg = 'Số điện thoại không hợp lệ!';
         }
         setError(msgR);
         setErrorMsg(msg);
         return isValid;
-    };
-    const handlePhoneBlur = () => {
-        if (phone !== '' && !phoneformat.test(phone)) {
-            setErrorMsg('Số điện thoại không hợp lệ!');
-        } else {
-            setErrorMsg('');
-        }
     };
 
     useEffect(function () {
@@ -242,7 +236,6 @@ function SellerDetail() {
                                 onChange={(e) => {
                                     setPhone(e.target.value);
                                 }}
-                                onBlur={handlePhoneBlur}
                             />
                             <TextField
                                 required

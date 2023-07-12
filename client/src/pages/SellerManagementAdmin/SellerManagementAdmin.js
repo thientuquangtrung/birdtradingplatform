@@ -17,30 +17,51 @@ function SellerManagementAdmin() {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [address, setAddress] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+    const [error, setError] = useState('');
+    const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
+    const validate = () => {
+        let isValid = true;
+        let errorMessage = '';
+        let errorMsg = '';
 
+        if (upLoadFile === '' || name === '' || email === '' || phone === '' || address === '' || password === '') {
+            isValid = false;
+            errorMessage = 'Vui lòng điền đầy đủ thông tin';
+        }
+        if (!phoneformat.test(phone)) {
+            isValid = false;
+            errorMsg = 'Số điện thoại không hợp lệ';
+        }
+
+        setErrorMsg(errorMessage);
+        setError(errorMsg);
+        return isValid;
+    };
     function handleCreate() {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('phone', phone);
-        formData.append('password', password);
-        formData.append('address', address);
-        formData.append('profile', upLoadFile);
-        formData.append('role', 'SELLER');
+        if (validate()) {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('password', password);
+            formData.append('address', address);
+            formData.append('profile', upLoadFile);
+            formData.append('role', 'SELLER');
 
-        axiosClient
-            .post(`auth/account`, formData)
-            .then(function (response) {
-                // handle success
-                enqueueSnackbar('Created successfully', { variant: 'success' });
-                navigate('/seller_management');
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            });
+            axiosClient
+                .post(`auth/account`, formData)
+                .then(function (response) {
+                    // handle success
+                    enqueueSnackbar('Created successfully', { variant: 'success' });
+                    navigate('/seller_management');
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+        }
     }
-
     return (
         <Box marginTop={5} marginBottom={5} marginLeft={10} marginRight={10}>
             <Typography variant="h4" fontWeight={600} fontSize={'x-large'} paddingTop={3} paddingBottom={3}>
@@ -84,56 +105,61 @@ function SellerManagementAdmin() {
                                     <Input
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        color="neutral"
                                         disabled={false}
                                         placeholder="Họ Tên"
                                         variant="outlined"
+                                        error={!!errorMsg && name === ''}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Input
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        color="neutral"
                                         disabled={false}
                                         placeholder="Email"
                                         variant="outlined"
                                         type="email"
+                                        error={!!errorMsg && email === ''}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Input
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        color="neutral"
                                         disabled={false}
                                         placeholder="Số điện thoại"
                                         variant="outlined"
                                         type="tel"
+                                        error={!!error}
                                     />
                                 </Grid>
-
                                 <Grid item xs={6}>
                                     <Input
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        color="neutral"
                                         disabled={false}
                                         placeholder="Mật khẩu"
                                         variant="outlined"
                                         type="password"
+                                        error={!!errorMsg && password === ''}
                                     />
                                 </Grid>
+                                <Typography style={{ color: 'red', fontSize: '13px', margin: '10px 0 0 15px' }}>
+                                    {error}
+                                </Typography>
                                 <Grid item xs={12}>
                                     <Input
                                         value={address}
                                         onChange={(e) => setAddress(e.target.value)}
-                                        color="neutral"
                                         disabled={false}
                                         placeholder="Địa chỉ"
                                         variant="outlined"
+                                        error={!!errorMsg && address === ''}
                                     />
                                 </Grid>
+                                <Typography margin="10px 0 0 15px" color="error" fontSize="13px">
+                                    {errorMsg}
+                                </Typography>
                             </Grid>
                             <Box display={'flex'} justifyContent={'flex-end'} marginTop={1.5}>
                                 <Button color="neutral" onClick={handleCreate}>
