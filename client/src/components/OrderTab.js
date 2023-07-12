@@ -547,11 +547,7 @@ function OrderTab({ status }) {
                     style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
                     sx={{
                         '& .Mui-selected': {
-                            backgroundColor: '#43a99c',
-                            color: 'white',
-                        },
-                        '& .Mui-selected:hover': {
-                            backgroundColor: '#43a99c',
+                            color: 'black',
                         },
                     }}
                 />

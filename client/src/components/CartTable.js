@@ -54,8 +54,8 @@ const Actions = ({ data }) => {
     return (
         <Stack direction="row" spacing={0.5}>
             <React.Fragment>
-                <IconButton color="primary" aria-label="delete" onClick={handleClickOpen}>
-                    <DeleteIcon />
+                <IconButton color="primary" aria-label="delete" onClick={handleClickOpen} >
+                    <DeleteIcon sx={{color: '#43a99c'}} />
                 </IconButton>
                 <Dialog
                     open={open}
