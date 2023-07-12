@@ -105,7 +105,17 @@ function NewProduct() {
                         style={{ width: '100%', fontSize: 16, padding: 3, fontFamily: 'Roboto' }}
                     />
 
-                    <Button disabled={isFullfilled()} variant="contained" color="success" onClick={handleSubmit}>
+                    <Button
+                        disabled={isFullfilled()}
+                        variant="contained"
+                        sx={{
+                            backgroundColor: '#43a99c',
+                            '&:hover': {
+                                backgroundColor: '#43a99c',
+                            },
+                        }}
+                        onClick={handleSubmit}
+                    >
                         Lưu & Hiển thị
                     </Button>
                 </Stack>

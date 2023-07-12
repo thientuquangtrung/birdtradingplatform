@@ -169,8 +169,7 @@ function Shopping() {
                         style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
                         sx={{
                             '& .Mui-selected': {
-                                backgroundColor: '#43a99c',
-                                color: 'white',
+                                color: 'black',
                             },
                         }}
                     />

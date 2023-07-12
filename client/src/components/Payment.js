@@ -93,7 +93,18 @@ export default function Payment({ selectedOption, setSelectedOption }) {
 
     return (
         <div>
-            <Button color="primary" variant="outlined" onClick={handleClickOpen}>
+            <Button
+                sx={{
+                    color: '#43a99c',
+                    borderColor: '#43a99c',
+                    '&:hover': {
+                        borderColor: '#43a99c',
+                        backgroundColor: '#c7e6e280',
+                    },
+                }}
+                variant="outlined"
+                onClick={handleClickOpen}
+            >
                 Chọn phương thức thanh toán
             </Button>
             <BootstrapDialog
@@ -132,7 +143,23 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button  size="sm" variant="soft" color="primary" autoFocus onClick={handleClose} sx={{ marginRight: 1 }}>
+                    <Button
+                        size="sm"
+                        variant="soft"
+                        color="primary"
+                        autoFocus
+                        onClick={handleClose}
+                        sx={{
+                            marginRight: 1,
+                            color: '#388f84',
+                            backgroundColor: '#c7e6e280',
+
+                            '&:hover': {
+                                borderColor: '#43a99c',
+                                backgroundColor: '#c7e6e280',
+                            },
+                        }}
+                    >
                         Xác nhận
                     </Button>
                 </DialogActions>

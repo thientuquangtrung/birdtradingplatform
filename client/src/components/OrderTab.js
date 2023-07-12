@@ -2,11 +2,6 @@ import {
     Box,
     Button,
     Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     FormControl,
     FormControlLabel,
     Grid,
@@ -145,19 +140,7 @@ function OrderTab({ status }) {
         }
         handleClose();
     }
-    const handlePickup = () => {
-        const updatedTableData = tableData.map((item) => {
-            if (item.orderId === modalState.orderId) {
-                changeOrderStatus(modalState.orderId, 'PICKUP');
-                return { ...item, status: 'PICKUP' };
-            }
-            return item;
-        });
-        filterTable(updatedTableData, 'PICKUP');
-        enqueueSnackbar('Đang lấy hàng', { variant: 'success' });
 
-        return;
-    };
     const handleDelivering = () => {
         const updatedTableData = tableData.map((item) => {
             if (item.orderId === modalState.orderId) {
@@ -222,8 +205,6 @@ function OrderTab({ status }) {
             return <Chip label="SUCCESSFUL" icon={<DoneIcon />} color="success" />;
         } else if (status === 'CANCELED') {
             return <Chip label="CANCELLED" icon={<CloseIcon />} color="error" />;
-        } else if (status === 'PICKUP') {
-            return <Chip label="PICKUP" icon={<AllInboxIcon />} sx={{ color: 'white', backgroundColor: '#ffeb3b' }} />;
         }
     };
     const renderStatusOnCustomer = (status) => {
@@ -234,52 +215,9 @@ function OrderTab({ status }) {
                         <Button onClick={handleClose}>Trở lại</Button>
                     </Stack>
                     <Stack direction="row">
-                        <Button
-                            variant="contained"
-                            size="small"
-                            sx={{
-                                borderRadius: '10px',
-                                color: 'white',
-                                backgroundColor: '#ffeb3b',
-                                '&:hover': {
-                                    backgroundColor: '#ffeb3b',
-                                },
-                            }}
-                            onClick={() => handlePickup()}
-                        >
-                            <AllInboxIcon />
-                            PICKUP
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            sx={{ borderRadius: '10px', marginLeft: '20px' }}
-                            onClick={() => setCancelConfirmationOpen(true)}
-                        >
-                            <CloseIcon />
-                            CANCELLED
-                        </Button>
-                    </Stack>
-                </Stack>
-            );
-        }
-        if (status === 'PICKUP') {
-            return (
-                <Stack direction="row" justifyContent="space-between" marginTop="10px">
-                    <Stack>
-                        <Button onClick={handleClose}>Trở lại</Button>
-                    </Stack>
-                    <Stack direction="row">
-                        <Button
-                            variant="contained"
-                            size="small"
-                            color="info"
-                            sx={{ borderRadius: '10px' }}
-                            onClick={() => handleDelivering()}
-                        >
+                        <Button variant="contained" size="small" color="info" onClick={() => handleDelivering()}>
                             <DeliveryDiningIcon />
-                            DELIVERING
+                            Delivering
                         </Button>
                         <Button
                             variant="contained"
@@ -295,6 +233,7 @@ function OrderTab({ status }) {
                 </Stack>
             );
         }
+
         if (status === 'SHIPPING') {
             return (
                 <Stack direction="row" justifyContent="space-between" marginTop="10px">
@@ -547,11 +486,7 @@ function OrderTab({ status }) {
                     style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
                     sx={{
                         '& .Mui-selected': {
-                            backgroundColor: '#43a99c',
-                            color: 'white',
-                        },
-                        '& .Mui-selected:hover': {
-                            backgroundColor: '#43a99c',
+                            color: 'black',
                         },
                     }}
                 />

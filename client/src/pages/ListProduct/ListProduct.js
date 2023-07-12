@@ -73,7 +73,17 @@ function ListProduct() {
                         onKeyDown={handlePress}
                     ></TextField>
                     <CategoryList categoryId={categoryId} setCategoryId={setCategoryId} />
-                    <Button variant="contained" href="#contained-buttons" onClick={handleSearchProduct} sx={{backgroundColor: '#43a99c'}}>
+                    <Button
+                        variant="contained"
+                        href="#contained-buttons"
+                        onClick={handleSearchProduct}
+                        sx={{
+                            backgroundColor: '#43a99c',
+                            '&:hover': {
+                                backgroundColor: '#43a99c',
+                            },
+                        }}
+                    >
                         Tìm
                     </Button>
                 </Stack>
@@ -87,7 +97,17 @@ function ListProduct() {
                 }}
             >
                 <Link to="/product/new">
-                    <Button variant="contained" startIcon={<AddIcon />} sx={{ marginBottom: 4, backgroundColor: '#43a99c' }}>
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        sx={{
+                            marginBottom: 4,
+                            backgroundColor: '#43a99c',
+                            '&:hover': {
+                                backgroundColor: '#43a99c',
+                            },
+                        }}
+                    >
                         Thêm sản phẩm mới
                     </Button>
                 </Link>
