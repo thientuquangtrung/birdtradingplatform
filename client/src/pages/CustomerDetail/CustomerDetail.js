@@ -31,17 +31,30 @@ function CustomerDetail() {
     const [errorMsg, setErrorMsg] = useState('');
     const [isUserActive, setIsUserActive] = useState(false);
     const [selectedValue, setSelectedValue] = useState(0);
+    const [error, setError] = useState('');
     const phoneformat = /(0[3|5|7|8|9])([0-9]{8})\b/;
     const validate = () => {
+        let isValid = true;
         let msg = '';
-        if (!phoneformat.test(phone)) {
-            msg = 'Số điện thoại không hợp lệ!';
+        let msgR = '';
+        if (name === '' || email === '' || phone === '' || address === '') {
+            isValid = false;
+            msgR = 'Vui lòng nhập đủ thông tin';
+            setError(msgR);
         }
-        setErrorMsg(msg);
+        if (!phoneformat.test(phone)) {
+            isValid = false;
+            msg = 'Số điện thoại không hợp lệ!';
+
+            setErrorMsg(msg);
+        }
+
+        return isValid;
     };
     useEffect(function () {
         axiosClient
             .get(`auth/account/${location.state.id}`, {
+                //user có ID tương ứng
                 params: {
                     role: 'CUSTOMER',
                 },
@@ -164,6 +177,7 @@ function CustomerDetail() {
     const isDisabled = () => {
         return name === user?.name && email === user?.email && phone === user?.phone && address === user?.shipToAddress;
     };
+    //thông tin kh thay đổi thì disabled
     return (
         <Stack gap={7} marginLeft={25} marginRight={25} marginTop={5} marginBottom={5} width="90%">
             <Stack direction="row" gap={2} sx={{ cursor: 'pointer' }}>
@@ -248,6 +262,9 @@ function CustomerDetail() {
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                             />
+                            <Typography color="error" fontSize="13px">
+                                {error}
+                            </Typography>
                         </Stack>
                         <Stack direction="row" gap={2} alignItems="center" marginTop={5}>
                             <Button
@@ -293,24 +310,7 @@ function CustomerDetail() {
                     Remove this customer’s chart if he requested that, if not please be aware that what has been deleted
                     can never brought back
                 </Typography>
-                {/* <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">{'Bạn có chắc chắn muốn xóa không?'}</DialogTitle>
-                    <DialogActions>
-                        <Stack direction="row">
-                            <Button variant="plain" onClick={handleClose}>
-                                Không
-                            </Button>
-                            <Button variant="plain" onClick={handleDelete} autoFocus>
-                                Có
-                            </Button>
-                        </Stack>
-                    </DialogActions>
-                </Dialog> */}
+
                 <Modal
                     open={open}
                     onClose={handleClose}

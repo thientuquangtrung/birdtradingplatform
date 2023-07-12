@@ -13,39 +13,32 @@ import OrderTab from '../../components/OrderTab';
 
 const ManageOrder = () => {
     const [value, setValue] = useState('1');
-    const [selectedType, setSelectedType] = useState('Mã đơn hàng');
-    const [inputValue, setInputValue] = useState('');
+    // const [selectedType, setSelectedType] = useState('Mã đơn hàng');
+    // const [inputValue, setInputValue] = useState('');
 
     const { enqueueSnackbar } = useSnackbar();
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const handleTypeChange = (event) => {
-        setSelectedType(event.target.value);
-    };
+    // const handleTypeChange = (event) => {
+    //     setSelectedType(event.target.value);
+    // };
 
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
+    // const handleInputChange = (event) => {
+    //     setInputValue(event.target.value);
+    // };
 
-    const handleSearch = () => {
-        if (inputValue === '') {
-            enqueueSnackbar('Type something to search', { variant: 'info' });
-            return;
-        }
-    };
-
-    const type = [
-        {
-            value: 'Mã đơn hàng',
-            label: 'Mã đơn hàng',
-        },
-        {
-            value: 'Tên người mua',
-            label: 'Tên người mua',
-        },
-    ];
+    // const type = [
+    //     {
+    //         value: 'Mã đơn hàng',
+    //         label: 'Mã đơn hàng',
+    //     },
+    //     {
+    //         value: 'Tên người mua',
+    //         label: 'Tên người mua',
+    //     },
+    // ];
 
     return (
         <Stack>
@@ -59,13 +52,12 @@ const ManageOrder = () => {
                     >
                         <Tab label="Tất cả" value="1" />
                         <Tab label="Chờ xác nhận" value="2" />
-                        <Tab label="Chờ lấy hàng" value="3" />
                         <Tab label="Đang giao" value="4" />
                         <Tab label="Hoàn thành" value="5" />
                         <Tab label="Đã hủy" value="6" />
                     </TabList>
                 </Paper>
-                <Stack marginTop={5} height="50px" direction="row" alignItems="center">
+                {/* <Stack marginTop={5} height="50px" direction="row" alignItems="center">
                     <TextField
                         id="outlined-select-currency"
                         select
@@ -99,16 +91,14 @@ const ManageOrder = () => {
                     >
                         Tìm kiếm
                     </Button>
-                </Stack>
+                </Stack> */}
                 <TabPanel value="1">
                     <OrderTab></OrderTab>
                 </TabPanel>
                 <TabPanel value="2">
                     <OrderTab status="PENDING"></OrderTab>
                 </TabPanel>
-                <TabPanel value="3">
-                    <OrderTab status="PICKUP"></OrderTab>
-                </TabPanel>
+
                 <TabPanel value="4">
                     <OrderTab status="SHIPPING"></OrderTab>
                 </TabPanel>
