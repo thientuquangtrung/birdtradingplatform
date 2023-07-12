@@ -352,7 +352,7 @@ function OrderTab({ status }) {
     return (
         <>
             <Stack>
-                <div style={{ fontWeight: '550', marginTop: '20px' }}>{tableData.length} Đơn hàng</div>
+                <div style={{ fontWeight: '550', marginTop: '20px' }}> Tổng số đơn hàng: {tableData.length}</div>
             </Stack>
             <Stack>
                 <TableContainer component={Paper} style={paperStyle}>
