@@ -132,7 +132,7 @@ const OtpVerify = () => {
                     sx={{
                         marginTop: '20px',
                         '&:disabled': {
-                            backgroundColor: !otp.every((digit) => digit !== '') ? 'lightblue' : 'blue',
+                            backgroundColor: !otp.every((digit) => digit !== '') ? 'lightblue' : '#43a99c',
                         },
                     }}
                     variant="contained"
