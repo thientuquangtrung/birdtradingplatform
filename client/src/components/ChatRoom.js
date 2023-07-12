@@ -15,8 +15,25 @@ import AuthContext from '../contexts/AuthContext';
 import { ChatContext } from '../contexts/ChatContext';
 import { useFetchRecipientUser } from '../hooks/useFetchRecipient';
 import axiosClient from '../api/axiosClient';
+import EmojiPicker, {
+    EmojiStyle,
+    SkinTones,
+    Theme,
+    Categories,
+    EmojiClickData,
+    Emoji,
+    SuggestionMode,
+    SkinTonePickerLocation,
+} from 'emoji-picker-react';
 
 function ChatRoom() {
+    const [showPicker, setShowPicker] = useState(false);
+
+    const handleEmojiClick = (emojiObject) => {
+        setMessage((prevInput) => prevInput + emojiObject.emoji);
+        setShowPicker(false);
+    };
+
     const { currentUser } = useContext(AuthContext);
     const { currentChat, messages, isMessagesLoading, setMessages, socket } = useContext(ChatContext);
     const { recipientUser } = useFetchRecipientUser(currentChat, currentUser);
@@ -116,21 +133,26 @@ function ChatRoom() {
                     ref={paperRef}
                     elevation={0}
                     onClose={handleClosePaper}
-                    sx={{ position: 'absolute', bottom: '28px', width: '25px', padding: 0, marginLeft: '18px' }}
+                    sx={{ position: 'absolute', bottom: '28px', width: '100%', padding: 0 }}
                 >
-                    <Stack direction="column" sx={{ padding: 0 }}>
-                        <Tooltip title="Stickers" placement="right-end" arrow sx={{ backgroundColor: 'black' }}>
-                            <IconButton size="small" sx={{ padding: 0 }}>
+                    <Stack direction="row" sx={{ margin: 1 }}>
+                        <Tooltip title="Stickers" placement="top" arrow>
+                            <IconButton size="small" onClick={() => setShowPicker((val) => !val)}>
                                 <TagFacesIcon fontSize="inherit" />
+                                <div style={{ position: 'absolute', bottom: 25 }} onClick={(e) => e.stopPropagation()}>
+                                    {showPicker && (
+                                        <EmojiPicker emojiStyle={EmojiStyle.NATIVE} onEmojiClick={handleEmojiClick} />
+                                    )}
+                                </div>
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Hình ảnh" placement="right-end" arrow>
+                        <Tooltip title="Hình ảnh" placement="top" arrow>
                             <IconButton size="small">
                                 <ImageIcon fontSize="inherit" />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Video" placement="right-end" arrow>
-                            <IconButton size="small" sx={{ padding: 0 }}>
+                        <Tooltip title="Video" placement="top" arrow>
+                            <IconButton size="small">
                                 <SlideshowIcon fontSize="inherit" />
                             </IconButton>
                         </Tooltip>
