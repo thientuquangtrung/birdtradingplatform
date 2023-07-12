@@ -58,7 +58,12 @@ function CustomerOrderTab({ status }) {
     const { currentUser } = useContext(AuthContext);
     const [selectedValue, setSelectedValue] = useState(0);
     const [cancelReasons, setCancelReasons] = useState([]);
-
+    const isDisabled = () => {
+        if (feedbackContent === '' || upLoadFile === '') {
+            return true;
+        }
+        return false;
+    };
     useEffect(() => {
         axiosClient
             .get('order/cancel_reason', {
@@ -128,7 +133,7 @@ function CustomerOrderTab({ status }) {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width: 550,
         bgcolor: 'white', // Update the background color here
         border: 'none',
         boxShadow: 24,
@@ -300,7 +305,16 @@ function CustomerOrderTab({ status }) {
                                                 </Button>
                                             </>
                                         ) : item.status === 'COMPLETED' ? (
-                                            <Button variant="contained" onClick={() => handleOpen(item)}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => handleOpen(item)}
+                                                sx={{
+                                                    backgroundColor: '#43a99c',
+                                                    '&:hover': {
+                                                        backgroundColor: '#43a99c',
+                                                    },
+                                                }}
+                                            >
                                                 Đánh Giá
                                             </Button>
                                         ) : null}
@@ -375,11 +389,30 @@ function CustomerOrderTab({ status }) {
                         direction="row"
                         sx={{ marginRight: 1.8, paddingTop: 1 }}
                     >
-                        <Button size="small" variant="text" onClick={handleClose}>
+                        <Button
+                            size="small"
+                            variant="text"
+                            sx={{
+                                color: '#43a99c',
+                            }}
+                            onClick={handleClose}
+                        >
                             Trở Lại
                         </Button>
 
-                        <Button size="small" variant="contained" onClick={handleSubmitFeedback}>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            disabled={isDisabled()}
+                            sx={{
+                                backgroundColor: '#43a99c',
+                                '&:hover': {
+                                    backgroundColor: '#43a99c',
+                                },
+                            }}
+                            onClick={handleSubmitFeedback}
+                        >
+                            {' '}
                             Hoàn Thành
                         </Button>
                     </Stack>
