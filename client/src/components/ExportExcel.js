@@ -10,7 +10,18 @@ function ExportExcel({ data }) {
         XLSX.writeFile(workbook, 'chart_data.xlsx');
     };
     return (
-        <Button variant="soft" color="primary" startDecorator={<DownloadIcon />} onClick={handleExport}>
+        <Button
+            variant="soft"
+            sx={{
+                color: '#378d82',
+                backgroundColor: '#d4ece7',
+                '&:hover': {
+                    backgroundColor: '#d4ece7',
+                },
+            }}
+            startDecorator={<DownloadIcon />}
+            onClick={handleExport}
+        >
             Export to Excel
         </Button>
     );

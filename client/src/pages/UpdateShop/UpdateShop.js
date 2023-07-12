@@ -138,7 +138,17 @@ export default function UpdateShop() {
                 {validationMsg.name}
             </Typography>
             <Box>
-                <Button disabled={isChange()} onClick={handleSubmit} color="primary" variant="contained">
+                <Button
+                    disabled={isChange()}
+                    onClick={handleSubmit}
+                    sx={{
+                        backgroundColor: '#43a99c',
+                        '&:hover': {
+                            backgroundColor: '#43a99c',
+                        },
+                    }}
+                    variant="contained"
+                >
                     Lưu
                 </Button>
             </Box>

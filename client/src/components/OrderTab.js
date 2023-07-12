@@ -352,7 +352,7 @@ function OrderTab({ status }) {
     return (
         <>
             <Stack>
-                <div style={{ fontWeight: '550', marginTop: '20px' }}>{tableData.length} Đơn hàng</div>
+                <div style={{ fontWeight: '550', marginTop: '20px' }}> Tổng số đơn hàng: {tableData.length}</div>
             </Stack>
             <Stack>
                 <TableContainer component={Paper} style={paperStyle}>
@@ -541,11 +541,19 @@ function OrderTab({ status }) {
             <Grid>
                 <Pagination
                     count={totalPage}
-                    color="primary"
                     shape="rounded"
                     page={currentPage}
                     onChange={handleChangePage}
                     style={{ display: 'flex', justifyContent: 'center', marginTop: 25 }}
+                    sx={{
+                        '& .Mui-selected': {
+                            backgroundColor: '#43a99c',
+                            color: 'white',
+                        },
+                        '& .Mui-selected:hover': {
+                            backgroundColor: '#43a99c',
+                        },
+                    }}
                 />
             </Grid>
         </>

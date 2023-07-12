@@ -28,7 +28,7 @@ function ShopProduct({ link = '/shopping', state = '' }) {
     return (
         <Grid item xs={2} marginTop={0.4}>
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
+                <AppBar position="static" sx={{backgroundColor: '#43a99c'}}>
                     <Toolbar variant="dense">
                         <IconButton edge="start" color="inherit" aria-label="menu">
                             <MenuIcon />
