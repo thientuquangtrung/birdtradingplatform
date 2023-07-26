@@ -7,6 +7,8 @@ const config = require('../../config');
 const { loadSqlQueries } = require('../../utils/sql_utils');
 const { redisClient } = require('../../config');
 const { updateSold } = require('../product/product.repo');
+const { getOnlineUsers } = require('../socket');
+const { createNotification } = require('../notification');
 
 /* 
     {
@@ -131,7 +133,6 @@ const placeOrder = async ({ shopOrderIds, userId, payment = 'COD', transactionId
 
                 for (let j = 0; j < orderByShop.items.length; j++) {
                     const product = orderByShop.items[j];
-
                     redisClient.hDel(`cart:${userId}`, `product:${product.id}`);
                 }
             }
@@ -152,6 +153,20 @@ const placeOrder = async ({ shopOrderIds, userId, payment = 'COD', transactionId
         } finally {
             // await pool;
             await pool.close();
+            const onlineUsers = await getOnlineUsers();
+            for (let index = 0; index < shopOrderIdsNew.length; index++) {
+                const order = shopOrderIdsNew[index];
+                const shopId = order.shop.id;
+                const noti = await createNotification({
+                    userId: shopId,
+                    content: `Check for new order now.`,
+                    title: 'You have new order!',
+                });
+                const user = onlineUsers.find((user) => user.userId === shopId);
+                if (user) {
+                    _io.to(user.socketId).emit('getNotification', noti);
+                }
+            }
         }
     } catch (error) {
         throw error;

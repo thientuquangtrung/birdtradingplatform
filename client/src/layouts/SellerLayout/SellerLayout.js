@@ -4,13 +4,14 @@ import AvaText from '../../components/AvaText';
 import AuthContext from '../../contexts/AuthContext';
 import SellerSidebar from '../layoutComponents/SellerSidebar/SellerSidebar';
 import ChatButton from '../../components/ChatButton';
+import NotificationHandle from '../../components/NotificationHandle';
 
 function SellerLayout({ children }) {
     const { currentUser } = useContext(AuthContext);
 
     return (
         <>
-            <AppBar position="sticky" sx={{backgroundColor: '#43a99c'}}>
+            <AppBar position="sticky" sx={{ backgroundColor: '#43a99c' }}>
                 <Toolbar sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Stack direction="row" alignItems="center" gap={3}>
                         <img width="50px" src="/assets/images/logo.png" alt="logo" />
@@ -18,9 +19,10 @@ function SellerLayout({ children }) {
                             Bird Trading Platform
                         </Typography>
                     </Stack>
-                    <Box>
+                    <Stack direction="row" alignItems="center" gap={5}>
+                        <NotificationHandle />
                         <AvaText user={currentUser} />
-                    </Box>
+                    </Stack>
                 </Toolbar>
             </AppBar>
             <Stack direction="row">

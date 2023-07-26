@@ -7,7 +7,12 @@ function ExportExcel({ data }) {
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(data);
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-        XLSX.writeFile(workbook, 'chart_data.xlsx');
+        XLSX.utils.sheet_add_aoa(
+            worksheet,
+            [['Date', 'Time', 'Number of orders', 'Number of products', 'Total revenue']],
+            { origin: 'A1' },
+        );
+        XLSX.writeFile(workbook, 'shop_revenue.xlsx');
     };
     return (
         <Button

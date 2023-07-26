@@ -23,6 +23,7 @@ function RevenueManagement() {
     const [value, setValue] = useState([yesterday, today]);
 
     useEffect(() => {
+        if (!value[0] || !value[1]) return;
         axiosClient
             .get(`seller/revenue/${currentUser.id}`, {
                 params: {
@@ -44,7 +45,6 @@ function RevenueManagement() {
         setValue(newValue);
     }
 
-    
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box>
@@ -85,8 +85,8 @@ function RevenueManagement() {
                                     <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                                 </linearGradient> */}
                             </defs>
-                            <XAxis dataKey="label" />
-                            <YAxis type="number" domain={[0, 'dataMax']} />
+                            <XAxis dataKey="date" />
+                            <YAxis type="number" domain={[0, 'dataMax']} dataKey="total" />
                             <CartesianGrid strokeDasharray="3 3" />
                             <Tooltip />
                             <Area

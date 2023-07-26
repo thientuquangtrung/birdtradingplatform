@@ -31,7 +31,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
 
 function OrderTab({ status = 'ALL' }) {
     const [tableData, setTableData] = useState([]);
@@ -44,22 +43,23 @@ function OrderTab({ status = 'ALL' }) {
     };
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [totalOrder, setTotalOrder] = useState(0);
     const [selectedValue, setSelectedValue] = useState(0);
     const [cancelReasons, setCancelReasons] = useState([]);
-    const [orderId, setOrderId] = useState('');
 
     useEffect(() => {
         axiosClient
             .get(`seller/order/${currentUser.id}`, {
                 params: {
                     page: currentPage,
-                    perPage: 30,
+                    perPage: 10,
                     status,
                 },
             })
             .then(function (response) {
                 setTableData(response.data.data);
                 setTotalPage(response.data.meta.totalPages);
+                setTotalOrder(response.data.meta.total);
                 setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
@@ -291,7 +291,7 @@ function OrderTab({ status = 'ALL' }) {
     return (
         <>
             <Stack>
-                <div style={{ fontWeight: '550', marginTop: '20px' }}> Tổng số đơn hàng: {tableData.length}</div>
+                <Typography variant="h5"> Tổng số đơn hàng: {totalOrder}</Typography>
             </Stack>
             <Stack>
                 <TableContainer component={Paper} style={paperStyle}>

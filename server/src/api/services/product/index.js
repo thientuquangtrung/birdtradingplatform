@@ -74,20 +74,15 @@ const searchProducts = async ({ sortBy, order, categoryId, q, page, shopId }) =>
             };
         }
 
-        let query = '';
-        if (!shopId) {
-            query = '*';
-            if (categoryId !== '0' || q) {
-                query = categoryId !== '0' ? `@categoryId:[${categoryId} ${categoryId}]` : ' ';
-                query += q ? `@name:(${q})` : '';
-            }
-        } else {
-            query = `@shopId:{${shopId.replaceAll('-', '\\-')}}`;
-            if (categoryId !== '0' || q) {
-                query = categoryId !== '0' ? `${query} @categoryId:[${categoryId} ${categoryId}]` : query;
-                query = q ? `${query} @name:(${q})` : query;
-            }
+        let query = '@enabled:{true} ';
+        if (categoryId !== '0' || q) {
+            query += categoryId !== '0' ? `@categoryId:[${categoryId} ${categoryId}]` : ' ';
+            query += q ? `@name:(${q})` : '';
         }
+        if (shopId) {
+            query += `@shopId:{${shopId.replaceAll('-', '\\-')}}`;
+        }
+
         return await searchItems('idx:products', query, option);
     } catch (error) {
         throw error;
