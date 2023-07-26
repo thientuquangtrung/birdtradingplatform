@@ -360,25 +360,9 @@ function OrderTab({ status = 'ALL' }) {
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             Địa chỉ: <span>{modalState.customer?.shipToAddress}</span>
                         </Typography>
-                    </Stack>
-
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack>
-                            <Typography
-                                id="modal-modal-title"
-                                variant="h6"
-                                component="h3"
-                                sx={{ mt: 1 }}
-                                fontSize="22px"
-                            >
-                                <PaymentsIcon></PaymentsIcon> Phương thức thanh toán:
-                            </Typography>
-                        </Stack>
-                        <Stack>
-                            <Typography id="modal-modal-description" sx={{ mt: 1 }} fontSize="18px">
-                                Thanh toán khi nhận hàng
-                            </Typography>
-                        </Stack>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Phương thức thanh toán: <span>{modalState.payment}</span>
+                        </Typography>
                     </Stack>
                     <Stack direction="column" sx={{ overflowY: 'scroll' }} maxHeight="500px">
                         <Table sx={{ minWidth: 650 }}>

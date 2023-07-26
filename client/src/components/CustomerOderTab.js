@@ -39,6 +39,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import StoreIcon from '@mui/icons-material/Store';
 import UploadImage from './UploadImage';
 import { enqueueSnackbar } from 'notistack';
+import dayjs from 'dayjs';
 
 function CustomerOrderTab({ status }) {
     const handleChangePage = (event, value) => {
@@ -306,6 +307,7 @@ function CustomerOrderTab({ status }) {
                                             </>
                                         ) : item.status === 'COMPLETED' ? (
                                             <Button
+                                                disabled={item.feedback !== null}
                                                 variant="contained"
                                                 onClick={() => handleOpen(item)}
                                                 sx={{
@@ -315,7 +317,11 @@ function CustomerOrderTab({ status }) {
                                                     },
                                                 }}
                                             >
-                                                Đánh Giá
+                                                {item.feedback
+                                                    ? `Đã đánh giá vào: ${dayjs(item.feedback, 'YYYY-MM-DD').format(
+                                                          'DD/MM/YYYY',
+                                                      )}`
+                                                    : `Đánh giá`}
                                             </Button>
                                         ) : null}
                                     </TableCell>
@@ -418,28 +424,6 @@ function CustomerOrderTab({ status }) {
                     </Stack>
                 </Box>
             </Modal>
-            {/* <Dialog
-                    open={cancelConfirmationOpen}
-                    onClose={() => handleCancelConfirmationClose(false)}
-                    aria-labelledby="cancel-confirmation-dialog-title"
-                    aria-describedby="cancel-confirmation-dialog-description"
-                >
-                    <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="cancel-confirmation-dialog-description">
-                            Bạn có chắc chắn muốn hủy đơn hàng không
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                            Có
-                        </Button>
-                        <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                            Không
-                        </Button>
-                    </DialogActions>
-                </Dialog> */}
-
             <Modal
                 open={cancelConfirmationOpen}
                 onClose={() => handleCancelConfirmationClose()}

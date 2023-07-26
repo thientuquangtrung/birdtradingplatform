@@ -73,6 +73,8 @@ const modifyOrder = async (list) => {
             orderId: key,
             date: value[0].date,
             status: value[0].status,
+            payment: value[0].payment,
+            feedback: value[0].feedback,
             customer: await readAccountById(value[0].customerId, 'CUSTOMER'),
             shop: await readAccountById(value[0].shopId, 'SELLER'),
         };
