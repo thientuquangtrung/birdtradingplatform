@@ -22,6 +22,7 @@ import MoMoButton from '../../components/MoMoButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Chip from '@mui/joy/Chip';
+import handleError from '../../utils/handleError';
 
 function Checkout() {
     const location = useLocation();
@@ -68,7 +69,7 @@ function Checkout() {
                 navigate('/orders');
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -83,7 +84,7 @@ function Checkout() {
                 setTotalPrice(response.data.data.checkoutOrder.totalPrice);
                 localStorage.setItem('shopOrderIds', JSON.stringify(response.data.data.shopOrderIds));
             })
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     }, [location.state]);
 
     useEffect(() => {
@@ -105,7 +106,7 @@ function Checkout() {
                     enqueueSnackbar('Placed order successfully!', { variant: 'success' });
                     navigate('/orders');
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
         }
 
         return () => {
@@ -122,7 +123,7 @@ function Checkout() {
                 <div style={{ display: 'flex', margin: '15px' }}>
                     <TextField value={phone} label="Số điện thoại" sx={{ paddingRight: '50px' }} disabled></TextField>
                     <TextField fullWidth value={shipToAddress} label="Địa chỉ" disabled></TextField>
-                    <Button style={{ marginLeft: '20px', color: '#43a99c', }}>Thay đổi</Button>
+                    <Button style={{ marginLeft: '20px', color: '#43a99c' }}>Thay đổi</Button>
                 </div>
             </Paper>
 
@@ -221,7 +222,7 @@ function Checkout() {
                             <span style={{ flex: 1 }}>
                                 Chính sách trả hàng hoặc hoàn tiền cho sản phẩm của Shop được quy định
                             </span>
-                            <Button size="small" onClick={handleOpen} sx={{color: '#388f84'}}>
+                            <Button size="small" onClick={handleOpen} sx={{ color: '#388f84' }}>
                                 tại đây
                             </Button>
                         </div>

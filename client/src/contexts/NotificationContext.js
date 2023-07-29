@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect, useCallback } from 'rea
 import AuthContext from './AuthContext';
 import axiosClient from '../api/axiosClient';
 import { SocketContext } from './SocketContext';
+import handleError from '../utils/handleError';
 
 export const NotificationContext = createContext();
 export const NotificationContextProvider = ({ children }) => {
@@ -21,7 +22,7 @@ export const NotificationContextProvider = ({ children }) => {
                 setNotiLoading(false);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
                 setNotiLoading(false);
             });
     }, [currentUser]);

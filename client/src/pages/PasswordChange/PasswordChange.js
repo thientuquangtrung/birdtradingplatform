@@ -6,6 +6,7 @@ import axiosClient from '../../api/axiosClient';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import handleError from '../../utils/handleError';
 
 const PasswordChange = () => {
     const location = useLocation();
@@ -35,7 +36,7 @@ const PasswordChange = () => {
                 navigate('/profile');
                 enqueueSnackbar('Đổi mật khẩu thành công', { variant: 'success' });
             })
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     };
 
     return (

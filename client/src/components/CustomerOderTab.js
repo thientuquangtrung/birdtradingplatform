@@ -40,6 +40,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import UploadImage from './UploadImage';
 import { enqueueSnackbar } from 'notistack';
 import dayjs from 'dayjs';
+import handleError from '../utils/handleError';
 
 function CustomerOrderTab({ status }) {
     const handleChangePage = (event, value) => {
@@ -77,7 +78,7 @@ function CustomerOrderTab({ status }) {
                 setCancelReasons(response.data.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -96,7 +97,7 @@ function CustomerOrderTab({ status }) {
                 setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }, [currentPage]);
 
@@ -112,7 +113,7 @@ function CustomerOrderTab({ status }) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
     const sendCancelRequest = (orderId) => {
@@ -200,7 +201,7 @@ function CustomerOrderTab({ status }) {
                 handleClose();
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }
 

@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import handleError from '../../utils/handleError';
 
 function SellerManagementAdmin() {
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ function SellerManagementAdmin() {
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    handleError(error);
                 });
         }
     }

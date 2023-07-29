@@ -24,6 +24,7 @@ import { enqueueSnackbar } from 'notistack';
 import axiosClient from '../../../api/axiosClient';
 import SuggestionList from '../../../components/SuggestionList';
 import NotificationHandle from '../../../components/NotificationHandle';
+import handleError from '../../../utils/handleError';
 
 function Header() {
     const navigate = useNavigate();
@@ -79,7 +80,7 @@ function Header() {
                     setSuggestData(response.data.data);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                 });
         }
     }, [productName]);
