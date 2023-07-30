@@ -13,6 +13,7 @@ export const NotificationContextProvider = ({ children }) => {
     const [notificationLength, setNotificationLength] = useState(0);
 
     useEffect(() => {
+        if (!currentUser) return;
         setNotiLoading(true);
         axiosClient
             .get(`notification/${currentUser?.id}`)

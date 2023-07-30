@@ -170,7 +170,7 @@ export default function InteractiveCard({ initialData }) {
                                 aria-describedby="alert-dialog-description"
                             >
                                 <DialogTitle id="alert-dialog-title">
-                                    {'Bạn có chắc chắn muốn xóa staff không?'}
+                                    {'Bạn có chắc chắn muốn xóa category không?'}
                                 </DialogTitle>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Không</Button>

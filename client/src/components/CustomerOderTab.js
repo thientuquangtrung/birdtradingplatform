@@ -41,6 +41,7 @@ import UploadImage from './UploadImage';
 import { enqueueSnackbar } from 'notistack';
 import dayjs from 'dayjs';
 import handleError from '../utils/handleError';
+import { Link } from 'react-router-dom';
 
 function CustomerOrderTab({ status }) {
     const handleChangePage = (event, value) => {
@@ -265,7 +266,9 @@ function CustomerOrderTab({ status }) {
                                             }}
                                         >
                                             <img src={product.image} width="70px" height="70px" alt="" />
-                                            {product.name}
+                                            <Link to={`/product/detail/${product.name}`} state={{ id: product.id }}>
+                                                {product.name}
+                                            </Link>
                                         </TableCell>
 
                                         <TableCell sx={{ border: 'none', margin: '2px 0' }} align="center">

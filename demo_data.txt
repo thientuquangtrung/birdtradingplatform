@@ -1,0 +1,38 @@
+Người mua:
+	username: vohongngan17022003@gmail.com
+	password: 123
+
+Người bán:
+	username: ngan0902419722
+	password: 12345
+
+Người bán mới:
+	username: ngantester@gmail.com
+	name: Tran Vo Hong Ngan
+	password: 12345
+	địa chỉ: Quận 1, Thành phố Hồ Chí Minh
+	Số điện thoại: 0947758903
+	Mô tả: Chào mừng bạn đến với shop bán chim! Shop của chúng tôi là một cửa hàng chuyên cung cấp các loại chim cảnh từ các giống độc đáo và đa dạng. 
+	Chúng tôi cung cấp nhiều loại chim như chim họa mi, chim hoàng yến, và nhiều loại chim cảnh khác. 
+	Mỗi loài chim đều được chọn lựa cẩn thận từ các nguồn tin cậy và đáng tin cậy để đảm bảo rằng chúng đều khỏe mạnh và đáng yêu.
+
+Chim Khướu:
+	Chim Khướu là loài chim sống chủ yếu tại vùng rừng núi, nên việc sở hữu 1 con chim khướu là vô cùng may mắn. 
+	Đặc trưng của chú chim này là bộ lông mềm và xốp như bông, phần mào nhô lên khá rõ, trong khi đó phần mắt và mào lại có màu đen nối liền với nhau nhìn khá huyền bí.
+	Với những người dân thành phố thì không thích hợp lắm cho việc nuôi loài chim này, vì tiếng hót của nó khá to gây sự vang dội, 
+	sợ làm ảnh hưởng đến các người khác. Còn đối với các vùng ngoại ô có mật độ dân số thưa thớt thì trào lưu nuôi em này đang phát triển rất nhiều.
+	3500000
+
+Lồng chim Khướu:
+
+	Lồng chim khướu là một loại lồng được sử dụng để nuôi và chăm sóc chim khướu (còn gọi là hót họa mi, hót sáo). 
+	Chim khướu là một trong những loài chim cảnh phổ biến và được ưa chuộng trong việc chơi chim ở nhiều nước.
+	Kích thước: Lồng chim khướu thường có kích thước nhỏ và phù hợp với con chim khướu. 
+	Kích thước lồng tùy thuộc vào số lượng chim và ý muốn của người chơi chim.
+	Chất liệu xây dựng: Lồng chim khướu thường được làm từ các chất liệu như gỗ, sắt, kim loại hoặc nhựa. Vật liệu phải an toàn và không gây hại cho sức khỏe của chim.
+	Thiết kế: Lồng chim khướu thường có một ngăn chia để tách biệt giữa các con chim hoặc để huấn luyện chim trước khi thả tự do. Ngoài ra, lồng còn có nắp trên cùng để dễ dàng đặt thức ăn và vệ sinh lồng.
+	Đáy lồng: Đáy lồng thường được làm bằng vật liệu dễ vệ sinh như nhựa hoặc tôn, giúp cho việc lau chùi và làm sạch lồng trở nên dễ dàng hơn.
+	Đồ trang trí: Người chơi chim thường trang trí lồng bằng các đồ trang trí như hoa văn, tranh vẽ hoặc các vật liệu tự nhiên để tạo không gian sống sinh động và hấp dẫn cho chim.
+	Lồng chim khướu không chỉ là nơi chim ăn ngủ mà còn giúp tạo môi trường sống thoải mái, an toàn và kích thích hoạt động cho các con chim khướu. Để nuôi chim khướu thành công, cần chú ý cung cấp thức ăn, nước uống và chăm sóc vệ sinh cho lồng đều đặn. 
+	Ngoài ra, hãy tạo điều kiện để chim có không gian để hót và vận động để duy trì sức khỏe tốt cho chúng.
+	1500000

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 
 import axiosClient from '../api/axiosClient';
-// import handleError from '../utils/handleError';
 import { createContext, useContext, useLayoutEffect, useState } from 'react';
 import AuthContext from '../contexts/AuthContext';
 import handleError from '../utils/handleError';
@@ -13,9 +12,10 @@ export const CartContextProvider = ({ children }) => {
 
     const [cartList, setCartList] = useState([]);
     const [cartLength, setCartLength] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useLayoutEffect(() => {
+        if (!currentUser) return;
         setLoading(true);
         axiosClient
             .get('cart', {

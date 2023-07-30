@@ -2,8 +2,8 @@ select CONVERT(varchar,h.[date], 1) as [date], CONVERT(varchar,h.[date], 8) as [
 from OrderHeader h 
 join OrderDetail d on h.id = d.orderHeaderId 
 and h.[date] >= @startDate
-and h.[date] <= @endDate 
+and h.[date] <= DATEADD(s,-1,DATEADD(d,1,@endDate))  
 and h.shopId = @id
 and h.[status] = 'COMPLETED'
 group by h.[date]
-order by h.[date] desc
+order by h.[date] asc
