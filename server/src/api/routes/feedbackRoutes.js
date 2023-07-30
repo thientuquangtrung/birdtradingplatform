@@ -6,7 +6,7 @@ const { verifyAccessToken } = require('../utils/jwt_utils');
 
 const { getFeedbackOfProduct, createFeedback } = require('../controllers/feedbackController');
 
-router.get('/feedback/:productId', verifyAccessToken, getFeedbackOfProduct);
+router.get('/feedback/:productId', getFeedbackOfProduct);
 router.post('/feedback', verifyAccessToken, uploadImg().single('image'), createFeedback);
 
 module.exports = {

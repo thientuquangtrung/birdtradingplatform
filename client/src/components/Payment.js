@@ -153,7 +153,6 @@ export default function Payment({ selectedOption, setSelectedOption }) {
                             marginRight: 1,
                             color: '#388f84',
                             backgroundColor: '#c7e6e280',
-
                             '&:hover': {
                                 borderColor: '#43a99c',
                                 backgroundColor: '#c7e6e280',

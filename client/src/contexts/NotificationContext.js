@@ -30,8 +30,8 @@ export const NotificationContextProvider = ({ children }) => {
         if (!socket) return;
 
         socket.on('getNotification', (res) => {
-            console.log(res);
             setNotificationList((prev) => [res, ...prev]);
+            setNotificationLength((prev) => prev + 1);
         });
 
         return () => {

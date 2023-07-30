@@ -102,13 +102,7 @@ function Shopping() {
                                     </Typography>
 
                                     <Button
-                                        sx={{
-                                            color: '#3a988c',
-                                            borderColor: '#43a99c',
-                                            '&:hover': {
-                                                borderColor: '#43a99c',
-                                            },
-                                        }}
+                                        color='success'
                                         startIcon={sortBy === 'timestamp' ? <CheckIcon /> : ''}
                                         variant={sortBy === 'timestamp' ? 'contained' : 'outlined'}
                                         onClick={() => handleFilter('timestamp')}
@@ -117,13 +111,7 @@ function Shopping() {
                                     </Button>
 
                                     <Button
-                                        sx={{
-                                            color: '#43a99c',
-                                            borderColor: '#43a99c',
-                                            '&:hover': {
-                                                borderColor: '#43a99c',
-                                            },
-                                        }}
+                                        color='success'
                                         startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
                                         variant={sortBy === 'sold' ? 'contained' : 'outlined'}
                                         onClick={() => handleFilter('sold', 'desc')}
