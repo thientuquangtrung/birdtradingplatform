@@ -122,7 +122,7 @@ function Checkout() {
                 <div style={{ display: 'flex', margin: '15px' }}>
                     <TextField value={phone} label="Số điện thoại" sx={{ paddingRight: '50px' }} disabled></TextField>
                     <TextField fullWidth value={shipToAddress} label="Địa chỉ" disabled></TextField>
-                    <Button style={{ marginLeft: '20px', color: '#43a99c', }}>Thay đổi</Button>
+                    <Button style={{ marginLeft: '20px', color: '#43a99c' }}>Thay đổi</Button>
                 </div>
             </Paper>
 
@@ -174,13 +174,13 @@ function Checkout() {
                                                 </TableCell>
                                                 <TableCell sx={{ border: 'none' }}>{item.name}</TableCell>
                                                 <TableCell sx={{ border: 'none' }} align="center">
-                                                    {item.price}
+                                                    {item.price.toLocaleString('vi-VN')}₫
                                                 </TableCell>
                                                 <TableCell sx={{ border: 'none' }} align="center">
                                                     {item.quantity}
                                                 </TableCell>
                                                 <TableCell sx={{ border: 'none' }} align="center">
-                                                    {item.subTotal}
+                                                    {item.subTotal.toLocaleString('vi-VN')}₫
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -221,7 +221,7 @@ function Checkout() {
                             <span style={{ flex: 1 }}>
                                 Chính sách trả hàng hoặc hoàn tiền cho sản phẩm của Shop được quy định
                             </span>
-                            <Button size="small" onClick={handleOpen} sx={{color: '#388f84'}}>
+                            <Button size="small" onClick={handleOpen} sx={{ color: '#388f84' }}>
                                 tại đây
                             </Button>
                         </div>

@@ -224,6 +224,11 @@ export default function CartDetail() {
                 width: 200,
                 headerAlign: 'center',
                 align: 'center',
+                renderCell: (params) => (
+                    <Typography variant="body2" component="p" noWrap>
+                        {params.value.toLocaleString('vi-VN')}₫
+                    </Typography>
+                ),
             },
             {
                 field: 'id',

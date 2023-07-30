@@ -23,7 +23,7 @@ function CartItem({ data }) {
                 {data.name}
             </Typography>
             <Typography ml={2} variant="body1" component="span" color="#43a99c">
-                {data.price}
+                {data.price.toLocaleString('vi-VN')}₫
             </Typography>
         </MenuItem>
     );

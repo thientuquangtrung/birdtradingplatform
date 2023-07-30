@@ -57,6 +57,7 @@ function OrderTab({ status = 'ALL' }) {
                 },
             })
             .then(function (response) {
+                console.log(response);
                 setTableData(response.data.data);
                 setTotalPage(response.data.meta.totalPages);
                 setTotalOrder(response.data.meta.total);
@@ -132,7 +133,7 @@ function OrderTab({ status = 'ALL' }) {
     const paperStyle = { width: '100%', margin: '20px auto' };
 
     function filterTable(updatedTableData, ignoreStatus) {
-        if (status) {
+        if (status !== 'ALL') {
             const filteredTableData = updatedTableData.filter((item) => item.status !== ignoreStatus);
             setTableData(filteredTableData);
         } else {
@@ -291,7 +292,7 @@ function OrderTab({ status = 'ALL' }) {
     return (
         <>
             <Stack>
-                <Typography variant="h5"> Tổng số đơn hàng: {totalOrder}</Typography>
+                <Typography variant="h5"> Tổng số đơn hàng: {tableData.length}</Typography>
             </Stack>
             <Stack>
                 <TableContainer component={Paper} style={paperStyle}>

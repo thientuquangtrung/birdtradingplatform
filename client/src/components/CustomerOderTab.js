@@ -109,7 +109,13 @@ function CustomerOrderTab({ status }) {
                 },
             })
             .then(function (response) {
-                console.log(response);
+                // Assuming the cancel request was successful, update the tableData
+                if (status !== 'ALL') {
+                    const updatedTableData = tableData.filter((item) => item.orderId !== id);
+                    setTableData(updatedTableData);
+                }
+
+                handleClose();
             })
             .catch(function (error) {
                 console.log(error);
@@ -272,23 +278,6 @@ function CustomerOrderTab({ status }) {
                                 <TableRow>
                                     <TableCell sx={{ textAlign: 'end' }} colSpan={5}>
                                         {item.status === 'PENDING' ? (
-                                            <>
-                                                <Button
-                                                    onClick={() => handleCancelConfirmationOpen(item.orderId)}
-                                                    variant="contained"
-                                                    style={{
-                                                        backgroundColor: '#fafafa',
-                                                        color: '#616161',
-                                                        fontWeight: '420',
-                                                        textTransform: 'none',
-                                                        boxShadow: '2px',
-                                                        border: '1px solid #9e9e9e',
-                                                    }}
-                                                >
-                                                    Hủy Đơn Hàng
-                                                </Button>
-                                            </>
-                                        ) : item.status === 'PICKUP' ? (
                                             <>
                                                 <Button
                                                     onClick={() => handleCancelConfirmationOpen(item.orderId)}

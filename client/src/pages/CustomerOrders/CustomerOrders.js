@@ -76,7 +76,7 @@ function CustomerOrders() {
                         </TabList>
                     </Box>
                     <TabPanel value="1">
-                        <CustomerOrderTab></CustomerOrderTab>
+                        <CustomerOrderTab status="ALL"></CustomerOrderTab>
                     </TabPanel>
                     <TabPanel value="2">
                         <CustomerOrderTab status="PENDING"></CustomerOrderTab>

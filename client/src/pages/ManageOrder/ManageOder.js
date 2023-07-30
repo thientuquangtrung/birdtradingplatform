@@ -40,7 +40,7 @@ const ManageOrder = () => {
                 </Paper>
                 <div style={{ margin: '-24px' }}>
                     <TabPanel value="1">
-                        <OrderTab></OrderTab>
+                        <OrderTab status="ALL"></OrderTab>
                     </TabPanel>
                     <TabPanel value="2">
                         <OrderTab status="PENDING"></OrderTab>

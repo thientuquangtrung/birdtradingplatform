@@ -14,7 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
-import { Chip } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import axiosClient from '../api/axiosClient';
 import handleError from '../utils/handleError';
 import { enqueueSnackbar } from 'notistack';
@@ -108,7 +108,18 @@ export default function ProductTable({ rows = [] }) {
             align: 'center',
         },
         { field: 'name', headerName: 'Tên sản phẩm', width: 140 },
-        { field: 'price', headerName: 'Giá', width: 150, headerAlign: 'center', align: 'center' },
+        {
+            field: 'price',
+            headerName: 'Giá',
+            width: 150,
+            headerAlign: 'center',
+            align: 'center',
+            renderCell: (params) => (
+                <Typography variant="body2" component="p" noWrap>
+                    {params.value.toLocaleString('vi-VN')}₫
+                </Typography>
+            ),
+        },
         { field: 'description', headerName: 'Mô tả', width: 200 },
         {
             field: 'enabled',
