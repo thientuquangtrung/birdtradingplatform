@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { privateRoutes, publicRoutes } from './routes';
 import CheckAuth from './components/CheckAuth';
 import axiosClient from './api/axiosClient';
+import handleError from './utils/handleError';
 
 function App() {
     const host = window.location.host;
@@ -19,8 +20,8 @@ function App() {
         axiosClient
             .post('init_product')
             .then((response) => {})
-            .catch((error) => console.log(error));
-    });
+            .catch((error) => handleError(error));
+    }, []);
 
     return (
         <div className="App">

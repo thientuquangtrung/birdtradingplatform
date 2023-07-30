@@ -104,7 +104,7 @@ const Quantity = ({ rowData }) => {
                 .then((response) => {
                     setCartList(response.data.data.items);
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
 
             return updatedCartItems;
         });
@@ -123,7 +123,7 @@ const Quantity = ({ rowData }) => {
                 .then((response) => {
                     setCartList(response.data.data.items);
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
 
             return updatedCartItems;
         });

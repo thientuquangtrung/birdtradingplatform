@@ -22,6 +22,7 @@ import MoMoButton from '../../components/MoMoButton';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import Chip from '@mui/joy/Chip';
+import handleError from '../../utils/handleError';
 
 function Checkout() {
     const location = useLocation();
@@ -68,7 +69,7 @@ function Checkout() {
                 navigate('/orders');
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -83,7 +84,7 @@ function Checkout() {
                 setTotalPrice(response.data.data.checkoutOrder.totalPrice);
                 localStorage.setItem('shopOrderIds', JSON.stringify(response.data.data.shopOrderIds));
             })
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     }, [location.state]);
 
     useEffect(() => {
@@ -105,7 +106,7 @@ function Checkout() {
                     enqueueSnackbar('Placed order successfully!', { variant: 'success' });
                     navigate('/orders');
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
         }
 
         return () => {

@@ -1,13 +1,14 @@
 import Button from '@mui/joy/Button';
 import { Typography } from '@mui/material';
 import axiosClient from '../api/axiosClient';
+import handleError from '../utils/handleError';
 
 function MoMoButton({ ordersData }) {
     const handlePayment = () => {
         axiosClient
             .post('create_momo_payment', ordersData)
             .then((response) => console.log(response))
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     };
     return (
         <Button onClick={handlePayment} color="danger" variant="soft" sx={{ width: '280px' }}>

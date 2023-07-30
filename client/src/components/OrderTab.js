@@ -31,6 +31,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import handleError from '../utils/handleError';
 
 function OrderTab({ status = 'ALL' }) {
     const [tableData, setTableData] = useState([]);
@@ -64,7 +65,7 @@ function OrderTab({ status = 'ALL' }) {
                 setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }, [currentPage]);
 
@@ -80,7 +81,7 @@ function OrderTab({ status = 'ALL' }) {
                 setCancelReasons(response.data.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -97,7 +98,7 @@ function OrderTab({ status = 'ALL' }) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -113,7 +114,7 @@ function OrderTab({ status = 'ALL' }) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
 

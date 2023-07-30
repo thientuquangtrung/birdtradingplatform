@@ -12,6 +12,7 @@ import axiosClient from '../api/axiosClient';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import handleError from '../utils/handleError';
 
 export default function InteractiveCard({ initialData }) {
     const [editMode, setEditMode] = useState(false);
@@ -36,19 +37,19 @@ export default function InteractiveCard({ initialData }) {
                 // handle success
                 setChange(true);
                 setOpen(false);
-                //setChange(true) được gọi để cập nhật trạng thái change thành true, 
+                //setChange(true) được gọi để cập nhật trạng thái change thành true,
                 //chỉ ra rằng dữ liệu đã thay đổi.
                 //setOpen(false) được gọi để đóng hộp thoại xác nhận xóa.
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     };
 
     const handleSave = () => {
         if (textFieldValue !== name) {
-            setName(textFieldValue); 
+            setName(textFieldValue);
             //được gọi để cập nhật tên của thẻ thành giá trị trong trường văn bản.
             axiosClient
                 .put(`category/${data.id}`, { name: textFieldValue })
@@ -61,11 +62,11 @@ export default function InteractiveCard({ initialData }) {
                     setData((prevData) => ({
                         ...prevData,
                         enabled: true,
-                    //được sử dụng để cập nhật dữ liệu của thẻ với trạng thái enabled là true.    
+                        //được sử dụng để cập nhật dữ liệu của thẻ với trạng thái enabled là true.
                     }));
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                 });
         }
         setEditMode(false);
@@ -73,8 +74,8 @@ export default function InteractiveCard({ initialData }) {
 
     const handleTextFieldChange = (e) => {
         setTextFieldValue(e.target.value);
-        //e.target.value truy cập giá trị mới 
-        //=> cập nhật giá trị của textFieldValue vào 
+        //e.target.value truy cập giá trị mới
+        //=> cập nhật giá trị của textFieldValue vào
     };
 
     const cardColor = change || data.enabled === false ? '#e0e0e0' : undefined;
@@ -117,8 +118,8 @@ export default function InteractiveCard({ initialData }) {
                                 size="small"
                                 autoFocus
                             />
-                        //editMode là true, sẽ hiển thị TextField để cho phép người dùng chỉnh sửa giá trị    
                         ) : (
+                            //editMode là true, sẽ hiển thị TextField để cho phép người dùng chỉnh sửa giá trị
                             <Chip variant="soft" color="neutral" size="lg" sx={{ pointerEvents: 'none' }}>
                                 {name}
                             </Chip>

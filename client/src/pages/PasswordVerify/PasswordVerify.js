@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
+import handleError from '../../utils/handleError';
 
 const PasswordVerify = () => {
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ const PasswordVerify = () => {
             })
             .catch((error) => {
                 // Handle the API error if needed
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -83,7 +84,7 @@ const PasswordVerify = () => {
                             backgroundColor: '#43a99c',
                             '&:hover': { backgroundColor: '#43a99c' },
                             '&:disabled': { backgroundColor: 'rgb(58 152 140 / 45%)' },
-                            color:'white'
+                            color: 'white',
                         }}
                         variant="contained"
                         onClick={handleSubmit}

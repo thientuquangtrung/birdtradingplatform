@@ -7,6 +7,7 @@ import Input from '@mui/joy/Input';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import handleError from '../../utils/handleError';
 
 function CustomerManagementAdmin() {
     const navigate = useNavigate();
@@ -66,7 +67,7 @@ function CustomerManagementAdmin() {
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    handleError(error);
                 });
         }
     }

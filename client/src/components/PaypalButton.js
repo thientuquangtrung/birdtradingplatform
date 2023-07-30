@@ -12,7 +12,7 @@ function PaypalButton({ ordersData }) {
             .then((response) => {
                 return response.data.id;
             })
-            .catch((error) => console.log(error));
+            .catch((error) => handleError(error));
     };
 
     const onApprove = async (data) => {

@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect, useCallback } from 'rea
 import AuthContext from './AuthContext';
 import axiosClient from '../api/axiosClient';
 import { SocketContext } from './SocketContext';
+import handleError from '../utils/handleError';
 
 export const ChatContext = createContext();
 export const ChatContextProvider = ({ children }) => {
@@ -86,7 +87,7 @@ export const ChatContextProvider = ({ children }) => {
                 setUserChats((prev) => [response.data.data, ...prev]);
             })
             .catch((error) => {
-                return console.log(error);
+                return handleError(error);
             });
     }, []);
 

@@ -4,6 +4,7 @@ import axiosClient from '../api/axiosClient';
 // import handleError from '../utils/handleError';
 import { createContext, useContext, useLayoutEffect, useState } from 'react';
 import AuthContext from '../contexts/AuthContext';
+import handleError from '../utils/handleError';
 
 export const CartContext = createContext();
 
@@ -28,7 +29,7 @@ export const CartContextProvider = ({ children }) => {
                 setLoading(false);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
                 setLoading(false);
             });
     }, []);

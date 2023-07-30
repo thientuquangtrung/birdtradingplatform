@@ -3,6 +3,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { Select } from '@mui/material';
 import { forwardRef, useEffect, useState } from 'react';
+import handleError from '../utils/handleError';
 
 import axiosClient from '../api/axiosClient';
 
@@ -18,7 +19,7 @@ function CategoryList({ categoryId, setCategoryId }, ref) {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }, []);
 

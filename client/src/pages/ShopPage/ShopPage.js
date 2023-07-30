@@ -15,6 +15,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import ChatButtonShop from '../../components/ChatButtonShop';
+import handleError from '../../utils/handleError';
 
 const priceOption = [
     {
@@ -53,7 +54,7 @@ function ShopPage() {
                 setShopInfo(response.data.data);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }, []);
     const handleChange = (event, value) => {
@@ -78,7 +79,7 @@ function ShopPage() {
                 setPage(response.data.meta.currentPage);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, [sortBy, order, categoryId, q, page, location.state]);
 
@@ -141,17 +142,17 @@ function ShopPage() {
                                     Sắp xếp theo:
                                 </Typography>
 
-                                <Button   
+                                <Button
                                     startIcon={sortBy === 'name' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'name' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('name')}
-                                    color='success'
+                                    color="success"
                                 >
                                     Mới Nhất
                                 </Button>
 
                                 <Button
-                                    color='success'
+                                    color="success"
                                     startIcon={sortBy === 'sold' ? <CheckIcon /> : ''}
                                     variant={sortBy === 'sold' ? 'contained' : 'outlined'}
                                     onClick={() => handleFilter('sold', 'desc')}

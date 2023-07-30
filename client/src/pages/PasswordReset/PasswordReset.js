@@ -7,6 +7,7 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import AuthContext from '../../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
 import LockResetIcon from '@mui/icons-material/LockReset';
+import handleError from '../../utils/handleError';
 
 const PasswordReset = () => {
     const { currentUser } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const PasswordReset = () => {
                     navigate('/login');
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                     // Handle error
                 });
         } else {

@@ -7,6 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import axiosClient from '../../api/axiosClient';
 import CheckIcon from '@mui/icons-material/Check';
 import ShopProduct from '../../components/ShopProduct';
+import handleError from '../../utils/handleError';
 
 const priceOption = [
     {
@@ -30,8 +31,8 @@ function Shopping() {
     const [page, setPage] = useState(1);
 
     useEffect(() => {
-        //kiểm tra xem location.state?.q và location.state?.categoryId có tồn tại hay không. 
-        //Nếu tồn tại, chúng ta cập nhật giá trị của q và categoryId bằng cách gọi setQ(location.state.q) 
+        //kiểm tra xem location.state?.q và location.state?.categoryId có tồn tại hay không.
+        //Nếu tồn tại, chúng ta cập nhật giá trị của q và categoryId bằng cách gọi setQ(location.state.q)
         //và setCategoryId(location.state.categoryId) tương ứng.
         if (location.state?.q) setQ(location.state.q);
         if (location.state?.categoryId) setCategoryId(location.state.categoryId);
@@ -50,19 +51,19 @@ function Shopping() {
             })
             .then((response) => {
                 const list = response.data.data.flatMap((document) => document.value);
-                // tạo một danh sách (list) từ dữ liệu nhận được từ API 
-                //bằng cách sử dụng phương thức flatMap để nối các giá trị từ mảng response.data.data. 
+                // tạo một danh sách (list) từ dữ liệu nhận được từ API
+                //bằng cách sử dụng phương thức flatMap để nối các giá trị từ mảng response.data.data.
                 setListProduct((prev) => [...list]);
-                //cập nhật giá trị của biến state listProduct 
-                //bằng cách thêm list vào cuối danh sách hiện tại (prev) bằng cách sử dụng toán tử spread [...list]. 
+                //cập nhật giá trị của biến state listProduct
+                //bằng cách thêm list vào cuối danh sách hiện tại (prev) bằng cách sử dụng toán tử spread [...list].
                 setTotalPage(response.data.meta.totalPages);
                 setPage(response.data.meta.currentPage);
                 //cập nhật giá trị của totalPage và page từ thông tin meta của response.data.
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
-    }, [sortBy, order, categoryId, q, page]);// gọi lại khi các biến này thay đổi
+    }, [sortBy, order, categoryId, q, page]); // gọi lại khi các biến này thay đổi
 
     const clearAllFilters = () => {
         setCategoryId(0);

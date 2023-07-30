@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
 import CustomerTable from '../../components/CustomerTable';
+import handleError from '../../utils/handleError';
 
 function CustomerManagement() {
     const [data, setData] = useState([]);
@@ -33,7 +34,7 @@ function CustomerManagement() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }, [name]);
 

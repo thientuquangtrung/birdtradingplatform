@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
+import handleError from '../../utils/handleError';
 
 const OtpVerify = () => {
     const location = useLocation();
@@ -85,7 +86,7 @@ const OtpVerify = () => {
                 enqueueSnackbar('Xác minh OTP thành công', { variant: 'success' });
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
                 setValidationMsg({ otp: 'Invalid OTP.' });
             });
     };
