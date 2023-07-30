@@ -9,6 +9,7 @@ import { Box, Grid, ListItemButton, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
+import handleError from '../utils/handleError';
 
 function ShopProduct({ link = '/shopping', state = '' }) {
     const location = useLocation();
@@ -21,14 +22,14 @@ function ShopProduct({ link = '/shopping', state = '' }) {
                 setCategoryList(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
     return (
         <Grid item xs={2} marginTop={0.4}>
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static" sx={{backgroundColor: '#43a99c'}}>
+                <AppBar position="static" sx={{ backgroundColor: '#43a99c' }}>
                     <Toolbar variant="dense">
                         <IconButton edge="start" color="inherit" aria-label="menu">
                             <MenuIcon />

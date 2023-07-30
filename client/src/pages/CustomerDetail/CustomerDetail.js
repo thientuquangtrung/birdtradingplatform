@@ -15,6 +15,7 @@ import { enqueueSnackbar } from 'notistack';
 import { FormControl, FormControlLabel, IconButton, Modal, Radio, RadioGroup } from '@mui/material';
 import { Box } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
+import handleError from '../../utils/handleError';
 
 function CustomerDetail() {
     const location = useLocation();
@@ -69,7 +70,7 @@ function CustomerDetail() {
                 setIsUserActive(fetchUser.enabled);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
 
         axiosClient
@@ -83,7 +84,7 @@ function CustomerDetail() {
                 setBanReasons(response.data.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -123,7 +124,7 @@ function CustomerDetail() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -170,7 +171,7 @@ function CustomerDetail() {
                     navigate('/customer_management');
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                 });
         }
     }

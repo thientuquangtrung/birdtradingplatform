@@ -9,6 +9,7 @@ import Box from '@mui/joy/Box';
 import CheckIcon from '@mui/icons-material/Check';
 import Button from '@mui/joy/Button';
 import Paper from '@mui/material/Paper';
+import handleError from '../../utils/handleError';
 
 function CategoryManagement() {
     const [getCategories, setGetCategories] = useState([]);
@@ -22,7 +23,7 @@ function CategoryManagement() {
                 setGetCategories(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -33,7 +34,6 @@ function CategoryManagement() {
             })
             //category name mới
             .then(() => {
-                
                 setName('');
                 //đặt về rỗng, tạo ô nhập category mới
                 axiosClient
@@ -42,11 +42,11 @@ function CategoryManagement() {
                         setGetCategories(response.data);
                     })
                     .catch((error) => {
-                        console.log(error);
+                        handleError(error);
                     });
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     };
 

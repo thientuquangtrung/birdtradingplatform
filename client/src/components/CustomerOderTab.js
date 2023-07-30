@@ -39,6 +39,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import StoreIcon from '@mui/icons-material/Store';
 import UploadImage from './UploadImage';
 import { enqueueSnackbar } from 'notistack';
+import dayjs from 'dayjs';
+import handleError from '../utils/handleError';
 
 function CustomerOrderTab({ status }) {
     const handleChangePage = (event, value) => {
@@ -76,7 +78,7 @@ function CustomerOrderTab({ status }) {
                 setCancelReasons(response.data.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -95,7 +97,7 @@ function CustomerOrderTab({ status }) {
                 setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }, [currentPage]);
 
@@ -108,10 +110,16 @@ function CustomerOrderTab({ status }) {
                 },
             })
             .then(function (response) {
-                console.log(response);
+                // Assuming the cancel request was successful, update the tableData
+                if (status !== 'ALL') {
+                    const updatedTableData = tableData.filter((item) => item.orderId !== id);
+                    setTableData(updatedTableData);
+                }
+
+                handleClose();
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
     const sendCancelRequest = (orderId) => {
@@ -199,7 +207,7 @@ function CustomerOrderTab({ status }) {
                 handleClose();
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }
 
@@ -287,25 +295,9 @@ function CustomerOrderTab({ status }) {
                                                     Hủy Đơn Hàng
                                                 </Button>
                                             </>
-                                        ) : item.status === 'PICKUP' ? (
-                                            <>
-                                                <Button
-                                                    onClick={() => handleCancelConfirmationOpen(item.orderId)}
-                                                    variant="contained"
-                                                    style={{
-                                                        backgroundColor: '#fafafa',
-                                                        color: '#616161',
-                                                        fontWeight: '420',
-                                                        textTransform: 'none',
-                                                        boxShadow: '2px',
-                                                        border: '1px solid #9e9e9e',
-                                                    }}
-                                                >
-                                                    Hủy Đơn Hàng
-                                                </Button>
-                                            </>
                                         ) : item.status === 'COMPLETED' ? (
                                             <Button
+                                                disabled={item.feedback !== null}
                                                 variant="contained"
                                                 onClick={() => handleOpen(item)}
                                                 sx={{
@@ -315,7 +307,11 @@ function CustomerOrderTab({ status }) {
                                                     },
                                                 }}
                                             >
-                                                Đánh Giá
+                                                {item.feedback
+                                                    ? `Đã đánh giá vào: ${dayjs(item.feedback, 'YYYY-MM-DD').format(
+                                                          'DD/MM/YYYY',
+                                                      )}`
+                                                    : `Đánh giá`}
                                             </Button>
                                         ) : null}
                                     </TableCell>
@@ -418,28 +414,6 @@ function CustomerOrderTab({ status }) {
                     </Stack>
                 </Box>
             </Modal>
-            {/* <Dialog
-                    open={cancelConfirmationOpen}
-                    onClose={() => handleCancelConfirmationClose(false)}
-                    aria-labelledby="cancel-confirmation-dialog-title"
-                    aria-describedby="cancel-confirmation-dialog-description"
-                >
-                    <DialogTitle id="cancel-confirmation-dialog-title">Confirmation</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="cancel-confirmation-dialog-description">
-                            Bạn có chắc chắn muốn hủy đơn hàng không
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => handleCancelConfirmationClose(true)} color="error" autoFocus>
-                            Có
-                        </Button>
-                        <Button onClick={() => handleCancelConfirmationClose(false)} color="primary">
-                            Không
-                        </Button>
-                    </DialogActions>
-                </Dialog> */}
-
             <Modal
                 open={cancelConfirmationOpen}
                 onClose={() => handleCancelConfirmationClose()}

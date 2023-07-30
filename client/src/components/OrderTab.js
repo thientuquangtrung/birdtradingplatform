@@ -31,7 +31,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axiosClient from '../api/axiosClient';
 import AuthContext from '../contexts/AuthContext';
 import { enqueueSnackbar } from 'notistack';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
+import handleError from '../utils/handleError';
 
 function OrderTab({ status = 'ALL' }) {
     const [tableData, setTableData] = useState([]);
@@ -44,26 +44,28 @@ function OrderTab({ status = 'ALL' }) {
     };
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [totalOrder, setTotalOrder] = useState(0);
     const [selectedValue, setSelectedValue] = useState(0);
     const [cancelReasons, setCancelReasons] = useState([]);
-    const [orderId, setOrderId] = useState('');
 
     useEffect(() => {
         axiosClient
             .get(`seller/order/${currentUser.id}`, {
                 params: {
                     page: currentPage,
-                    perPage: 30,
+                    perPage: 10,
                     status,
                 },
             })
             .then(function (response) {
+                console.log(response);
                 setTableData(response.data.data);
                 setTotalPage(response.data.meta.totalPages);
+                setTotalOrder(response.data.meta.total);
                 setCurrentPage(response.data.meta.currentPage);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     }, [currentPage]);
 
@@ -79,7 +81,7 @@ function OrderTab({ status = 'ALL' }) {
                 setCancelReasons(response.data.data);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -96,7 +98,7 @@ function OrderTab({ status = 'ALL' }) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -112,7 +114,7 @@ function OrderTab({ status = 'ALL' }) {
                 console.log(response);
             })
             .catch(function (error) {
-                console.log(error);
+                handleError(error);
             });
     };
 
@@ -132,7 +134,7 @@ function OrderTab({ status = 'ALL' }) {
     const paperStyle = { width: '100%', margin: '20px auto' };
 
     function filterTable(updatedTableData, ignoreStatus) {
-        if (status) {
+        if (status !== 'ALL') {
             const filteredTableData = updatedTableData.filter((item) => item.status !== ignoreStatus);
             setTableData(filteredTableData);
         } else {
@@ -291,7 +293,7 @@ function OrderTab({ status = 'ALL' }) {
     return (
         <>
             <Stack>
-                <div style={{ fontWeight: '550', marginTop: '20px' }}> Tổng số đơn hàng: {tableData.length}</div>
+                <Typography variant="h5"> Tổng số đơn hàng: {tableData.length}</Typography>
             </Stack>
             <Stack>
                 <TableContainer component={Paper} style={paperStyle}>
@@ -360,25 +362,9 @@ function OrderTab({ status = 'ALL' }) {
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             Địa chỉ: <span>{modalState.customer?.shipToAddress}</span>
                         </Typography>
-                    </Stack>
-
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack>
-                            <Typography
-                                id="modal-modal-title"
-                                variant="h6"
-                                component="h3"
-                                sx={{ mt: 1 }}
-                                fontSize="22px"
-                            >
-                                <PaymentsIcon></PaymentsIcon> Phương thức thanh toán:
-                            </Typography>
-                        </Stack>
-                        <Stack>
-                            <Typography id="modal-modal-description" sx={{ mt: 1 }} fontSize="18px">
-                                Thanh toán khi nhận hàng
-                            </Typography>
-                        </Stack>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Phương thức thanh toán: <span>{modalState.payment}</span>
+                        </Typography>
                     </Stack>
                     <Stack direction="column" sx={{ overflowY: 'scroll' }} maxHeight="500px">
                         <Table sx={{ minWidth: 650 }}>

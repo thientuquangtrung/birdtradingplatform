@@ -1,4 +1,4 @@
-const dateFormat = require('dateformat');
+const moment = require('moment');
 const querystring = require('qs');
 const crypto = require('crypto');
 const { checkoutReview, placeOrder } = require('../checkout');
@@ -8,30 +8,25 @@ const createVNPayUrl = async (payload) => {
     try {
         const { checkoutOrder } = await checkoutReview(payload);
 
-        var tmnCode = process.env.VNP_TMN_CODE;
-        var secretKey = process.env.VNP_HASH_SECRET;
-        var vnpUrl = process.env.VNP_URL;
-        var returnUrl = process.env.CHECKOUT_RETURN_URL;
+        let date = new Date();
+        let createDate = moment(date).format('YYYYMMDDHHmmss');
 
-        var date = new Date();
+        let ipAddr = payload.ipAddr;
 
-        var createDate = dateFormat(date, 'yyyymmddHHmmss');
-        var orderId = dateFormat(date, 'HHmmss');
-        var amount = checkoutOrder.totalPrice;
-        var bankCode = payload.bankCode || 'NCB';
-        var ipAddr = payload.ipAddr;
+        let tmnCode = process.env.VNP_TMN_CODE;
+        let secretKey = process.env.VNP_HASH_SECRET;
+        let vnpUrl = process.env.VNP_URL;
+        let returnUrl = process.env.CHECKOUT_RETURN_URL;
+        let orderId = moment(date).format('DDHHmmss');
+        let amount = checkoutOrder.totalPrice;
+        let bankCode = payload.bankCode || 'NCB';
 
-        var currCode = 'VND';
-        // var orderType = payload.orderType;
-        var locale = payload.language;
-        if (!locale) {
-            locale = 'vn';
-        }
-        var vnp_Params = {};
+        let locale = 'vn';
+        let currCode = 'VND';
+        let vnp_Params = {};
         vnp_Params['vnp_Version'] = '2.1.0';
         vnp_Params['vnp_Command'] = 'pay';
         vnp_Params['vnp_TmnCode'] = tmnCode;
-        // vnp_Params['vnp_Merchant'] = ''
         vnp_Params['vnp_Locale'] = locale;
         vnp_Params['vnp_CurrCode'] = currCode;
         vnp_Params['vnp_TxnRef'] = orderId;
@@ -47,9 +42,11 @@ const createVNPayUrl = async (payload) => {
 
         vnp_Params = sortObject(vnp_Params);
 
-        var signData = querystring.stringify(vnp_Params, { encode: false });
-        var hmac = crypto.createHmac('sha512', secretKey);
-        var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+        let querystring = require('qs');
+        let signData = querystring.stringify(vnp_Params, { encode: false });
+        let crypto = require('crypto');
+        let hmac = crypto.createHmac('sha512', secretKey);
+        let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
         vnp_Params['vnp_SecureHash'] = signed;
         vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 

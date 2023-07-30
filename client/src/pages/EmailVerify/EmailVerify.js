@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import axiosClient from '../../api/axiosClient';
 import { enqueueSnackbar } from 'notistack';
+import handleError from '../../utils/handleError';
 const EmailVerify = () => {
     const paperStyle = {
         padding: 20,
@@ -46,7 +47,7 @@ const EmailVerify = () => {
                     navigate('/otp/verify', { state: { email } });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                     setError('Email đã được sử dụng');
                 });
         }
@@ -89,11 +90,10 @@ const EmailVerify = () => {
                     <Button
                         disabled={isButtonDisabled}
                         style={{
-                            color:'white',
+                            color: 'white',
                             backgroundColor: isButtonDisabled ? 'rgb(58 152 140 / 45%)' : '#43a99c',
                         }}
                         sx={{
-                            
                             marginTop: '10px',
                         }}
                         variant="contained"

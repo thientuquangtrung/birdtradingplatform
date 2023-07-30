@@ -4,6 +4,7 @@ import axiosClient from '../api/axiosClient';
 // import handleError from '../utils/handleError';
 import { createContext, useLayoutEffect, useState } from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
+import handleError from '../utils/handleError';
 
 export const AuthContext = createContext();
 
@@ -21,7 +22,7 @@ export const AuthContextProvider = ({ children }) => {
                     setCurrentUser(response.data);
                     setLoading(false);
                 } catch (error) {
-                    console.log(error);
+                    handleError(error);
                     setLoading(false);
                 }
             }

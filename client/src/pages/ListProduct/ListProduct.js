@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import CategoryList from '../../components/CategoryList';
 import { useState, useEffect } from 'react';
 import axiosClient from '../../api/axiosClient';
+import handleError from '../../utils/handleError';
 
 function ListProduct() {
     const [categoryId, setCategoryId] = useState('');
@@ -30,7 +31,7 @@ function ListProduct() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }, []);
 
@@ -48,7 +49,7 @@ function ListProduct() {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                handleError(error);
             });
     }
 

@@ -69,7 +69,7 @@ const ProductCard = ({ data }) => {
                     }}
                 >
                     <Typography variant="body2" component="p" noWrap>
-                        {data.price}
+                        {data.price.toLocaleString('vi-VN')}₫
                     </Typography>
                     <Typography variant="body2" component="p" noWrap>
                         Đã bán: {data.sold}
@@ -89,7 +89,9 @@ const ProductCard = ({ data }) => {
                             id: data.id,
                         }}
                     >
-                        <Button size="small" sx={{color: '#238f78',}}>Chi tiết</Button>
+                        <Button size="small" sx={{ color: '#238f78' }}>
+                            Chi tiết
+                        </Button>
                     </Link>
                 </CardActions>
             </Box>

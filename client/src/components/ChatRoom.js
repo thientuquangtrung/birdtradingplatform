@@ -15,16 +15,8 @@ import AuthContext from '../contexts/AuthContext';
 import { ChatContext } from '../contexts/ChatContext';
 import { useFetchRecipientUser } from '../hooks/useFetchRecipient';
 import axiosClient from '../api/axiosClient';
-import EmojiPicker, {
-    EmojiStyle,
-    SkinTones,
-    Theme,
-    Categories,
-    EmojiClickData,
-    Emoji,
-    SuggestionMode,
-    SkinTonePickerLocation,
-} from 'emoji-picker-react';
+import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import handleError from '../utils/handleError';
 
 function ChatRoom() {
     const [showPicker, setShowPicker] = useState(false);
@@ -97,7 +89,7 @@ function ChatRoom() {
                 socket.emit('sendMessage', { ...response.data.data, to: recipientUser.id });
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
     };
 

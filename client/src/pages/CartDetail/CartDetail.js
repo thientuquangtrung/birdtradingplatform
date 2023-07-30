@@ -104,7 +104,7 @@ const Quantity = ({ rowData }) => {
                 .then((response) => {
                     setCartList(response.data.data.items);
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
 
             return updatedCartItems;
         });
@@ -123,7 +123,7 @@ const Quantity = ({ rowData }) => {
                 .then((response) => {
                     setCartList(response.data.data.items);
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => handleError(error));
 
             return updatedCartItems;
         });
@@ -224,6 +224,11 @@ export default function CartDetail() {
                 width: 200,
                 headerAlign: 'center',
                 align: 'center',
+                renderCell: (params) => (
+                    <Typography variant="body2" component="p" noWrap>
+                        {params.value.toLocaleString('vi-VN')}₫
+                    </Typography>
+                ),
             },
             {
                 field: 'id',

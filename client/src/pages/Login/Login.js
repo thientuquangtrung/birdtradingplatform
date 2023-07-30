@@ -134,7 +134,7 @@ const Login = ({ role }) => {
                         fullWidth
                         onClick={handleSubmit}
                         style={{
-                            color:'white',
+                            color: 'white',
                             backgroundColor: isButtonDisabled ? 'rgb(58 152 140 / 45%)' : '#43a99c',
                         }}
                     >

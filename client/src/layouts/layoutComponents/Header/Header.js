@@ -23,20 +23,17 @@ import CartContext from '../../../contexts/CartContext';
 import { enqueueSnackbar } from 'notistack';
 import axiosClient from '../../../api/axiosClient';
 import SuggestionList from '../../../components/SuggestionList';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import Notification from '../../../components/Notification';
-import { NotificationContext } from '../../../contexts/NotificationContext';
+import NotificationHandle from '../../../components/NotificationHandle';
+import handleError from '../../../utils/handleError';
 
 function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const cartRef = useRef();
     const searchRef = useRef();
-    const notificationRef = useRef();
 
     const { currentUser } = useContext(AuthContext);
     const { cartLength } = useContext(CartContext);
-    const { notificationLength } = useContext(NotificationContext);
     const [productName, setProductName] = useState('');
     const [suggestData, setSuggestData] = useState([]);
     function handlePress(event) {
@@ -57,16 +54,6 @@ function Header() {
                 q: productName,
             },
         });
-    }
-
-    function notificationsLabel(count) {
-        if (count === 0) {
-            return 'no notifications';
-        }
-        if (count > 99) {
-            return 'more than 99 notifications';
-        }
-        return `${count} notifications`;
     }
 
     const handleTyping = (e) => {
@@ -93,7 +80,7 @@ function Header() {
                     setSuggestData(response.data.data);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    handleError(error);
                 });
         }
     }, [productName]);
@@ -116,26 +103,7 @@ function Header() {
 
                         {currentUser ? (
                             <Stack direction="row" alignItems="center" gap={5}>
-                                <Tippy
-                                    interactive
-                                    placement="bottom-end"
-                                    render={(attrs) => (
-                                        <Box tabIndex="-1" {...attrs}>
-                                            <Notification />
-                                        </Box>
-                                    )}
-                                >
-                                    <Stack direction="row" alignItems="center" ref={notificationRef}>
-                                        <IconButton aria-label={notificationsLabel(notificationLength)}>
-                                            <Badge badgeContent={notificationLength} color="success">
-                                                <NotificationsIcon sx={{ color: 'white' }} />
-                                            </Badge>
-                                        </IconButton>
-                                        <Typography fontSize={14} sx={{ cursor: 'pointer' }}>
-                                            Thông báo
-                                        </Typography>
-                                    </Stack>
-                                </Tippy>
+                                <NotificationHandle />
                                 <AvaText user={currentUser} />
                             </Stack>
                         ) : (

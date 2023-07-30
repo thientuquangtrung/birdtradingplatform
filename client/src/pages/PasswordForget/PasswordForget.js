@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
 import axiosClient from '../../api/axiosClient';
+import handleError from '../../utils/handleError';
 const PasswordReset = () => {
     const navigate = useNavigate();
     const avatarStyle = { backgroundColor: '#1E90FF' };
@@ -25,7 +26,7 @@ const PasswordReset = () => {
                 console.log(response);
             })
             .catch((error) => {
-                console.log(error);
+                handleError(error);
             });
         // navigate('/login');
         enqueueSnackbar('Xác nhận đã gửi. Vui lòng check email !', { variant: 'success' });
